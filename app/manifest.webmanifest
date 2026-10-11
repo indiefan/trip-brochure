@@ -1,0 +1,10 @@
+{
+  "name": "Trip",
+  "short_name": "Trip",
+  "start_url": "index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4efe6",
+  "theme_color": "#f4efe6",
+  "icons": [{ "src": "icon.png", "sizes": "1024x1024", "type": "image/png" }]
+}

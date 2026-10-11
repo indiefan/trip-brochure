@@ -1,0 +1,2043 @@
+{
+ "name": "Japan & Korea",
+ "title_html": "Japan <i>&amp;</i><br>Korea",
+ "family": "The Example family",
+ "seal": "旅",
+ "farewell": {
+  "native": "いってらっしゃい",
+  "english": "Have a wonderful trip."
+ },
+ "intro": "10 nights, 5 cities, two countries: from the neon of <em>Tokyo</em> to the hot springs of Hakone, the temples of Kyoto, the theme parks of Osaka, and on to Seoul.",
+ "start": "2027-04-14",
+ "end": "2027-04-24",
+ "people": [
+  "Alex",
+  "Sam",
+  "Jordan"
+ ],
+ "zones": {
+  "default": "+09:00",
+  "Seattle": "-07:00"
+ },
+ "timezone": {
+  "default": "Asia/Tokyo",
+  "home": "America/Los_Angeles"
+ },
+ "bundle_id": "com.example.tripbrochure",
+ "cover": {
+  "file": "photos/f74cf5590aaec82c.jpg",
+  "focus": "50% 55%",
+  "credit": "Luka Peternel",
+  "license": "CC BY-SA 4.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Fushimi-Inari-Shrine-Senbon-Torii-2018-Luka-Peternel.jpg"
+ },
+ "cities": {
+  "Tokyo": {
+   "country": "Japan",
+   "native": "東京",
+   "color": "#34557a",
+   "blurb": "Japan's capital runs on contrasts: Shibuya's crossing and backstreet kitchens, the elevated expressway loop at night, and the waterfront theatre of DisneySea. Three nights is enough for a good first taste.",
+   "photo": {
+    "file": "photos/06589f692eb4b1ec.jpg",
+    "focus": "68% 50%",
+    "credit": "Ximonic (Simo Räsänen)",
+    "license": "CC BY-SA 4.0",
+    "page": "https://commons.wikimedia.org/wiki/File:Shibuya_and_Shinjuku_from_Yebisu_Garden_Place_Tower,_Ebisu,_Tokyo,_Japan,_2024_May.jpg"
+   }
+  },
+  "Hakone": {
+   "country": "Japan",
+   "native": "箱根",
+   "color": "#4f7a5a",
+   "blurb": "A mountain town of hot springs, cedar slopes and lake views within easy reach of Tokyo. One night is the classic ryokan pause: bathe, eat well, sleep early.",
+   "photo": {
+    "file": "photos/ccb5abffa8255d0c.jpg",
+    "focus": "72% 55%",
+    "credit": "Charlie fong",
+    "license": "CC BY-SA 4.0",
+    "page": "https://commons.wikimedia.org/wiki/File:Lake_Ashi_%26_Mt_Fuji_%26_Hakone_Shrine.jpg"
+   }
+  },
+  "Kyoto": {
+   "country": "Japan",
+   "native": "京都",
+   "color": "#b0662a",
+   "blurb": "Eleven centuries of capital life, from the vermilion tunnels of Fushimi Inari to digital art rooms and Nara's famously fast mochi pounders.",
+   "photo": {
+    "file": "photos/f769a54b83f78751.jpg",
+    "focus": "66% 30%",
+    "credit": "Moyan Brenn from Italy",
+    "license": "CC BY 2.0",
+    "page": "https://commons.wikimedia.org/wiki/File:Kyoto_(16042885718).jpg"
+   }
+  },
+  "Osaka": {
+   "country": "Japan",
+   "native": "大阪",
+   "color": "#b8432c",
+   "blurb": "Japan's kitchen city, loud and friendly, here given over to a single full day at Universal Studios Japan with the park gates a short walk from the room.",
+   "photo": {
+    "file": "photos/d5f046296be4b20d.jpg",
+    "focus": "70% 45%",
+    "credit": "Martin Falbisoner",
+    "license": "CC BY-SA 4.0",
+    "page": "https://commons.wikimedia.org/wiki/File:Osaka_Castle_Outer_Moat_and_Osaka_Business_Park,_November_2016.jpg"
+   }
+  },
+  "Seoul": {
+   "country": "South Korea",
+   "native": "서울",
+   "color": "#6b4f8a",
+   "blurb": "A capital that moves fast: Gangnam skincare clinics, the soaring shelves of Starfield Library, and the griddles and mung-bean pancakes of Gwangjang Market.",
+   "photo": {
+    "file": "photos/38e5d807d5fa97ac.jpg",
+    "focus": "60% 50%",
+    "credit": "Joon Kyu Park",
+    "license": "CC BY-SA 3.0",
+    "page": "https://commons.wikimedia.org/wiki/File:Seoul_(175734251)_(cropped).jpg"
+   }
+  }
+ },
+ "hotels": [
+  {
+   "id": "H-01",
+   "city": "Tokyo",
+   "country": "Japan",
+   "start": "2027-04-15",
+   "end": "2027-04-18",
+   "name": "The Okura Tokyo (Heritage Wing)",
+   "room": "Heritage Twin Junior Suite",
+   "booking": "Amex Fine Hotels + Resorts",
+   "perks": "Free breakfast for 3, $100 credit, Guaranteed 4PM checkout",
+   "confirmation": "",
+   "address": "2-chōme-10-4 Toranomon, Minato City, Tokyo 105-0001, Japan",
+   "blurb": "The Okura's Heritage Wing carries the hotel's mid-century design legacy into quiet, generously sized suites, with a wet room and deep garden jet-bath for the end of a long walking day.",
+   "facts": [
+    {
+     "label": "Room",
+     "value": "Heritage Twin Junior Suite"
+    },
+    {
+     "label": "Nights",
+     "value": "3"
+    },
+    {
+     "label": "Booking",
+     "value": "ABC123 (sample)"
+    },
+    {
+     "label": "Perks",
+     "value": "Free breakfast for 3, $100 credit, guaranteed 4PM checkout"
+    },
+    {
+     "label": "Toilet",
+     "value": "Detached hallway toilet entry, no bathroom cross-over"
+    },
+    {
+     "label": "Bath",
+     "value": "Deep soaking garden jet-bath and rainfall wet room"
+    }
+   ],
+   "gplace": {
+    "id": "ChIJ3X4lOACLGGARKSN9g6m68bo",
+    "name": "The Okura Heritage Wing Tokyo",
+    "address": "2-chōme-10-4 Toranomon, Minato City, Tokyo 105-0001, Japan",
+    "lat": 35.667684,
+    "lng": 139.74386,
+    "local_name": "オークラ ヘリテージウィング",
+    "local_address": "日本、〒105-0001 東京都港区虎ノ門２丁目１０−４",
+    "language": "ja"
+   }
+  },
+  {
+   "id": "H-02",
+   "city": "Hakone",
+   "country": "Japan",
+   "start": "2027-04-18",
+   "end": "2027-04-19",
+   "name": "Hakone Gora Karaku",
+   "room": "East Wing Deluxe Japanese Room",
+   "booking": "Direct / Confirmed",
+   "perks": "Multi-course Kaiseki dinner & breakfast included",
+   "confirmation": "",
+   "address": "1300-8 Gōra, Hakone, Ashigarashimo District, Kanagawa 250-0408, Japan",
+   "blurb": "A Gora ryokan where the room opens onto a private balcony tub fed by volcanic hot spring water, and dinner arrives as a long seasonal kaiseki procession.",
+   "facts": [
+    {
+     "label": "Room",
+     "value": "East Wing Deluxe Japanese Room"
+    },
+    {
+     "label": "Nights",
+     "value": "1"
+    },
+    {
+     "label": "Booking",
+     "value": "ABC123 (sample)"
+    },
+    {
+     "label": "Includes",
+     "value": "Multi-course kaiseki dinner and breakfast"
+    },
+    {
+     "label": "Toilet",
+     "value": "Separate master bath wet room, independent from toilet"
+    },
+    {
+     "label": "Bath",
+     "value": "Private balcony open-air geothermal tub"
+    }
+   ],
+   "gplace": {
+    "id": "ChIJI2F7QPuhGWARxwS547_PAQI",
+    "name": "Hakone Gora Karaku",
+    "address": "1300-8 Gōra, Hakone, Ashigarashimo District, Kanagawa 250-0408, Japan",
+    "lat": 35.250055,
+    "lng": 139.049632,
+    "local_name": "箱根・強羅 佳ら久",
+    "local_address": "日本、〒250-0408 神奈川県足柄下郡箱根町強羅１３００−８",
+    "language": "ja"
+   }
+  },
+  {
+   "id": "H-03",
+   "city": "Kyoto",
+   "country": "Japan",
+   "start": "2027-04-19",
+   "end": "2027-04-21",
+   "name": "The Thousand Kyoto",
+   "room": "Premier Triple Room",
+   "booking": "Direct / Confirmed",
+   "perks": "3 identical full-sized single beds side-by-side",
+   "confirmation": "",
+   "address": "570 Higashishiokōjichō, Shimogyo Ward, Kyoto, 600-8216, Japan",
+   "blurb": "A calm modern hotel two flat minutes from Kyoto Station, with three matching single beds so nobody draws the short straw.",
+   "facts": [
+    {
+     "label": "Room",
+     "value": "Premier Triple Room"
+    },
+    {
+     "label": "Nights",
+     "value": "2"
+    },
+    {
+     "label": "Booking",
+     "value": "ABC123 (sample)"
+    },
+    {
+     "label": "Beds",
+     "value": "3 identical full-sized singles side-by-side"
+    },
+    {
+     "label": "Bath",
+     "value": "Deep soaking tub"
+    },
+    {
+     "label": "Location",
+     "value": "2-minute flat walk from Kyoto Station"
+    }
+   ],
+   "gplace": {
+    "id": "ChIJibhg0ugJAWAR-h6HazkbLLo",
+    "name": "The Thousand Kyoto",
+    "address": "570 Higashishiokōjichō, Shimogyo Ward, Kyoto, 600-8216, Japan",
+    "lat": 34.98642,
+    "lng": 135.761292,
+    "local_name": "THE THOUSAND KYOTO",
+    "local_address": "日本、〒600-8216 京都府京都市下京区東塩小路町５７０",
+    "language": "ja"
+   }
+  },
+  {
+   "id": "H-04",
+   "city": "Osaka",
+   "country": "Japan",
+   "start": "2027-04-21",
+   "end": "2027-04-22",
+   "name": "The Park Front Hotel at Universal Studios",
+   "room": "Premium Superior Connecting Suite",
+   "booking": "Direct / Confirmed",
+   "perks": "4 beds, Two complete separate master bathrooms",
+   "confirmation": "",
+   "address": "6-chōme-2-52 Shimaya, Konohana Ward, Osaka, 554-0024, Japan",
+   "blurb": "Steps from the Universal gates, a connecting suite built for a park day: four beds and two complete bathrooms, so morning preparation happens in parallel.",
+   "facts": [
+    {
+     "label": "Room",
+     "value": "Premium Superior Connecting Suite"
+    },
+    {
+     "label": "Nights",
+     "value": "1"
+    },
+    {
+     "label": "Booking",
+     "value": "ABC123 (sample)"
+    },
+    {
+     "label": "Beds",
+     "value": "4"
+    },
+    {
+     "label": "Bathrooms",
+     "value": "2 independent toilets, 2 separate showers/tubs"
+    },
+    {
+     "label": "Bath",
+     "value": "Two separate deep-soaking tubs"
+    }
+   ],
+   "gplace": {
+    "id": "ChIJ__8_NJHoAGARNHDjdayadr4",
+    "name": "The Park Front Hotel at Universal Studios Japan",
+    "address": "6-chōme-2-52 Shimaya, Konohana Ward, Osaka, 554-0024, Japan",
+    "lat": 34.667898,
+    "lng": 135.437258,
+    "local_name": "ザ パーク フロント ホテル アット ユニバーサル・スタジオ・ジャパン",
+    "local_address": "日本、〒554-0024 大阪府大阪市此花区島屋６丁目２−５２",
+    "language": "ja"
+   }
+  },
+  {
+   "id": "H-05",
+   "city": "Seoul",
+   "country": "South Korea",
+   "start": "2027-04-22",
+   "end": "2027-04-24",
+   "name": "Conrad Seoul",
+   "room": "Premium 2 Queen Beds River View",
+   "booking": "Amex Fine Hotels + Resorts",
+   "perks": "Free breakfast for 3, $100 credit, Guaranteed 4PM checkout",
+   "confirmation": "",
+   "address": "10 Gukjegeumyung-ro, Yeongdeungpo District, Seoul, South Korea",
+   "blurb": "In Yeouido, the Conrad looks straight out over the Han River, best enjoyed from the tub at the end of a Gwangjang Market evening.",
+   "facts": [
+    {
+     "label": "Room",
+     "value": "Premium 2 Queen Beds River View"
+    },
+    {
+     "label": "Nights",
+     "value": "2"
+    },
+    {
+     "label": "Booking",
+     "value": "ABC123 (sample)"
+    },
+    {
+     "label": "Perks",
+     "value": "Free breakfast for 3, $100 credit, guaranteed 4PM checkout"
+    },
+    {
+     "label": "Bathroom",
+     "value": "Double vanity with enclosed glass water closet"
+    },
+    {
+     "label": "Bath",
+     "value": "Deep-soaking tub with panoramic Han River view"
+    }
+   ],
+   "gplace": {
+    "id": "ChIJbfiu7TuffDUR0gqGAsSRDoc",
+    "name": "Conrad Seoul",
+    "address": "10 Gukjegeumyung-ro, Yeongdeungpo District, Seoul, South Korea",
+    "lat": 37.525334,
+    "lng": 126.926555,
+    "local_name": "콘래드 서울",
+    "local_address": "대한민국 서울특별시 영등포구 국제금융로 10",
+    "language": "ko"
+   }
+  }
+ ],
+ "events": [
+  {
+   "id": "E-01",
+   "date": "2027-04-14",
+   "start": "11:35",
+   "end": "14:20",
+   "title": "International Flight Outbound",
+   "place": "SEA Airport",
+   "type": "Transit",
+   "city": "Seattle -> Tokyo",
+   "status": "booked",
+   "confirmation": "ABC123",
+   "address": "",
+   "cost": "",
+   "notes": "Cross the International Date Line. Rest up on the plane.",
+   "blurb": "The long westward hop from Seattle to Tokyo-Haneda, nonstop over the Pacific and across the International Date Line. Ten and three quarter hours to sleep, read, and arrive a day later.",
+   "facts": [
+    {
+     "label": "Flight",
+     "value": "Delta DL0167 SEA → HND, Airbus A350-900, nonstop, 10h45m"
+    },
+    {
+     "label": "Confirmation",
+     "value": "ABC123 (sample)"
+    },
+    {
+     "label": "Seats",
+     "value": "38G Sam · 38H Alex · 38J Jordan (Delta Main)"
+    },
+    {
+     "label": "Terminal",
+     "value": "SEA Terminal TBD → HND Terminal 3"
+    },
+    {
+     "label": "eTicket",
+     "value": "ABC123 (sample)"
+    },
+    {
+     "label": "Cost",
+     "value": "149,800 miles and $41.33 USD"
+    }
+   ],
+   "dest": "Seattle-Tacoma International Airport, Seattle, Washington, USA",
+   "gplace": {
+    "id": "ChIJ_f7qQlVDkFQRtzfcx8TZ05k",
+    "name": "Seattle-Tacoma International Airport",
+    "address": "17801 International Blvd, SeaTac, WA 98158, USA",
+    "lat": 47.448365,
+    "lng": -122.308593,
+    "local_name": "",
+    "local_address": "",
+    "language": ""
+   },
+   "photo": null,
+   "docs": [
+    "flight",
+    "flight-app"
+   ]
+  },
+  {
+   "id": "E-02",
+   "date": "2027-04-15",
+   "start": "14:20",
+   "end": "15:00",
+   "title": "Haneda Airport Arrival & Customs",
+   "place": "Haneda Terminal",
+   "type": "Transit",
+   "city": "Tokyo",
+   "status": "planned",
+   "confirmation": "",
+   "address": "",
+   "cost": "",
+   "notes": "Clear customs and grab a quick 20-minute taxi straight to the hotel.",
+   "blurb": "Clear immigration and customs at Haneda, then take a taxi straight to the hotel, about twenty minutes.",
+   "facts": [],
+   "dest": "Haneda Airport Terminal 3, Tokyo, Japan",
+   "gplace": {
+    "id": "ChIJEzipOlRhGGAR3-3UwuMqAnI",
+    "name": "Terminal 3",
+    "address": "Terminal 3, 2-chōme-6-5 Hanedakūkō, Ota City, Tokyo 144-0041, Japan",
+    "lat": 35.545461,
+    "lng": 139.768722,
+    "local_name": "第3ターミナル",
+    "local_address": "日本、〒144-0041 東京都大田区羽田空港２丁目６−５ 第3ターミナル",
+    "language": "ja"
+   },
+   "photo": null,
+   "docs": []
+  },
+  {
+   "id": "E-03",
+   "date": "2027-04-15",
+   "start": "15:30",
+   "end": null,
+   "title": "Hotel Check-In & Jet Lag Recovery",
+   "place": "The Okura Tokyo",
+   "type": "Lodging",
+   "city": "Tokyo",
+   "status": "booked",
+   "confirmation": "ABC123",
+   "address": "",
+   "cost": "",
+   "notes": "Settle into the Heritage Wing suite. Enjoy a long deep garden bath soak.",
+   "blurb": "The Okura's Heritage Wing carries the hotel's famous mid-century design into quiet modern rooms. First order of business: a long soak in the deep garden bath and a reset of the body clock.",
+   "facts": [
+    {
+     "label": "Confirmation",
+     "value": "ABC123 (sample)"
+    },
+    {
+     "label": "Address",
+     "value": "2-10-4 Toranomon, Minato-ku, 105-0001"
+    },
+    {
+     "label": "Room",
+     "value": "Heritage Twin Junior Suite, 60sqm, 3 guests (roll-away requested)"
+    },
+    {
+     "label": "Stay",
+     "value": "3 nights; guest Alex Example"
+    },
+    {
+     "label": "Includes",
+     "value": "Breakfast for two daily, $100 property credit, Wi-Fi, 4pm checkout"
+    },
+    {
+     "label": "Cost",
+     "value": "$4,610.98 USD; due at hotel $0.00"
+    }
+   ],
+   "dest": "The Okura Tokyo, Tokyo, Japan",
+   "gplace": {
+    "id": "ChIJuecmcH2LGGARgmOaAPaK9zA",
+    "name": "The Okura Tokyo",
+    "address": "2-chōme-10-4 Toranomon, Minato City, Tokyo 105-0001, Japan",
+    "lat": 35.667175,
+    "lng": 139.74386,
+    "local_name": "オークラ東京",
+    "local_address": "日本、〒105-0001 東京都港区虎ノ門２丁目１０−４",
+    "language": "ja"
+   },
+   "photo": {
+    "file": "photos/c05ace598553ad99.jpg",
+    "focus": "50% 50%",
+    "credit": "Calton",
+    "license": "CC BY-SA 4.0",
+    "page": "https://commons.wikimedia.org/wiki/File:Hotel_Okura_Tokyo_lobby_at_4_a.m.jpg"
+   },
+   "docs": []
+  },
+  {
+   "id": "E-04",
+   "date": "2027-04-16",
+   "start": "13:00",
+   "end": "16:00",
+   "title": "Arigato Travel Daytime Shibuya Food Tour",
+   "place": "JR Shibuya Station, Hachiko Exit",
+   "type": "Activity",
+   "city": "Tokyo",
+   "status": "booked",
+   "confirmation": "ABC123",
+   "address": "Hachiko Exit, JR Shibuya Station, 2-1 Dogenzaka, Shibuya, Tokyo",
+   "cost": "¥79,200",
+   "notes": "BOOKED. 13 distinct regional dishes across 5 spots. Non-alcoholic drinks integrated.",
+   "blurb": "An afternoon walk through Shibuya's backstreets, tasting thirteen regional dishes across five small places with a guide who explains what you are eating and why it matters.",
+   "facts": [
+    {
+     "label": "Confirmation",
+     "value": "ABC123 (sample)"
+    },
+    {
+     "label": "Meeting point",
+     "value": "Outside JR Shibuya Hachiko Exit, by the Hachiko wall mural — not the statue"
+    },
+    {
+     "label": "Landmark",
+     "value": "Between the exit and the Shibuchika entrance, on your left facing the crossing"
+    },
+    {
+     "label": "Meet",
+     "value": "12:45–1:00 PM; guide holds an Arigato Travel sign"
+    },
+    {
+     "label": "Party",
+     "value": "3 adults"
+    },
+    {
+     "label": "Includes",
+     "value": "13 dishes at 5 spots; non-alcoholic drinks"
+    }
+   ],
+   "dest": "Shibuya Station Hachiko Exit, Shibuya, Tokyo, Japan",
+   "gplace": {
+    "id": "ChIJZ5YbSXiLGGAR2bi7lKs5Wh0",
+    "name": "Hachiko Square",
+    "address": "2 Chome-1 Dogenzaka, Shibuya, Tokyo 150-0043, Japan",
+    "lat": 35.65907,
+    "lng": 139.700726,
+    "local_name": "ハチ公前広場",
+    "local_address": "日本、〒150-0043 東京都渋谷区道玄坂２丁目１",
+    "language": "ja"
+   },
+   "photo": {
+    "file": "photos/76d30a5d757db9fd.jpg",
+    "focus": "57% 45%",
+    "credit": "Benh LIEU SONG (Flickr)",
+    "license": "CC BY-SA 2.0",
+    "page": "https://commons.wikimedia.org/wiki/File:Tokyo_Shibuya_Scramble_Crossing_2018-10-09.jpg"
+   },
+   "docs": []
+  },
+  {
+   "id": "E-05",
+   "date": "2027-04-16",
+   "start": "16:00",
+   "end": "17:00",
+   "title": "Pop Culture Shopping Sprint",
+   "place": "Shibuya Parco (Nintendo / Pokemon Center)",
+   "type": "Activity",
+   "city": "Tokyo",
+   "status": "planned",
+   "confirmation": "",
+   "address": "",
+   "cost": "",
+   "notes": "Browse official multi-story stores before car tour check-in.",
+   "blurb": "Shibuya Parco stacks the official Nintendo and Pokémon Center stores a few floors apart, both full of things you cannot buy at home. A browse before the evening pickup.",
+   "facts": [],
+   "dest": "Shibuya PARCO, Shibuya, Tokyo, Japan",
+   "gplace": {
+    "id": "ChIJcyH-4qiMGGARGzk4lZCx2xo",
+    "name": "Shibuya Parco",
+    "address": "Japan, 〒150-8377 Tokyo, Shibuya, Udagawachō, 15−１ 渋谷パルコ・ヒューリックビル B1-10階",
+    "lat": 35.662048,
+    "lng": 139.698777,
+    "local_name": "渋谷PARCO",
+    "local_address": "日本、〒150-8377 東京都渋谷区宇田川町１５−１ 渋谷パルコ・ヒューリックビル B1-10階",
+    "language": "ja"
+   },
+   "photo": {
+    "file": "photos/b22c3678f50982fb.jpg",
+    "focus": "57% 48%",
+    "credit": "江戸村のとくぞう",
+    "license": "CC BY-SA 4.0",
+    "page": "https://commons.wikimedia.org/wiki/File:Shibuya_Parco_200220f.jpg"
+   },
+   "docs": []
+  },
+  {
+   "id": "E-06",
+   "date": "2027-04-16",
+   "start": "17:00",
+   "end": "20:00",
+   "title": "Samurai Car Tour (Wangan & Daikoku PA Cruise)",
+   "place": "Shibuya Pickup -> Daikoku PA",
+   "type": "Activity",
+   "city": "Tokyo",
+   "status": "booked",
+   "confirmation": "ABC123",
+   "address": "",
+   "cost": "¥88,000",
+   "notes": "BOOKED. Private sports car ride with native English guide. Complete by 8 PM for deep sleep.\nOpen question: the timing of this one is not settled yet.",
+   "blurb": "An evening with Tokyo's car culture: a private ride in a Japanese sports car along the Wangan bayside expressway to Daikoku PA, the legendary parking-area gathering spot, with a native English-speaking guide.",
+   "facts": [
+    {
+     "label": "Confirmation",
+     "value": "ABC123 (sample)"
+    },
+    {
+     "label": "Guests",
+     "value": "3"
+    },
+    {
+     "label": "Meeting point",
+     "value": "Unconfirmed — Shibuya Station or hotel pickup in Minato ward"
+    },
+    {
+     "label": "Arrive by",
+     "value": "16:45 for ~5 min vehicle briefing"
+    },
+    {
+     "label": "Getting there",
+     "value": "Come by train or subway, not taxi; message 'I'm here' on arrival"
+    },
+    {
+     "label": "Bring",
+     "value": "Passport or photo ID and International Driving Permit"
+    }
+   ],
+   "dest": "",
+   "gplace": null,
+   "photo": {
+    "file": "photos/f0dbd3e28247ef3f.jpg",
+    "focus": "50% 55%",
+    "credit": "aotaro",
+    "license": "CC BY 2.0",
+    "page": "https://commons.wikimedia.org/wiki/File:Tokyo_Bay_Aqua-Line_Highway_(30700131481).jpg"
+   },
+   "docs": []
+  },
+  {
+   "id": "E-07",
+   "date": "2027-04-17",
+   "start": "08:00",
+   "end": "09:00",
+   "title": "Luggage Forwarding Shipping Window",
+   "place": "The Okura Tokyo Bell Desk",
+   "type": "Logistics",
+   "city": "Tokyo",
+   "status": "critical",
+   "confirmation": "",
+   "address": "",
+   "cost": "",
+   "notes": "CRITICAL. Forward all 3 large bags to The Thousand Kyoto. Pack small overnight bag for Hakone.",
+   "blurb": "Hand the three large bags to the bell desk for forwarding to The Thousand Kyoto, and keep only a small overnight bag for Hakone.",
+   "facts": [
+    {
+     "label": "Note",
+     "value": "Forward all 3 large bags; pack small overnight bag"
+    }
+   ],
+   "dest": "The Okura Tokyo, Tokyo, Japan",
+   "gplace": {
+    "id": "ChIJuecmcH2LGGARgmOaAPaK9zA",
+    "name": "The Okura Tokyo",
+    "address": "2-chōme-10-4 Toranomon, Minato City, Tokyo 105-0001, Japan",
+    "lat": 35.667175,
+    "lng": 139.74386,
+    "local_name": "オークラ東京",
+    "local_address": "日本、〒105-0001 東京都港区虎ノ門２丁目１０−４",
+    "language": "ja"
+   },
+   "photo": null,
+   "docs": []
+  },
+  {
+   "id": "E-08",
+   "date": "2027-04-17",
+   "start": "09:00",
+   "end": "20:00",
+   "title": "Tokyo DisneySea Park Exploration",
+   "place": "Tokyo DisneySea",
+   "type": "Activity",
+   "city": "Tokyo",
+   "status": "booked",
+   "confirmation": "ABC123",
+   "address": "",
+   "cost": "¥12,400 each",
+   "notes": "TICKETS SECURED. Instantly claim Fantasy Springs passes inside mobile app upon entry turnstile scan.",
+   "blurb": "Disney's only sea-themed park, built around a volcano and a Venetian harbour, with Fantasy Springs as the newest quarter. Claim passes in the app as soon as you scan in.",
+   "facts": [
+    {
+     "label": "Tickets",
+     "value": "3 × Adult 1-Day Passport, reservation A00000000000"
+    },
+    {
+     "label": "Confirmation",
+     "value": "ABC123 (sample)"
+    },
+    {
+     "label": "Cost",
+     "value": "¥12,400 each; ¥37,200 total, paid by credit card"
+    },
+    {
+     "label": "Entry",
+     "value": "Tokyo Disney Resort App or ticket code"
+    },
+    {
+     "label": "Note",
+     "value": "No cancellations or refunds; date changes online only; valid to 2027-09-17"
+    }
+   ],
+   "dest": "Tokyo DisneySea, Urayasu, Chiba, Japan",
+   "gplace": {
+    "id": "ChIJszdHEQN9GGARJS23SnAdR0E",
+    "name": "Tokyo DisneySea",
+    "address": "1-13 Maihama, Urayasu, Chiba 279-8511, Japan",
+    "lat": 35.626711,
+    "lng": 139.885078,
+    "local_name": "東京ディズニーシー",
+    "local_address": "日本、〒279-8511 千葉県浦安市舞浜１−１３",
+    "language": "ja"
+   },
+   "photo": {
+    "file": "photos/31bab96ec8be0b8c.jpg",
+    "focus": "55% 45%",
+    "credit": "Wing1990hk",
+    "license": "CC BY 3.0",
+    "page": "https://commons.wikimedia.org/wiki/File:Tokyo_DisneySea_Mediterranean_Harbour_View1_201306.jpg"
+   },
+   "docs": []
+  },
+  {
+   "id": "E-09",
+   "date": "2027-04-17",
+   "start": "20:30",
+   "end": null,
+   "title": "Late-Night T-Market Grazing",
+   "place": "Toranomon Hills T-Market",
+   "type": "Food",
+   "city": "Tokyo",
+   "status": "planned",
+   "confirmation": "",
+   "address": "",
+   "cost": "",
+   "notes": "Scan single QR code to sample premium sushi, artisan pizzas, and smash burgers together.",
+   "blurb": "A late food hall under Toranomon Hills where one QR code covers the lot: premium sushi, artisan pizza and smash burgers eaten at the same table.",
+   "facts": [],
+   "dest": "T-MARKET Toranomon Hills Station Tower, Tokyo, Japan",
+   "gplace": {
+    "id": "ChIJ2wXibQCLGGARaDuIZB1_VSc",
+    "name": "T-MARKET | TORANOMON HILLS",
+    "address": "Japan, 〒105-0001 Tokyo, Minato City, Toranomon, 2-chōme−6−３ 虎ノ門ヒルズステーションタワー B2F",
+    "lat": 35.667482,
+    "lng": 139.746985,
+    "local_name": "T-MARKET",
+    "local_address": "日本、〒105-0001 東京都港区虎ノ門２丁目６−３ 虎ノ門ヒルズステーションタワー B2F",
+    "language": "ja"
+   },
+   "photo": null,
+   "docs": []
+  },
+  {
+   "id": "E-10",
+   "date": "2027-04-18",
+   "start": "13:15",
+   "end": "13:30",
+   "title": "FHR Checkout & Taxi to Shinjuku",
+   "place": "Shinjuku Station",
+   "type": "Transit",
+   "city": "Tokyo -> Hakone",
+   "status": "planned",
+   "confirmation": "",
+   "address": "",
+   "cost": "",
+   "notes": "Maximize 4 PM checkout availability. Travel light with overnight packs only.",
+   "blurb": "Check out late, then taxi to Shinjuku Station for the run to Hakone, carrying overnight packs only.",
+   "facts": [
+    {
+     "label": "Note",
+     "value": "Guaranteed 4pm checkout available"
+    }
+   ],
+   "dest": "The Okura Tokyo, Tokyo, Japan",
+   "gplace": {
+    "id": "ChIJuecmcH2LGGARgmOaAPaK9zA",
+    "name": "The Okura Tokyo",
+    "address": "2-chōme-10-4 Toranomon, Minato City, Tokyo 105-0001, Japan",
+    "lat": 35.667175,
+    "lng": 139.74386,
+    "local_name": "オークラ東京",
+    "local_address": "日本、〒105-0001 東京都港区虎ノ門２丁目１０−４",
+    "language": "ja"
+   },
+   "photo": null,
+   "docs": []
+  },
+  {
+   "id": "E-11",
+   "date": "2027-04-18",
+   "start": "13:40",
+   "end": "14:55",
+   "title": "Odakyu Romancecar Panoramic Rail",
+   "place": "Shinjuku -> Hakone-Yumoto",
+   "type": "Transit",
+   "city": "Tokyo -> Hakone",
+   "status": "booked",
+   "confirmation": "ABC123",
+   "address": "",
+   "cost": "¥3,450",
+   "notes": "Scenic limited express train with massive viewing windows. Relaxing city-to-mountain escape.",
+   "blurb": "Odakyu's flagship Romancecar glides from Shinjuku's towers to the foot of the Hakone mountains, its panoramic windows turning the ride itself into sightseeing.",
+   "facts": [
+    {
+     "label": "Train",
+     "value": "Romancecar Hakone 21 (GSE)"
+    },
+    {
+     "label": "Route",
+     "value": "Shinjuku Station → Hakone-Yumoto"
+    },
+    {
+     "label": "Seats",
+     "value": "Car 1: 9A, 10A, 10B (3 adults, Standard)"
+    },
+    {
+     "label": "Cost",
+     "value": "¥3,450"
+    },
+    {
+     "label": "Note",
+     "value": "Basic fare tickets or freepass needed separately to board"
+    }
+   ],
+   "dest": "Odakyu Shinjuku Station, Shinjuku, Tokyo, Japan",
+   "gplace": {
+    "id": "ChIJVVWFxNCMGGARmdqTOf2pZ2Q",
+    "name": "Odakyu Shinjuku Station",
+    "address": "Odakyu Shinjuku Station, 1-chōme-1 Nishishinjuku, Shinjuku City, Tokyo 160-0023, Japan",
+    "lat": 35.690584,
+    "lng": 139.699554,
+    "local_name": "小田急電鉄 新宿駅",
+    "local_address": "日本、〒160-0023 東京都新宿区西新宿１丁目１ 小田急電鉄 新宿駅",
+    "language": "ja"
+   },
+   "photo": {
+    "file": "photos/30c300002fd4ca84.jpg",
+    "focus": "68% 50%",
+    "credit": "MaedaAkihiko",
+    "license": "CC BY-SA 4.0",
+    "page": "https://commons.wikimedia.org/wiki/File:Odakyu.type50000.jpg"
+   },
+   "docs": []
+  },
+  {
+   "id": "E-12",
+   "date": "2027-04-18",
+   "start": "15:05",
+   "end": "15:45",
+   "title": "Hakone Tozan Railway Mountain Switchbacks",
+   "place": "Hakone-Yumoto -> Gora Station",
+   "type": "Transit",
+   "city": "Tokyo -> Hakone",
+   "status": "planned",
+   "confirmation": "",
+   "address": "",
+   "cost": "",
+   "notes": "Historic rail scaling deep ravines, bridges, and dense forest canopies straight to Gora.",
+   "blurb": "Japan's oldest mountain railway climbs to Gora by a series of switchbacks, crossing ravines and bridges with forest pressing close to the windows.",
+   "facts": [
+    {
+     "label": "Route",
+     "value": "Hakone-Yumoto → Gora Station"
+    }
+   ],
+   "dest": "Hakone-Yumoto Station, Hakone, Kanagawa, Japan",
+   "gplace": {
+    "id": "ChIJcX9RE3WjGWARooaTIj-NpZs",
+    "name": "Hakone-Yumoto Station",
+    "address": "Yumoto, Hakone, Ashigarashimo District, Kanagawa 250-0311, Japan",
+    "lat": 35.233282,
+    "lng": 139.103588,
+    "local_name": "箱根湯本駅",
+    "local_address": "日本、〒250-0311 神奈川県足柄下郡箱根町湯本",
+    "language": "ja"
+   },
+   "photo": {
+    "file": "photos/17d1fb549304d551.jpg",
+    "focus": "50% 45%",
+    "credit": "Kuroc622",
+    "license": "CC0",
+    "page": "https://commons.wikimedia.org/wiki/File:Hakone_tozan_railway_103_in_Deyama_bridge.jpg"
+   },
+   "docs": []
+  },
+  {
+   "id": "E-13",
+   "date": "2027-04-18",
+   "start": "16:00",
+   "end": null,
+   "title": "Ryokan Relaxation & Balcony Onsen",
+   "place": "Hakone Gora Karaku",
+   "type": "Lodging",
+   "city": "Hakone",
+   "status": "booked",
+   "confirmation": "ABC123",
+   "address": "",
+   "cost": "",
+   "notes": "Watch sunset from private volcanic hot spring balcony. Traditional multi-course Kaiseki dinner at 6:30 PM.",
+   "blurb": "A modern ryokan high in Gora, where the room's open-air volcanic bath looks out over the hills at sunset and dinner arrives as a multi-course kaiseki.",
+   "facts": [
+    {
+     "label": "Confirmation",
+     "value": "ABC123 (sample)"
+    },
+    {
+     "label": "Room",
+     "value": "East Wing upper-floor Deluxe, Japanese style with open-air bath"
+    },
+    {
+     "label": "Check-in",
+     "value": "15:00–17:00 window, arrival stated 16:00; check-out 11:00"
+    },
+    {
+     "label": "Dinner",
+     "value": "Main dining Mutsuki, seating 17:00–17:30"
+    },
+    {
+     "label": "Includes",
+     "value": "Museum admission ticket ('泊りがけでモネ')"
+    },
+    {
+     "label": "Note",
+     "value": "Pay on site; allergies noted for Jordan (fruit, nuts)"
+    }
+   ],
+   "dest": "Hakone Gora Karaku, Hakone, Kanagawa, Japan",
+   "gplace": {
+    "id": "ChIJI2F7QPuhGWARxwS547_PAQI",
+    "name": "Hakone Gora Karaku",
+    "address": "1300-8 Gōra, Hakone, Ashigarashimo District, Kanagawa 250-0408, Japan",
+    "lat": 35.250055,
+    "lng": 139.049632,
+    "local_name": "箱根・強羅 佳ら久",
+    "local_address": "日本、〒250-0408 神奈川県足柄下郡箱根町強羅１３００−８",
+    "language": "ja"
+   },
+   "photo": {
+    "file": "photos/9b0856a10dceb69b.jpg",
+    "focus": "45% 50%",
+    "credit": "Michael Casim",
+    "license": "CC BY 2.0",
+    "page": "https://commons.wikimedia.org/wiki/File:%E5%AD%A3%E3%81%AE%E6%B9%AF_%E9%9B%AA%E6%9C%88%E8%8A%B1_%E7%AE%B1%E6%A0%B9%E5%BC%B7%E7%BE%85%E6%B8%A9%E6%B3%89_Apr_2,_2015.jpg"
+   },
+   "docs": [
+    "ryokan"
+   ]
+  },
+  {
+   "id": "E-14",
+   "date": "2027-04-19",
+   "start": "10:00",
+   "end": "13:00",
+   "title": "Tozan Railway Down & Shinkansen Bullet Train",
+   "place": "Odawara Station -> Kyoto Station",
+   "type": "Transit",
+   "city": "Hakone -> Kyoto",
+   "status": "planned",
+   "confirmation": "",
+   "address": "",
+   "cost": "",
+   "notes": "Speed westbound across Honshu via high-speed Shinkansen loop (under 2 hours).",
+   "blurb": "Down the mountain by Tozan rail to Odawara, then westward across Honshu by Shinkansen, reaching Kyoto in under two hours.",
+   "facts": [
+    {
+     "label": "Route",
+     "value": "Odawara Station → Kyoto Station"
+    }
+   ],
+   "dest": "Gora Station, Hakone, Kanagawa, Japan",
+   "gplace": {
+    "id": "ChIJ4XzP4vihGWART3zwwK1mU94",
+    "name": "Gora Station",
+    "address": "Gora, Hakone, Ashigarashimo District, Kanagawa 250-0408, Japan",
+    "lat": 35.250852,
+    "lng": 139.048205,
+    "local_name": "強羅駅",
+    "local_address": "日本、〒250-0408 神奈川県足柄下郡箱根町強羅",
+    "language": "ja"
+   },
+   "photo": {
+    "file": "photos/81a59e97af82c6a1.jpg",
+    "focus": "50% 45%",
+    "credit": "Takeshi Aida",
+    "license": "CC BY-SA 2.0",
+    "page": "https://commons.wikimedia.org/wiki/File:Shinkansen_N700S_series_photographed_at_Higashi-Tagonoura_with_Mount_Fuji_in_the_background,_10_April_2023.jpg"
+   },
+   "docs": []
+  },
+  {
+   "id": "E-15",
+   "date": "2027-04-19",
+   "start": "13:15",
+   "end": "13:45",
+   "title": "Luggage Recovery & Quick Check-In",
+   "place": "The Thousand Kyoto",
+   "type": "Lodging",
+   "city": "Kyoto",
+   "status": "booked",
+   "confirmation": "ABC123",
+   "address": "",
+   "cost": "",
+   "notes": "2-min walk from station exit. Large suitcases from Tokyo will be waiting safely at front desk.",
+   "blurb": "A calm, contemporary hotel two minutes from Kyoto Station, where the large suitcases forwarded from Tokyo are waiting at the front desk.",
+   "facts": [
+    {
+     "label": "Confirmation",
+     "value": "ABC123 (sample)"
+    },
+    {
+     "label": "Room",
+     "value": "Superior Familiar King, 2 nights, 3 adults"
+    },
+    {
+     "label": "Address",
+     "value": "570 Higashi Shiokoji cho, Shimogyo-ku, Kyoto 600-8216"
+    },
+    {
+     "label": "Check-in",
+     "value": "After 15:00; check-out before 12:00"
+    },
+    {
+     "label": "Cost",
+     "value": "JPY 205,020 (JPY 102,510/night, I Prefer Member Rate)"
+    },
+    {
+     "label": "Note",
+     "value": "Kyoto accommodation tax charged at check-in"
+    }
+   ],
+   "dest": "The Thousand Kyoto, Kyoto, Japan",
+   "gplace": {
+    "id": "ChIJibhg0ugJAWAR-h6HazkbLLo",
+    "name": "The Thousand Kyoto",
+    "address": "570 Higashishiokōjichō, Shimogyo Ward, Kyoto, 600-8216, Japan",
+    "lat": 34.98642,
+    "lng": 135.761292,
+    "local_name": "THE THOUSAND KYOTO",
+    "local_address": "日本、〒600-8216 京都府京都市下京区東塩小路町５７０",
+    "language": "ja"
+   },
+   "photo": null,
+   "docs": []
+  },
+  {
+   "id": "E-16",
+   "date": "2027-04-19",
+   "start": "14:00",
+   "end": "16:30",
+   "title": "teamLab Biovortex Kyoto Digital Art Museum",
+   "place": "Kyoto Station Complex Adjacent",
+   "type": "Activity",
+   "city": "Kyoto",
+   "status": "booked",
+   "confirmation": "ABC123",
+   "address": "",
+   "cost": "JPY 36,000",
+   "notes": "TICKETS SECURED (FLEXIBLE). Giant 10,000 sqm dry foot indoor layout. Wear pants for mirror floors.",
+   "blurb": "teamLab's Kyoto museum spreads digital artworks across 10,000 square metres of dry, walkable galleries, with mirrored floors and rooms that respond as you move.",
+   "facts": [
+    {
+     "label": "Confirmation",
+     "value": "ABC123 (sample)"
+    },
+    {
+     "label": "Tickets",
+     "value": "3 × Flexible Pass"
+    },
+    {
+     "label": "Cost",
+     "value": "JPY 36,000"
+    },
+    {
+     "label": "Address",
+     "value": "21-5 Higashikujo Higashi-Iwamotocho, Minami-ku"
+    },
+    {
+     "label": "Note",
+     "value": "Date/time changeable up to 3 times, until 2 hours before admission"
+    },
+    {
+     "label": "Dress",
+     "value": "Wear pants for mirror floors"
+    }
+   ],
+   "dest": "teamLab Biovortex Kyoto, Kyoto, Japan",
+   "gplace": {
+    "id": "ChIJUW4XawAJAWARO8Dp88_nego",
+    "name": "teamLab Biovortex Kyoto",
+    "address": "21-5 Higashikujō Higashiiwamotochō, Minami Ward, Kyoto, 601-8006, Japan",
+    "lat": 34.983716,
+    "lng": 135.764937,
+    "local_name": "チームラボ バイオヴォルテックス 京都 - 大成建設",
+    "local_address": "日本、〒601-8006 京都府京都市南区東九条東岩本町２１−５",
+    "language": "ja"
+   },
+   "photo": {
+    "file": "photos/437e4010a9709454.jpg",
+    "focus": "62% 55%",
+    "credit": "Indiana jo",
+    "license": "CC BY-SA 4.0",
+    "page": "https://commons.wikimedia.org/wiki/File:TOKIO_INKARAMI_in_Tadasu_Forest_Shimogamo_Shrine_06.jpg"
+   },
+   "docs": []
+  },
+  {
+   "id": "E-18",
+   "date": "2027-04-20",
+   "start": "07:45",
+   "end": "09:00",
+   "title": "Fushimi Inari Taisha Crowdless Hike",
+   "place": "Inari Station (JR Nara Line)",
+   "type": "Activity",
+   "city": "Kyoto -> Nara",
+   "status": "planned",
+   "confirmation": "",
+   "address": "",
+   "cost": "",
+   "notes": "Beat the tour buses. Hike through tunnels of thousands of vermilion torii gates at 7:50 AM.",
+   "blurb": "Thousands of vermilion torii gates thread up the wooded slopes of Mount Inari. An early start buys quiet paths before the tour buses arrive.",
+   "facts": [
+    {
+     "label": "Meeting point",
+     "value": "Inari Station (JR Nara Line)"
+    },
+    {
+     "label": "Start",
+     "value": "On the trail by 7:50 AM"
+    }
+   ],
+   "dest": "Inari Station, JR Nara Line, Kyoto, Japan",
+   "gplace": {
+    "id": "ChIJyT2StWoPAWARKSYycYJ85X4",
+    "name": "Inari Station",
+    "address": "Fukakusa Inarionmaecho, Fushimi Ward, Kyoto, 612-0881, Japan",
+    "lat": 34.966807,
+    "lng": 135.77085,
+    "local_name": "稲荷駅",
+    "local_address": "日本、〒612-0881 京都府京都市伏見区深草稲荷御前町",
+    "language": "ja"
+   },
+   "photo": {
+    "file": "photos/f74cf5590aaec82c.jpg",
+    "focus": "50% 55%",
+    "credit": "Luka Peternel",
+    "license": "CC BY-SA 4.0",
+    "page": "https://commons.wikimedia.org/wiki/File:Fushimi-Inari-Shrine-Senbon-Torii-2018-Luka-Peternel.jpg"
+   },
+   "docs": []
+  },
+  {
+   "id": "E-19",
+   "date": "2027-04-20",
+   "start": "10:00",
+   "end": "10:30",
+   "title": "Nakatanidou High-Speed Mochi Pounding",
+   "place": "Sanjo-dori Street, Nara",
+   "type": "Activity",
+   "city": "Nara",
+   "status": "planned",
+   "confirmation": "",
+   "address": "",
+   "cost": "",
+   "notes": "LOCKED IN. Watch national champion pounding spectacle. Eat fresh warm Yomogi Mochi.",
+   "blurb": "Nakatanidou's mochi pounders work at startling speed, drawing a crowd on Sanjo-dori. The reward is warm yomogi mochi eaten on the spot.",
+   "facts": [
+    {
+     "label": "Address",
+     "value": "Sanjo-dori Street, Nara"
+    }
+   ],
+   "dest": "Nakatanidou, Sanjo-dori, Nara, Japan",
+   "gplace": {
+    "id": "ChIJmzwHEog5AWARiML9vXtSFso",
+    "name": "Nakatanidou",
+    "address": "29 Hashimotochō, Nara, 630-8217, Japan",
+    "lat": 34.681943,
+    "lng": 135.8289,
+    "local_name": "中谷堂",
+    "local_address": "日本、〒630-8217 奈良県奈良市橋本町２９",
+    "language": "ja"
+   },
+   "photo": {
+    "file": "photos/c27a69e7f7e36f6f.jpg",
+    "focus": "55% 55%",
+    "credit": "Dimethylsulfoxid",
+    "license": "CC BY-SA 4.0",
+    "page": "https://commons.wikimedia.org/wiki/File:Mochi_Herstellung.jpg"
+   },
+   "docs": []
+  },
+  {
+   "id": "E-20",
+   "date": "2027-04-20",
+   "start": "10:30",
+   "end": "12:30",
+   "title": "Nara Park Bowing Deer & Giant Buddha",
+   "place": "Nara Park / Todai-ji Temple",
+   "type": "Activity",
+   "city": "Nara",
+   "status": "planned",
+   "confirmation": "",
+   "address": "",
+   "cost": "",
+   "notes": "Interact with wild deer and view the world's largest bronze Buddha statue in timber hall.",
+   "blurb": "Nara Park's free-roaming deer bow for crackers, and nearby Todai-ji shelters the world's largest bronze Buddha inside a vast timber hall.",
+   "facts": [
+    {
+     "label": "Place",
+     "value": "Nara Park / Todai-ji Temple"
+    }
+   ],
+   "dest": "Todai-ji Temple, Nara, Japan",
+   "gplace": {
+    "id": "ChIJ3XYIepA5AWARjzzVnT-skPg",
+    "name": "Tōdai-ji",
+    "address": "406-1 Zōshichō, Nara, 630-8587, Japan",
+    "lat": 34.688985,
+    "lng": 135.839816,
+    "local_name": "東大寺",
+    "local_address": "日本、〒630-8587 奈良県奈良市雑司町４０６−１",
+    "language": "ja"
+   },
+   "photo": {
+    "file": "photos/5f34a4a1af13f1bd.jpg",
+    "focus": "55% 55%",
+    "credit": "Daniel Lu (User:dllu)",
+    "license": "CC BY-SA 4.0",
+    "page": "https://commons.wikimedia.org/wiki/File:Sika_deer_doe_and_fawn_Nara_2027_dllu.jpg"
+   },
+   "docs": []
+  },
+  {
+   "id": "E-21",
+   "date": "2027-04-20",
+   "start": "13:15",
+   "end": "16:00",
+   "title": "Nishiki Market Street Food Lunch Crawl",
+   "place": "Nishiki Market Arcade",
+   "type": "Food",
+   "city": "Kyoto",
+   "status": "planned",
+   "confirmation": "",
+   "address": "",
+   "cost": "",
+   "notes": "Graze indoor stalls for lunch: sample grilled Wagyu skewers, soy milk donuts, and local pickles.",
+   "blurb": "Kyoto's narrow covered market runs several blocks of specialist stalls. Lunch is assembled as you walk: wagyu skewers, soy milk donuts, local pickles.",
+   "facts": [
+    {
+     "label": "Place",
+     "value": "Nishiki Market Arcade"
+    }
+   ],
+   "dest": "Nishiki Market, Kyoto, Japan",
+   "gplace": {
+    "id": "ChIJT8uMzZwIAWARnGzsARCjnrY",
+    "name": "Nishiki Market",
+    "address": "Higashiuoyacho, Nakagyo Ward, Kyoto, 604-8055, Japan",
+    "lat": 35.005026,
+    "lng": 135.764723,
+    "local_name": "錦市場",
+    "local_address": "日本、〒604-8055 京都府京都市中京区東魚屋町",
+    "language": "ja"
+   },
+   "photo": {
+    "file": "photos/853c193577d63ac0.jpg",
+    "focus": "45% 55%",
+    "credit": "jmsuarez",
+    "license": "CC BY 2.0",
+    "page": "https://commons.wikimedia.org/wiki/File:Maguro_zuke_kushi_closeup_by_jmsuarez_in_Nishiki_Ichiba,_Kyoto.jpg"
+   },
+   "docs": []
+  },
+  {
+   "id": "E-22",
+   "date": "2027-04-21",
+   "start": "06:45",
+   "end": "07:00",
+   "title": "Same-Day Luggage Forwarding Drop",
+   "place": "The Thousand Kyoto Front Desk",
+   "type": "Logistics",
+   "city": "Kyoto -> Osaka",
+   "status": "planned",
+   "confirmation": "",
+   "address": "",
+   "cost": "",
+   "notes": "Drop large bags by 9 AM for instant hands-free delivery straight to your Osaka suite.",
+   "blurb": "Hand over the large bags at the front desk for same-day forwarding to the Osaka suite, so the day's travel stays hands-free.",
+   "facts": [
+    {
+     "label": "Drop by",
+     "value": "9 AM"
+    },
+    {
+     "label": "Meeting point",
+     "value": "The Thousand Kyoto front desk"
+    },
+    {
+     "label": "Delivery",
+     "value": "Direct to Osaka suite"
+    }
+   ],
+   "dest": "The Thousand Kyoto, Kyoto, Japan",
+   "gplace": {
+    "id": "ChIJibhg0ugJAWAR-h6HazkbLLo",
+    "name": "The Thousand Kyoto",
+    "address": "570 Higashishiokōjichō, Shimogyo Ward, Kyoto, 600-8216, Japan",
+    "lat": 34.98642,
+    "lng": 135.761292,
+    "local_name": "THE THOUSAND KYOTO",
+    "local_address": "日本、〒600-8216 京都府京都市下京区東塩小路町５７０",
+    "language": "ja"
+   },
+   "photo": null,
+   "docs": []
+  },
+  {
+   "id": "E-34",
+   "date": "2027-04-21",
+   "start": "07:00",
+   "end": "08:00",
+   "title": "JR Kyoto Line to Osaka",
+   "place": "Kyoto Station (JR Kyoto Line)",
+   "type": "Transit",
+   "city": "Kyoto -> Osaka",
+   "status": "planned",
+   "confirmation": "",
+   "address": "",
+   "cost": "",
+   "notes": "",
+   "blurb": "The straightforward rail hop from Kyoto to Osaka, a short ride on the JR Kyoto Line through the valley between the two cities.",
+   "facts": [
+    {
+     "label": "Departs",
+     "value": "Kyoto Station (JR Kyoto Line)"
+    }
+   ],
+   "dest": "Kyoto Station, Kyoto, Japan",
+   "gplace": {
+    "id": "ChIJ7wKLka4IAWARCByidG5EGrY",
+    "name": "Kyoto Station",
+    "address": "Higashishiokoji Kamadonocho, Shimogyo Ward, Kyoto, 600-8216, Japan",
+    "lat": 34.985849,
+    "lng": 135.758767,
+    "local_name": "京都駅",
+    "local_address": "日本、〒600-8216 京都府京都市下京区東塩小路釜殿町",
+    "language": "ja"
+   },
+   "photo": null,
+   "docs": []
+  },
+  {
+   "id": "E-23",
+   "date": "2027-04-21",
+   "start": "08:00",
+   "end": "18:00",
+   "title": "Universal Studios Japan Expedition",
+   "place": "Universal Studios Japan",
+   "type": "Activity",
+   "city": "Osaka",
+   "status": "booked",
+   "confirmation": "ABC123",
+   "address": "",
+   "cost": "¥9,900 each (Studio Pass)",
+   "notes": "CRITICAL. Express Passes open 60 days out (Aug 22, 2027) for Super Nintendo World access.",
+   "blurb": "A full day at Universal Studios Japan, where Super Nintendo World puts you inside a life-size Mushroom Kingdom alongside the park's film-set streets and headline rides.",
+   "facts": [
+    {
+     "label": "Confirmation",
+     "value": "ABC123 (sample)"
+    },
+    {
+     "label": "Tickets",
+     "value": "3 adult 1-Day Studio Passes + 3 Express Pass Premium Unlimited"
+    },
+    {
+     "label": "Cost",
+     "value": "¥9,900 each (Studio Pass)"
+    },
+    {
+     "label": "E-tickets",
+     "value": "ABC123 (sample)"
+    },
+    {
+     "label": "Ticket code",
+     "value": "AD00DIDAT1D00H (Adult 12+)"
+    },
+    {
+     "label": "Note",
+     "value": "Print QR; each guest scans own; no re-entry; non-refundable"
+    }
+   ],
+   "dest": "Universal Studios Japan, Osaka, Japan",
+   "gplace": {
+    "id": "ChIJXeLVg9DgAGARqlIyMCX-BTY",
+    "name": "Universal Studios Japan",
+    "address": "2-chōme-1-33 Sakurajima, Konohana Ward, Osaka, 554-0031, Japan",
+    "lat": 34.665677,
+    "lng": 135.432319,
+    "local_name": "ユニバーサル・スタジオ・ジャパン",
+    "local_address": "日本、〒554-0031 大阪府大阪市此花区桜島２丁目１−３３",
+    "language": "ja"
+   },
+   "photo": {
+    "file": "photos/6f7c816975c2a991.jpg",
+    "focus": "50% 50%",
+    "credit": "Japanexperterna.se",
+    "license": "CC BY-SA 2.0",
+    "page": "https://commons.wikimedia.org/wiki/File:Super_Nintendo_World_Theme_Park_at_USJ_Osaka_Evening_Sky.jpg"
+   },
+   "docs": []
+  },
+  {
+   "id": "E-24",
+   "date": "2027-04-21",
+   "start": "18:15",
+   "end": null,
+   "title": "Suite Check-In & Neon Dotonbori Dinner",
+   "place": "The Park Front Hotel -> Dotonbori",
+   "type": "Lodging",
+   "city": "Osaka",
+   "status": "booked",
+   "confirmation": "ABC123",
+   "address": "",
+   "cost": "",
+   "notes": "Large bags waiting in room. Two master bathrooms to refresh seamlessly before eating Takoyaki.",
+   "blurb": "Check in beside the park, then head for Dotonbori, where the neon signs and canal reflections frame a dinner of takoyaki and street food.",
+   "facts": [
+    {
+     "label": "Confirmation",
+     "value": "ABC123 (sample)"
+    },
+    {
+     "label": "Hotel",
+     "value": "The Park Front Hotel at Universal Studios Japan"
+    },
+    {
+     "label": "Address",
+     "value": "6-2-52 Shimaya, Osaka 554-0024"
+    },
+    {
+     "label": "Room",
+     "value": "Premium Superior Connecting Room, 3 adults, 1 night"
+    },
+    {
+     "label": "Check-in / out",
+     "value": "15:00 / 12:00"
+    },
+    {
+     "label": "Cost",
+     "value": "JPY 76,000.00, pay at front desk"
+    }
+   ],
+   "dest": "The Park Front Hotel at Universal Studios, Osaka, Japan",
+   "gplace": {
+    "id": "ChIJ__8_NJHoAGARNHDjdayadr4",
+    "name": "The Park Front Hotel at Universal Studios Japan",
+    "address": "6-chōme-2-52 Shimaya, Konohana Ward, Osaka, 554-0024, Japan",
+    "lat": 34.667898,
+    "lng": 135.437258,
+    "local_name": "ザ パーク フロント ホテル アット ユニバーサル・スタジオ・ジャパン",
+    "local_address": "日本、〒554-0024 大阪府大阪市此花区島屋６丁目２−５２",
+    "language": "ja"
+   },
+   "photo": {
+    "file": "photos/eb355493325bc038.jpg",
+    "focus": "60% 45%",
+    "credit": "そらみみ",
+    "license": "CC BY-SA 4.0",
+    "page": "https://commons.wikimedia.org/wiki/File:Glico_Man_Neon_Sign_and_Ebisubashi_Bridge_at_night.jpg"
+   },
+   "docs": []
+  },
+  {
+   "id": "E-25",
+   "date": "2027-04-22",
+   "start": "10:30",
+   "end": "11:30",
+   "title": "Studio Escape Puzzle Challenge",
+   "place": "Studio Escape Daikokucho (Naniwa Ward)",
+   "type": "Activity",
+   "city": "Osaka -> Seoul",
+   "status": "booked",
+   "confirmation": "ABC123",
+   "address": "1-6-17 Shikitsunishi, Naniwa Ward, Osaka 556-0015",
+   "cost": "",
+   "notes": "BOOKED. Premium high-energy escape room. Breakout by 11:30 AM.\nOpen question: the timing of this one is not settled yet.",
+   "blurb": "Shadow Zen is a premium, high-energy escape room played in English at Studio Escape's Daikokucho branch, a short walk from Daikoku-cho Station. Sixty-odd minutes of locks, clues and a countdown; the plan is to break out by 11:30.",
+   "facts": [
+    {
+     "label": "Confirmation",
+     "value": "ABC123 (sample)"
+    },
+    {
+     "label": "Address",
+     "value": "1-6-17 Shikitsunishi, Naniwa Ward, Osaka 556-0015"
+    },
+    {
+     "label": "Getting there",
+     "value": "7 min from Daikoku-cho Stn (Midosuji Line) exit 2 — not Universal CityWalk"
+    },
+    {
+     "label": "Cost",
+     "value": "14,400 JPY, paid in full — 3 participants (Alex Example)"
+    },
+    {
+     "label": "Check-in",
+     "value": "Arrive 5 min before; over 15 min late counts as same-day cancellation"
+    },
+    {
+     "label": "Note",
+     "value": "Timing clash with the 12:15 KIX bus — consider a later bus or OCAT/Namba"
+    }
+   ],
+   "dest": "Studio Escape, 1-6-17 Shikitsunishi, Naniwa Ward, Osaka 556-0015, Japan",
+   "gplace": {
+    "id": "ChIJ05eB9HHnAGARdV__LtxYigI",
+    "name": "Studio Escape ShadowZen 大国町店 - 漆黒の悟り",
+    "address": "Japan, 〒556-0015 Osaka, Naniwa Ward, Shikitsunishi, 1-chōme−6−１７ Sakuta Building, 1階(公園側入口",
+    "lat": 34.659191,
+    "lng": 135.495881,
+    "local_name": "Studio Escape - 漆黒の悟り",
+    "local_address": "日本、〒556-0015 大阪府大阪市浪速区敷津西１丁目６−１７ 作田ビル 1階(公園側入口",
+    "language": "ja"
+   },
+   "photo": null,
+   "docs": []
+  },
+  {
+   "id": "E-26",
+   "date": "2027-04-22",
+   "start": "12:15",
+   "end": "13:30",
+   "title": "KIX Limousine Bus Transit",
+   "place": "Hotel Curb -> KIX Terminal 1",
+   "type": "Transit",
+   "city": "Osaka -> Seoul",
+   "status": "planned",
+   "confirmation": "",
+   "address": "",
+   "cost": "",
+   "notes": "Pick up bags from lobby, toss into bus hold. Smooth 70-min direct highway ride to T1.",
+   "blurb": "Collect the bags in the lobby and load them into the bus hold for the direct highway run to Kansai Airport Terminal 1.",
+   "facts": [
+    {
+     "label": "Route",
+     "value": "Hotel curb to KIX Terminal 1"
+    },
+    {
+     "label": "Duration",
+     "value": "About 70 minutes, direct"
+    }
+   ],
+   "dest": "The Park Front Hotel at Universal Studios, Osaka, Japan",
+   "gplace": {
+    "id": "ChIJ__8_NJHoAGARNHDjdayadr4",
+    "name": "The Park Front Hotel at Universal Studios Japan",
+    "address": "6-chōme-2-52 Shimaya, Konohana Ward, Osaka, 554-0024, Japan",
+    "lat": 34.667898,
+    "lng": 135.437258,
+    "local_name": "ザ パーク フロント ホテル アット ユニバーサル・スタジオ・ジャパン",
+    "local_address": "日本、〒554-0024 大阪府大阪市此花区島屋６丁目２−５２",
+    "language": "ja"
+   },
+   "photo": null,
+   "docs": []
+  },
+  {
+   "id": "I-189acc49",
+   "date": "2027-04-22",
+   "start": "16:00",
+   "end": "11:00",
+   "title": "Conrad Seoul (Amex FHR)",
+   "place": "Conrad Seoul, 10 Gukjegeumyung-ro, Yeongdeungpo-gu, +00 00-0000-0000",
+   "type": "Lodging",
+   "city": "Seoul",
+   "status": "booked",
+   "confirmation": "ABC123",
+   "address": "",
+   "cost": "$1,589.72",
+   "notes": "2 nights, Premium Room 2 Queen Beds River View, 3 guests, guest Alex Example; FHR benefits: daily breakfast for two, $100 property credit, Wi-Fi, room upgrade when available, guaranteed 4pm check-out (requested); refundable, but cancel between April 21 23:59 and April 22 23:59 local = 1 night fee; $0 due at hotel",
+   "blurb": "A river-view stay in Yeouido, Seoul's finance district, with the Han River on one side and easy subway links on the other.",
+   "facts": [
+    {
+     "label": "Confirmation",
+     "value": "ABC123 (sample)"
+    },
+    {
+     "label": "Address",
+     "value": "10 Gukjegeumyung-ro, Yeongdeungpo-gu"
+    },
+    {
+     "label": "Room",
+     "value": "Premium Room, 2 Queen Beds, River View, 3 guests, 2 nights"
+    },
+    {
+     "label": "Includes",
+     "value": "Breakfast for two, $100 credit, Wi-Fi, 4pm check-out requested"
+    },
+    {
+     "label": "Cost",
+     "value": "$1,589.72; $0 due at hotel"
+    },
+    {
+     "label": "Check-in / out",
+     "value": "16:00 / 11:00"
+    }
+   ],
+   "dest": "Conrad Seoul, 10 Gukjegeumyung-ro, Yeongdeungpo-gu, Seoul, South Korea",
+   "gplace": {
+    "id": "ChIJbfiu7TuffDUR0gqGAsSRDoc",
+    "name": "Conrad Seoul",
+    "address": "10 Gukjegeumyung-ro, Yeongdeungpo District, Seoul, South Korea",
+    "lat": 37.525334,
+    "lng": 126.926555,
+    "local_name": "콘래드 서울",
+    "local_address": "대한민국 서울특별시 영등포구 국제금융로 10",
+    "language": "ko"
+   },
+   "photo": null,
+   "docs": []
+  },
+  {
+   "id": "E-27",
+   "date": "2027-04-22",
+   "start": "19:35",
+   "end": "21:35",
+   "title": "Korean Air Flight (KIX -> ICN/GMP)",
+   "place": "KIX T1 Departures",
+   "type": "Transit",
+   "city": "Osaka -> Seoul",
+   "status": "booked",
+   "confirmation": "ABC123",
+   "address": "",
+   "cost": "",
+   "notes": "BOOKED. Safe premium legacy carrier loop with ample legroom. Taxi down to Conrad Seoul upon landing.",
+   "blurb": "Korean Air to Seoul on an A321neo, landing at Gimpo rather than Incheon, which puts you much closer to the city for the taxi to the hotel.",
+   "facts": [
+    {
+     "label": "Flight",
+     "value": "KE2120 KIX → GMP, 19:35–21:25, 1h50m"
+    },
+    {
+     "label": "Confirmation",
+     "value": "ABC123 (sample)"
+    },
+    {
+     "label": "Terminal",
+     "value": "KIX Terminal 1 → GMP International Terminal"
+    },
+    {
+     "label": "Class",
+     "value": "Economy (L), 1 checked bag, no seat assigned"
+    },
+    {
+     "label": "Cost",
+     "value": "JPY 38,280"
+    },
+    {
+     "label": "Check-in",
+     "value": "Closes 1 hour before departure; arrive 2 hours early"
+    }
+   ],
+   "dest": "Kansai International Airport Terminal 1, Osaka, Japan",
+   "gplace": {
+    "id": "ChIJ9_rNIxO5AGARiI-QjZ-ncfE",
+    "name": "Kansai International Airport",
+    "address": "1番地 Senshūkūkōkita, Izumisano, Osaka 549-0001, Japan",
+    "lat": 34.431999,
+    "lng": 135.236602,
+    "local_name": "関西国際空港",
+    "local_address": "日本、〒549-0001 大阪府泉佐野市泉州空港北1番地",
+    "language": "ja"
+   },
+   "photo": null,
+   "docs": [
+    "eticket"
+   ]
+  },
+  {
+   "id": "E-28",
+   "date": "2027-04-23",
+   "start": "10:00",
+   "end": "13:00",
+   "title": "Gold J Advanced Gangnam Skincare Treatments",
+   "place": "Gold J Clinic, Gangnam",
+   "type": "Activity",
+   "city": "Seoul",
+   "status": "planned",
+   "confirmation": "",
+   "address": "",
+   "cost": "",
+   "notes": "Line 9 Express Subway shortcut (15-min). Elite facial analysis, clinical dermatology or spa care.",
+   "blurb": "Gangnam's clinic culture at close range: facial analysis followed by clinical dermatology or gentler spa treatment.",
+   "facts": [
+    {
+     "label": "Address",
+     "value": "Gold J Clinic, Gangnam"
+    },
+    {
+     "label": "Getting there",
+     "value": "Line 9 Express subway, about 15 minutes"
+    }
+   ],
+   "dest": "Gold J Clinic, Gangnam, Seoul, South Korea",
+   "gplace": {
+    "id": "ChIJ6ztXmQ-kfDURGu3KY_ZDvZk",
+    "name": "골드제이의원 ゴールドジェイクリニック Gold J Clinic Gold J 皮膚科醫院ㅣ Gangnam · Seolleung Station",
+    "address": "South Korea, Seoul, KR 서울특별시 강남구 테헤란로 408 8층 ソウル特別市江南区テヘラン路408 デチビルディング8階",
+    "lat": 37.50452,
+    "lng": 127.050285,
+    "local_name": "골드제이의원 ゴールドジェイクリニック Gold J Clinic Gold J 皮膚科醫院ㅣ Gangnam · Seolleung Station",
+    "local_address": "대한민국 서울특별시 KR 서울특별시 강남구 테헤란로 408 8층 ソウル特別市江南区テヘラン路408 デチビルディング8階",
+    "language": "ko"
+   },
+   "photo": null,
+   "docs": []
+  },
+  {
+   "id": "E-35",
+   "date": "2027-04-23",
+   "start": "13:00",
+   "end": "14:00",
+   "title": "Lunch at Starfield Library",
+   "place": "Starfield Library, COEX Mall",
+   "type": "Food",
+   "city": "Seoul",
+   "status": "planned",
+   "confirmation": "",
+   "address": "",
+   "cost": "",
+   "notes": "",
+   "blurb": "Lunch at COEX Mall beneath the Starfield Library, whose 13-metre shelves and free-to-browse stacks have become one of Seoul's favourite indoor landmarks.",
+   "facts": [
+    {
+     "label": "Address",
+     "value": "Starfield Library, COEX Mall"
+    }
+   ],
+   "dest": "Starfield Library, COEX Mall, Seoul, South Korea",
+   "gplace": {
+    "id": "ChIJu5Gg2hWkfDURl7NN7FpFnis",
+    "name": "Starfield Library",
+    "address": "South Korea, Seoul, Gangnam District, Yeongdong-daero, 513 스타필드 코엑스몰 B1",
+    "lat": 37.510213,
+    "lng": 127.060019,
+    "local_name": "별마당 도서관",
+    "local_address": "대한민국 서울특별시 강남구 영동대로 513 스타필드 코엑스몰 B1",
+    "language": "ko"
+   },
+   "photo": null,
+   "docs": []
+  },
+  {
+   "id": "E-30",
+   "date": "2027-04-23",
+   "start": "18:00",
+   "end": "20:30",
+   "title": "Gwangjang Market Food Alley Crawl",
+   "place": "Gwangjang Market (Euljiro 4-ga)",
+   "type": "Food",
+   "city": "Seoul",
+   "status": "planned",
+   "confirmation": "",
+   "address": "",
+   "cost": "",
+   "notes": "Graze indoor stalls for early dinner. Taste Netflix knife-cut noodles and mung bean pancakes.",
+   "blurb": "Seoul's oldest market keeps its food alley humming after dark, stalls shoulder to shoulder under bare bulbs. Graze your way through an early dinner rather than committing to one seat.",
+   "facts": [
+    {
+     "label": "Place",
+     "value": "Gwangjang Market (Euljiro 4-ga)"
+    },
+    {
+     "label": "Try",
+     "value": "Knife-cut noodles; mung bean pancakes"
+    },
+    {
+     "label": "Note",
+     "value": "Indoor stalls, early dinner grazing"
+    }
+   ],
+   "dest": "Gwangjang Market, Seoul, South Korea",
+   "gplace": {
+    "id": "ChIJm3V0fu2ifDURRJ8IMUijVtY",
+    "name": "Gwangjang Market",
+    "address": "88 Cheonggyecheon-ro, Jongno District, Seoul, South Korea",
+    "lat": 37.570038,
+    "lng": 126.999604,
+    "local_name": "광장시장",
+    "local_address": "대한민국 서울특별시 종로구 청계천로 88",
+    "language": "ko"
+   },
+   "photo": {
+    "file": "photos/57d8e51f0f262b56.jpg",
+    "focus": "50% 55%",
+    "credit": "Republic of Korea from Seoul, Republic of Korea",
+    "license": "CC BY-SA 2.0",
+    "page": "https://commons.wikimedia.org/wiki/File:Korea_GwangjangMarket_Eats_01_(13885110035).jpg"
+   },
+   "docs": []
+  },
+  {
+   "id": "E-36",
+   "date": "2027-04-24",
+   "start": "11:30",
+   "end": "13:00",
+   "title": "Meerkat Friends",
+   "place": "Meerkat Friends (Hongdae)",
+   "type": "Activity",
+   "city": "Seoul",
+   "status": "planned",
+   "confirmation": "",
+   "address": "",
+   "cost": "",
+   "notes": "Meerkat Friends animal cafe in Hongdae, Wausan-ro 21-gil, Mapo-gu (the Myeongdong branch has closed). Nearest: Sangsu Station exit 2 (about 10 min walk) or Hongik Univ. Station exit 9 (about 12 min).\nOpen question: the timing of this one is not settled yet.",
+   "blurb": "A small animal cafe in Hongdae where meerkats, and a few other residents, wander freely among the guests. Low-key, curious and very hands-on.",
+   "facts": [
+    {
+     "label": "Address",
+     "value": "Wausan-ro 21-gil, Mapo-gu (Hongdae)"
+    },
+    {
+     "label": "Nearest station",
+     "value": "Sangsu Stn exit 2 (~10 min) or Hongik Univ. Stn exit 9 (~12 min)"
+    },
+    {
+     "label": "Hours",
+     "value": "Opens about 1:30 PM daily (weekends 1:20–1:30 PM)"
+    },
+    {
+     "label": "Note",
+     "value": "Timing unsettled; consider swapping with the 1:15 PM Hyundai Seoul lunch"
+    },
+    {
+     "label": "Mind",
+     "value": "4 PM checkout and the airport bus"
+    }
+   ],
+   "dest": "Meerkat Friends, Wausan-ro 21-gil, Mapo-gu, Seoul, South Korea",
+   "gplace": {
+    "id": "ChIJQ1GTJ8WYfDURMicgCdYYZRM",
+    "name": "Meerkat Friends",
+    "address": "South Korea, Seoul, Mapo-gu, Wausan-ro 21-gil, 20 미어캣 프랜즈 2층",
+    "lat": 37.552419,
+    "lng": 126.922959,
+    "local_name": "Meerkatfriends (미어캣 프랜즈)",
+    "local_address": "대한민국 서울특별시 마포구 와우산로21길 20 미어캣 프랜즈 2층",
+    "language": "ko"
+   },
+   "photo": null,
+   "docs": []
+  },
+  {
+   "id": "E-37",
+   "date": "2027-04-24",
+   "start": "13:15",
+   "end": "15:30",
+   "title": "Shopping & Lunch at The Hyundai Seoul",
+   "place": "The Hyundai Seoul, Yeouido",
+   "type": "Activity",
+   "city": "Seoul",
+   "status": "planned",
+   "confirmation": "",
+   "address": "",
+   "cost": "",
+   "notes": "",
+   "blurb": "Korea's largest department store wraps its shops around a sunlit indoor garden on Yeouido. The basement food hall makes an easy lunch between browsing floors.",
+   "facts": [
+    {
+     "label": "Place",
+     "value": "The Hyundai Seoul, Yeouido"
+    }
+   ],
+   "dest": "The Hyundai Seoul, Yeouido, Seoul, South Korea",
+   "gplace": {
+    "id": "ChIJz4OjfACffDURdhog9kiXBus",
+    "name": "The Hyundai Seoul",
+    "address": "108 Yeoui-daero, Yeongdeungpo District, Seoul, South Korea",
+    "lat": 37.52605,
+    "lng": 126.928296,
+    "local_name": "The Hyundai Seoul",
+    "local_address": "대한민국 서울특별시 영등포구 여의대로 108",
+    "language": "ko"
+   },
+   "photo": null,
+   "docs": []
+  },
+  {
+   "id": "E-32",
+   "date": "2027-04-24",
+   "start": "16:00",
+   "end": "19:00",
+   "title": "Amex FHR 4PM Checkout & Outbound Departure",
+   "place": "Conrad Seoul -> Airport Limousine",
+   "type": "Transit",
+   "city": "Seoul -> Seattle",
+   "status": "planned",
+   "confirmation": "",
+   "address": "",
+   "cost": "",
+   "notes": "Shower/pack completely stress-free. Board airport bus outside gate at 4 PM for 7 PM flight home.",
+   "blurb": "The late checkout earns an unhurried last morning: shower, pack, and leave without watching the clock. Board the airport bus outside the hotel gate.",
+   "facts": [
+    {
+     "label": "Checkout",
+     "value": "4 PM (Amex FHR benefit)"
+    },
+    {
+     "label": "From",
+     "value": "Conrad Seoul"
+    },
+    {
+     "label": "Transfer",
+     "value": "Airport Limousine bus outside gate, 4 PM"
+    },
+    {
+     "label": "Flight",
+     "value": "7 PM departure"
+    }
+   ],
+   "dest": "Conrad Seoul, 10 Gukjegeumyung-ro, Yeongdeungpo-gu, Seoul, South Korea",
+   "gplace": {
+    "id": "ChIJbfiu7TuffDUR0gqGAsSRDoc",
+    "name": "Conrad Seoul",
+    "address": "10 Gukjegeumyung-ro, Yeongdeungpo District, Seoul, South Korea",
+    "lat": 37.525334,
+    "lng": 126.926555,
+    "local_name": "콘래드 서울",
+    "local_address": "대한민국 서울특별시 영등포구 국제금융로 10",
+    "language": "ko"
+   },
+   "photo": null,
+   "docs": []
+  },
+  {
+   "id": "I-2ffc355f",
+   "date": "2027-04-24",
+   "start": "19:00",
+   "end": "13:14",
+   "title": "Delta DL0196 Seoul-Incheon (ICN) → Seattle (SEA)",
+   "place": "ICN Terminal 2 → SEA Terminal TBD",
+   "type": "Transit",
+   "city": "Seoul -> Seattle",
+   "status": "booked",
+   "confirmation": "ABC123",
+   "address": "",
+   "cost": "",
+   "notes": "Airbus A350-900, nonstop, 10h14m. Seats 38H/38G/38J, Delta Main (NV). 3 passengers. Non-refundable.",
+   "blurb": "The long way home: a nonstop Airbus A350-900 across the Pacific, landing in Seattle the same afternoon you left Seoul.",
+   "facts": [
+    {
+     "label": "Flight",
+     "value": "Delta DL0196, nonstop, 10h14m"
+    },
+    {
+     "label": "Route",
+     "value": "ICN Terminal 2 → SEA Terminal TBD"
+    },
+    {
+     "label": "Confirmation",
+     "value": "ABC123 (sample)"
+    },
+    {
+     "label": "Seats",
+     "value": "38G Sam · 38H Alex · 38J Jordan"
+    },
+    {
+     "label": "Cabin",
+     "value": "Delta Main (NV), 3 passengers"
+    },
+    {
+     "label": "Arrives",
+     "value": "01:14PM same day"
+    }
+   ],
+   "dest": "Incheon International Airport Terminal 2 Departures, Incheon, South Korea",
+   "gplace": {
+    "id": "ChIJ7TZN-XaQezUR0UAqfjDR5eU",
+    "name": "Incheon Airport Terminal 2",
+    "address": "272 Gonghang-ro, Jung-gu, Incheon, South Korea",
+    "lat": 37.468888,
+    "lng": 126.433359,
+    "local_name": "인천국제공항제2여객터미널청사",
+    "local_address": "대한민국 인천광역시 중구 공항로 272",
+    "language": "ko"
+   },
+   "photo": null,
+   "docs": []
+  }
+ ],
+ "docs": {
+  "flight": {
+   "kind": "email",
+   "file": "docs/flight.html",
+   "subject": "Your trip to Tokyo is confirmed",
+   "sender": "Example Air <noreply@example.com>",
+   "received": "2027-09-18T17:09:00Z"
+  },
+  "flight-app": {
+   "kind": "file",
+   "file": "docs/flight-app.png",
+   "received": "2027-09-27T21:47:00Z"
+  },
+  "ryokan": {
+   "kind": "email",
+   "file": "docs/ryokan.html",
+   "translation": "docs/ryokan.en.html",
+   "language": "日本語",
+   "language_en": "Japanese",
+   "subject": "【予約完了】箱根・強羅 佳ら久のご予約",
+   "sender": "佳ら久 <reservation@example.jp>",
+   "received": "2027-09-12T10:15:00Z"
+  },
+  "eticket": {
+   "kind": "file",
+   "file": "docs/eticket.pdf",
+   "subject": "e-Ticket itinerary / receipt",
+   "received": "2027-09-18T18:46:00Z"
+  }
+ }
+}

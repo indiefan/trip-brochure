@@ -1,0 +1,9 @@
+{
+  "product": "TripBrochure",
+  "title": "Japan & Korea",
+  "bundle_id": "com.example.tripbrochure",
+  "team": "YOUR_TEAM_ID",
+  "version": "1.0.0",
+  "background": "#f4efe6",
+  "depot_lan": "http://depot.local:8137/api/depot/trip"
+}

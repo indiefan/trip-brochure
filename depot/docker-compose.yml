@@ -1,0 +1,13 @@
+# The depot on a NAS or a Mac mini with Docker:
+#   APPS_SECRET=$(python3 -c 'import secrets;print(secrets.token_urlsafe(32))')   # keep it in .env next to this file
+#   docker compose up -d
+services:
+  depot:
+    build: .
+    restart: unless-stopped
+    ports: ["8137:8137"]           # LAN: publishing (open) and phones (secret path). Put HTTPS in front for phones away from home.
+    environment:
+      APPS_SECRET: ${APPS_SECRET:?set APPS_SECRET in .env}
+      PUBLIC_URL: ${PUBLIC_URL:-http://depot.local:8137}    # what phones reach: your HTTPS address once you have one
+    volumes:
+      - ./data:/data
