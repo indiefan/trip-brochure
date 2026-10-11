@@ -9,7 +9,8 @@ What it does, in order: reads trip.json; derives the days and the legs (stays an
 copies and resizes the photographs; turns each document into pages (a PDF → one JPEG per page, a screenshot → a JPEG,
 an email .eml/.html/.txt → a clean HTML page of its own, pictures inlined) plus a thumbnail; copies the app (index.html,
 app.css, app.js, sw.js, fonts); writes data.js (everything the page needs) and manifest.json (the version and every
-file's SHA-256, for updates). Nothing here needs a key or an account. The optional pipeline/ scripts add Claude-written
+file's SHA-256, for updates); fetches each day's forecast from Open-Meteo (free, no key). Nothing here needs a key
+or an account. The optional pipeline/ scripts add Claude-written
 copy, translations and exact map places to trip.json before you build; see HANDBOOK.md.
 
 Needs: Python 3.10+, pillow, pymupdf (PDFs), beautifulsoup4 (emails), requests (only for --fonts and remote pictures).
@@ -230,7 +231,7 @@ def legs_of(trip: dict, days: list[dict]) -> list[dict]:
 
 # --- the build -------------------------------------------------------------------------------------------------------
 
-def build(src: Path, out: Path, refetch_fonts: bool = False, fetch_remote: bool = True) -> dict:
+def build(src: Path, out: Path, refetch_fonts: bool = False, fetch_remote: bool = True, refresh_weather: bool = False, with_weather: bool = True) -> dict:
     trip = json.loads((src / "trip.json").read_text(encoding="utf-8"))
     cache = src / ".cache"
     files: dict[str, bytes] = {}
@@ -320,9 +321,10 @@ def build(src: Path, out: Path, refetch_fonts: bool = False, fetch_remote: bool 
         hotels.append({k: h.get(k) for k in ("id", "city", "country", "start", "end", "name", "room", "booking", "perks", "confirmation", "address")}
                       | {"nights": h.get("nights") or (date.fromisoformat(h["end"]) - date.fromisoformat(h["start"])).days,
                          "copy": {"blurb": h.get("blurb", ""), "facts": h.get("facts") or [], "native": ""}, "gplace": gplace(h.get("gplace"))})
+    wx = weather(trip, days, cache, refresh_weather) if with_weather else None
     built = datetime.now(timezone.utc)
     data = {k: trip.get(k) for k in ("name", "title_html", "family", "seal", "farewell", "intro", "start", "end", "people", "zones", "timezone", "bundle_id", "please", "languages")}
-    data.update({"cities": {k: {"color": v.get("color")} for k, v in (trip.get("cities") or {}).items()}, "days": days, "legs": legs, "events": events, "hotels": hotels,
+    data.update({"weather": wx, "cities": {k: {"color": v.get("color")} for k, v in (trip.get("cities") or {}).items()}, "days": days, "legs": legs, "events": events, "hotels": hotels,
                  "docs": docs_out, "cover": cover, "credits": credits + list(trip.get("credits") or []),
                  "built": built.strftime("%Y-%m-%dT%H:%M:%SZ"), "version": built.strftime("%Y%m%d.%H%M%S")})
     files["data.js"] = ("window.TRIP = " + json.dumps(data, ensure_ascii=False, separators=(",", ":")) + ";\n").encode()
@@ -348,6 +350,72 @@ def build(src: Path, out: Path, refetch_fonts: bool = False, fetch_remote: bool 
     (out / "manifest.json").write_text(json.dumps(manifest, indent=1))
     say(f"built {len(files)} files, {sum(len(b) for b in files.values()) / 1e6:.1f} MB, version {data['version']} → {out}")
     return manifest
+
+
+# --- weather: each day's forecast where you are (Open-Meteo: free, no key, about 16 days ahead) -----------------------
+
+WEATHER_TTL = 20 * 3600            # a forecast this old is fetched again on the next build (--weather forces it)
+
+
+def day_cities(day: dict) -> list[str]:
+    """Where you are on a day: where you wake up, and where you sleep when that is somewhere else."""
+    woke = (day.get("cities") or [None])[0]
+    sleep = day.get("city") if day.get("hotel_id") else None
+    return list(dict.fromkeys(c for c in (woke, sleep) if c)) or ([day["city"]] if day.get("city") else [])
+
+
+def weather(trip: dict, days: list[dict], cache: Path, refresh: bool = False) -> dict:
+    """{updated, days: {date: [{city, code, hi, lo, rain}]}} for the trip's days, in °F (trip.json "units": "celsius"
+    for °C). trip.json may give its own "weather" block instead (a demo, or typed by hand). Kept in the trip's cache;
+    asked again when older than WEATHER_TTL. Days past the forecast's reach simply have none, and a failed fetch keeps
+    the last forecast."""
+    if trip.get("weather"):
+        return trip["weather"]
+    import requests
+    path = cache / "weather.json"
+    old = json.loads(path.read_text()) if path.exists() else None
+    key = trip["start"] + trip["end"] + trip.get("units", "")
+    if old and not refresh and time.time() - old.get("at", 0) < WEATHER_TTL and old.get("key") == key:
+        return old["data"]
+    where = {}
+    for h in trip.get("hotels", []):                                   # the hotel's own spot, when places.py found it
+        g = h.get("gplace") or {}
+        if g.get("lat") is not None:
+            where.setdefault(h["city"], (g["lat"], g["lng"]))
+    for name, c in (trip.get("cities") or {}).items():                 # or coordinates you gave the city
+        if c.get("lat") is not None:
+            where.setdefault(name, (c["lat"], c["lng"]))
+    wanted = {d["date"]: day_cities(d) for d in days}
+    today = datetime.now(timezone.utc).date()
+    first, last = max(date.fromisoformat(trip["start"]), today - timedelta(days=60)), min(date.fromisoformat(trip["end"]), today + timedelta(days=15))
+    out = {"updated": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"), "days": {}}
+    if first > last:
+        return out
+    try:
+        for city in sorted({c for cs in wanted.values() for c in cs}):
+            if city not in where:
+                g = requests.get("https://geocoding-api.open-meteo.com/v1/search", params={"name": city, "count": 1, "language": "en"}, timeout=30).json()
+                hit = (g.get("results") or [None])[0]
+                if not hit:
+                    say(f"  weather: no place called {city!r}; give the city lat/lng in trip.json"); continue
+                where[city] = (hit["latitude"], hit["longitude"])
+            lat, lng = where[city]
+            f = requests.get("https://api.open-meteo.com/v1/forecast", timeout=30, params={
+                "latitude": lat, "longitude": lng, "timezone": "auto", "temperature_unit": "celsius" if trip.get("units") == "celsius" else "fahrenheit",
+                "daily": "weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max",
+                "start_date": first.isoformat(), "end_date": last.isoformat()}).json()["daily"]
+            for i, d in enumerate(f["time"]):
+                if city in wanted.get(d, []) and f["temperature_2m_max"][i] is not None:
+                    out["days"].setdefault(d, []).append({"city": city, "code": f["weather_code"][i], "hi": round(f["temperature_2m_max"][i]),
+                                                          "lo": round(f["temperature_2m_min"][i]), "rain": f["precipitation_probability_max"][i]})
+    except Exception as e:                                               # noqa: BLE001 - no network, say: the last forecast stands
+        say(f"  weather: {e}; keeping the last forecast")
+        return old["data"] if old else out
+    for d, items in out["days"].items():
+        items.sort(key=lambda x: wanted[d].index(x["city"]))
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps({"at": time.time(), "key": key, "data": out}))
+    return out
 
 
 FONTS = [("Instrument+Serif:ital@0;1", "instrument", None), ("Shippori+Mincho:wght@600", "mincho", "ja"), ("Nanum+Myeongjo:wght@700", "myeongjo", "ko")]
@@ -384,6 +452,8 @@ if __name__ == "__main__":
     ap.add_argument("--out", help="where to write the app (default: <trip>/dist)")
     ap.add_argument("--fonts", action="store_true", help="re-fetch the fonts from Google Fonts, subset for this trip")
     ap.add_argument("--no-remote", action="store_true", help="do not fetch an email's remote pictures")
+    ap.add_argument("--weather", action="store_true", help="fetch a fresh forecast even if the cached one is recent (for a nightly run)")
+    ap.add_argument("--no-weather", action="store_true", help="leave the forecast out")
     a = ap.parse_args()
     src = Path(a.trip).resolve()
-    build(src, Path(a.out).resolve() if a.out else src / "dist", a.fonts, not a.no_remote)
+    build(src, Path(a.out).resolve() if a.out else src / "dist", a.fonts, not a.no_remote, a.weather, not a.no_weather)

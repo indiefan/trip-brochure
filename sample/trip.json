@@ -2039,5 +2039,138 @@
    "subject": "e-Ticket itinerary / receipt",
    "received": "2027-09-18T18:46:00Z"
   }
+ },
+ "weather": {
+  "sample": true,
+  "updated": "2027-04-13T18:00:00Z",
+  "days": {
+   "2027-04-14": [
+    {
+     "city": "Seattle",
+     "code": 1,
+     "hi": 57,
+     "lo": 45,
+     "rain": 5
+    }
+   ],
+   "2027-04-15": [
+    {
+     "city": "Tokyo",
+     "code": 2,
+     "hi": 67,
+     "lo": 54,
+     "rain": 10
+    }
+   ],
+   "2027-04-16": [
+    {
+     "city": "Tokyo",
+     "code": 3,
+     "hi": 68,
+     "lo": 52,
+     "rain": 20
+    }
+   ],
+   "2027-04-17": [
+    {
+     "city": "Tokyo",
+     "code": 0,
+     "hi": 69,
+     "lo": 53,
+     "rain": 0
+    }
+   ],
+   "2027-04-18": [
+    {
+     "city": "Tokyo",
+     "code": 61,
+     "hi": 65,
+     "lo": 54,
+     "rain": 60
+    },
+    {
+     "city": "Hakone",
+     "code": 2,
+     "hi": 58,
+     "lo": 44,
+     "rain": 10
+    }
+   ],
+   "2027-04-19": [
+    {
+     "city": "Hakone",
+     "code": 80,
+     "hi": 59,
+     "lo": 45,
+     "rain": 45
+    },
+    {
+     "city": "Kyoto",
+     "code": 1,
+     "hi": 70,
+     "lo": 51,
+     "rain": 5
+    }
+   ],
+   "2027-04-20": [
+    {
+     "city": "Kyoto",
+     "code": 3,
+     "hi": 71,
+     "lo": 49,
+     "rain": 20
+    }
+   ],
+   "2027-04-21": [
+    {
+     "city": "Kyoto",
+     "code": 0,
+     "hi": 67,
+     "lo": 50,
+     "rain": 0
+    },
+    {
+     "city": "Osaka",
+     "code": 2,
+     "hi": 68,
+     "lo": 55,
+     "rain": 10
+    }
+   ],
+   "2027-04-22": [
+    {
+     "city": "Osaka",
+     "code": 1,
+     "hi": 69,
+     "lo": 53,
+     "rain": 5
+    },
+    {
+     "city": "Seoul",
+     "code": 63,
+     "hi": 65,
+     "lo": 46,
+     "rain": 70
+    }
+   ],
+   "2027-04-23": [
+    {
+     "city": "Seoul",
+     "code": 2,
+     "hi": 66,
+     "lo": 47,
+     "rain": 10
+    }
+   ],
+   "2027-04-24": [
+    {
+     "city": "Seoul",
+     "code": 1,
+     "hi": 62,
+     "lo": 45,
+     "rain": 5
+    }
+   ]
+  }
  }
 }

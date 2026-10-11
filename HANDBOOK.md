@@ -100,6 +100,17 @@ what it is (plane, train, bus, car, bed, bowl, bag, star), a photograph when the
 Apple Maps search), a short blurb, a "Booked" or "Don't miss" tag, the Directions buttons, the facts, the confirmations,
 and the original itinerary notes folded away under "Itinerary notes".
 
+### The weather, day by day
+
+![Day headings with the forecast: one city, and both cities on a travel day](docs/screenshots/21-weather.jpg)
+
+Under each day's heading: the forecast where you are that day: an icon, the high and the low, and the chance of rain
+when it is 30% or more. On a travel day, both cities (where you wake up, then where you sleep). It comes from
+[Open-Meteo](https://open-meteo.com) (free, no key), at the hotels' own coordinates when `places.py` has found them,
+otherwise the city's. Forecasts reach about 16 days ahead, so days further out simply have none until they come into
+range; rebuild nightly (section 8) and they fill in and sharpen. The end page credits Open-Meteo and says when the
+forecast was fetched. Leave it out with `--no-weather`, or give your own (`weather` in trip.json, section 5).
+
 ### Directions, exact places, and the offline map
 
 ![An event with its facts and directions](docs/screenshots/06-event.jpg)
@@ -197,7 +208,7 @@ The last page: the seal, a farewell in the local language, photo credits, and wh
 | Folder | What it is | Needs |
 |---|---|---|
 | `app/` | The page: `index.html`, `app.css` (the look), `app.js` (everything it does), `sw.js` (offline for the web-app route), `manifest.webmanifest`, `fonts/`. Edit these to restyle or add features. | a browser |
-| `build.py` | Trip folder → `dist/`. | Python 3.10+, `pillow`, `pymupdf`, `beautifulsoup4` |
+| `build.py` | Trip folder → `dist/`, with each day's forecast from Open-Meteo. | Python 3.10+, `pillow`, `pymupdf`, `beautifulsoup4`, `requests` |
 | `sample/` | A complete trip: `trip.json`, photos, four invented documents, an icon. | — |
 | `pipeline/` | Optional helpers that write into `trip.json`. | an Anthropic API key; a Google Maps key |
 | `depot/` | Optional: a small server (Docker) that holds published versions and the iOS install page. Only for Route B. | Docker, or Python |
@@ -272,6 +283,8 @@ times `HH:MM` (24-hour, local to where the event happens).
 | `cover` | The cover photograph (see photographs below). Defaults to the first city's photo. |
 | `please` | Optional. Overrides or adds the "please take me here" line by language code: `{"zh": "请带我去这里。"}`. |
 | `languages` | Optional. Names for language codes not already known: `{"id": "Indonesian"}`. |
+| `units` | Optional. `"celsius"` for the forecast in °C; °F otherwise. |
+| `weather` | Optional. A forecast of your own instead of Open-Meteo's: `{"sample": true, "days": {"2027-04-15": [{"city": "Tokyo", "code": 2, "hi": 67, "lo": 53, "rain": 10}]}}`. `code` is a [WMO weather code](https://open-meteo.com/en/docs#weather_variable_documentation) (0 clear, 1–2 partly cloudy, 3 cloudy, 45 fog, 51–57 drizzle, 61–67 rain, 71–77 snow, 80–82 showers, 95+ thunderstorms). The sample uses this, since its dates are beyond any forecast. Leave it out for the real thing. |
 
 ### Cities
 
@@ -284,7 +297,8 @@ times `HH:MM` (24-hour, local to where the event happens).
 
 One entry per city you sleep in, keyed by the exact name used in `hotels[].city`. `native` is the name in the local
 script (down the side of the chapter's photo); `color` is the city's colour everywhere (its dot, its ribbon, the dock's
-line); `blurb` the chapter's paragraph. All optional except the key; `pipeline/copy.py` writes `blurb` and `native`
+line); `blurb` the chapter's paragraph; `lat`/`lng` (optional) pin the city for the forecast when its name alone is
+ambiguous (a "Portland" or a small town). All optional except the key; `pipeline/copy.py` writes `blurb` and `native`
 for you, and the app picks a colour if you give none.
 
 ### Hotels (stays)
@@ -366,6 +380,7 @@ in landscape, 1800 px or wider, under CC licences. Your agent can do the same, o
 ```bash
 python3 build.py mytrip/                # → mytrip/dist
 python3 build.py mytrip/ --fonts        # once: re-fetch the fonts, subset to your trip's own characters (needs network)
+python3 build.py mytrip/ --weather      # fetch a fresh forecast now (otherwise one under 20 hours old is reused)
 ```
 
 The builder prints every document as it goes and ends with the version. `mytrip/dist` is the whole app; open
@@ -648,6 +663,18 @@ On the phones: the next time the app is opened with a connection (the native she
 the front, at most every 15 minutes), the new version is fetched in the background; a toast says "The itinerary was
 updated" with **Show**; the old version keeps working until then. Pull down on the native app to check at once.
 
+**The forecast, nightly.** Forecasts change daily, so rebuild and publish once a night: the app then opens each morning
+with today's forecast. On the Mac mini, `crontab -e` and add (paths to suit; the deploy line is your route's):
+
+```
+0 3 * * *  cd ~/trip-brochure && .venv/bin/python build.py mytrip/ --weather && npx wrangler pages deploy mytrip/dist --project-name <name>
+```
+
+or, for Route B, `&& .venv/bin/python depot/publish.py trip mytrip/dist`. Cron runs on the Mac's own clock: during the
+trip, a forecast fetched at 3 AM at home is mid-afternoon at the destination. Two lines (a second at the hour that is 3 AM
+there) keep it fresh for both. On a NAS, the same lines go in its scheduled tasks (or a cron container). If the network
+is down, the build keeps the last forecast.
+
 Changing the **native shell** itself (Swift, the icon, the app's name) is the only thing that needs the Mac again:
 bump `version` in `app.json`, `scripts/build.sh trip --upload`; the app then offers "Install" for the new one.
 Content changes never need it.
@@ -695,7 +722,7 @@ Things that are a few lines each, all in `trip.json` or at the top of `app.css`:
   into `app/fonts` and an `@font-face` into `app/fonts.css`).
 - **Cover photograph:** `cover` in `trip.json`; the `focus` moves the crop.
 - **Fewer features:** delete what you do not want from `app.js`: `docCards()` (confirmations), `whereHTML()` (maps and
-  local names), the dock (`dockLayout`/`dockMove` and the `#dock` markup), `goNow()` (auto-scroll). Each is
+  local names), `wxHTML()` (the forecast; or build with `--no-weather`), the dock (`dockLayout`/`dockMove` and the `#dock` markup), `goNow()` (auto-scroll). Each is
   self-contained.
 
 Ideas we did not build, in rough order of how much they would add:
@@ -703,7 +730,6 @@ Ideas we did not build, in rough order of how much they would add:
 - A **packing list** or **to-do** page (a second data array, a checklist with ticks saved in `localStorage`).
 - A **phrasebook** per country (a few dozen lines with the local script large, like the driver card).
 - **Per-person details**: seats and ticket numbers by traveller, shown on the event under each name.
-- **Weather** for each day, fetched at build time and stored (it is a forecast; rebuild the day before).
 - A **"Share to Trip"** iOS Shortcut that saves a screenshot into `docs/` on a shared folder, so a rebuild picks it up.
 - **Currency** conversions on costs, fixed at build time.
 - A **printable** version: the page already prints acceptably; a `@media print` block would make it a real brochure.
@@ -744,9 +770,11 @@ Ideas we did not build, in rough order of how much they would add:
 - Fonts: Instrument Serif, Shippori Mincho, Nanum Myeongjo, all SIL Open Font License (Google Fonts).
 - Sample photographs: Wikimedia Commons, Creative Commons, each credited in `sample/trip.json` and on the app's end
   page. Keep the credits when you use them; replace them freely.
-- Sample documents: invented ("Example Air" does not exist).
+- Sample documents: invented ("Example Air" does not exist). The sample's forecast is invented too (marked "sample").
+- Weather: [Open-Meteo](https://open-meteo.com), free for non-commercial use, data under CC BY 4.0: keep the credit on
+  the end page.
 - What our build cost in services: Claude for copy, translations, destination picking and reading ~20 confirmations,
-  about two dollars over the whole project; Google Maps for 40 places and 40 maps, within the free allowance. Apple
+  about two dollars over the whole project; Google Maps for 40 places and 40 maps, within the free allowance. Open-Meteo forecasts: free. Apple
   Developer Program US$99/year. Everything else free.
 
 ---

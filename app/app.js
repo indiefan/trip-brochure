@@ -179,12 +179,40 @@
     </article>`;
   }
 
+  // --- weather: the day's forecast where you are (data.js "weather", from Open-Meteo at build time) ---------------
+  const WX = {                                   // WMO weather codes → an icon and a word
+    sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/>',
+    part: '<path d="M8.5 4.5v1.5M3.6 9H5M5 5.5l1 1M12 6.5l1-1"/><path d="M5.6 12.4a3.5 3.5 0 1 1 6.3-2.9"/><path d="M8 19.5h9.5a3.5 3.5 0 0 0 0-7 5 5 0 0 0-9.6 1.3A2.9 2.9 0 0 0 8 19.5z"/>',
+    cloud: '<path d="M7 19h10.5a4 4 0 0 0 .4-8 6 6 0 0 0-11.6 1.6A3.2 3.2 0 0 0 7 19z"/>',
+    fog: '<path d="M4 10h16M6 14h12M4 18h16M7 6h10"/>',
+    rain: '<path d="M7 15h10.5a4 4 0 0 0 .4-8 6 6 0 0 0-11.6 1.6A3.2 3.2 0 0 0 7 15z"/><path d="M9 18l-1 2.5M13 18l-1 2.5M17 18l-1 2.5"/>',
+    snow: '<path d="M7 14h10.5a4 4 0 0 0 .4-8 6 6 0 0 0-11.6 1.6A3.2 3.2 0 0 0 7 14z"/><path d="M8.5 18h.01M12 20h.01M15.5 18h.01M12 17h.01"/>',
+    storm: '<path d="M7 14h10.5a4 4 0 0 0 .4-8 6 6 0 0 0-11.6 1.6A3.2 3.2 0 0 0 7 14z"/><path d="M12.5 15.5l-2 3.5h3l-2 3.5"/>',
+  };
+  function wxKind(code) {
+    if (code === 0) return ["sun", "Clear"];
+    if (code <= 2) return ["part", "Partly cloudy"];
+    if (code === 3) return ["cloud", "Cloudy"];
+    if (code === 45 || code === 48) return ["fog", "Fog"];
+    if (code >= 51 && code <= 57) return ["rain", "Drizzle"];
+    if ((code >= 61 && code <= 67) || (code >= 80 && code <= 82)) return ["rain", code >= 80 ? "Showers" : "Rain"];
+    if ((code >= 71 && code <= 77) || code === 85 || code === 86) return ["snow", "Snow"];
+    if (code >= 95) return ["storm", "Thunderstorms"];
+    return ["cloud", ""];
+  }
+  function wxHTML(iso) {
+    const items = T.weather?.days?.[iso];
+    if (!items?.length) return "";
+    return `<div class="wx">${items.map(w => { const [k, word] = wxKind(w.code);
+      return `<span class="w" title="${esc(word)}"><svg viewBox="0 0 24 24" aria-hidden="true">${WX[k]}</svg>${items.length > 1 ? `<i>${esc(w.city)}</i>` : ""}<b>${w.hi}°</b><small>${w.lo}°</small>${w.rain >= 30 ? `<em>${w.rain}% rain</em>` : ""}<span class="word">${esc(word)}</span></span>`; }).join("")}</div>`;
+  }
+
   function dayHTML(iso, ids, c) {
     const list = ids.map(i => ev[i]).filter(Boolean).filter(e => e.date === iso)
       .sort((a, b) => (mins(a.start) ?? 9999) - (mins(b.start) ?? 9999));
     if (!list.length) return "";
     return `<section class="day" id="day-${iso}" data-date="${iso}">
-      <div class="dayhead"><span class="num">Day ${dayNo(iso)}</span><h3>${fmt(iso, { weekday: "long", month: "long", day: "numeric" })}</h3></div>
+      <div class="dayhead"><span class="num">Day ${dayNo(iso)}</span><h3>${fmt(iso, { weekday: "long", month: "long", day: "numeric" })}</h3>${wxHTML(iso)}</div>
       ${list.map(e => eventHTML(e, c)).join("")}
     </section>`;
   }
@@ -260,7 +288,7 @@
           <h2>${esc(T.farewell?.native || T.farewell?.english || "Have a wonderful trip.")}</h2>
           ${T.farewell?.native && T.farewell?.english ? `<p>${esc(T.farewell.english)}</p>` : ""}
           <div class="credits">${T.credits.map(c => `<div>Photo: ${esc(c.credit)}, ${esc(c.license || "")}</div>`).join("")}</div>
-          <div class="build">Itinerary as of ${new Date(T.built).toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}<span id="shellv"></span></div>
+          <div class="build">Itinerary as of ${new Date(T.built).toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}${T.weather?.updated && Object.keys(T.weather.days || {}).length ? ` · forecast ${T.weather.sample ? "(sample)" : `by <a href="https://open-meteo.com/">Open-Meteo</a>, ${new Date(T.weather.updated).toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}`}` : ""}<span id="shellv"></span></div>
         </div>
       </footer>
       <nav id="dock" aria-label="Cities">
