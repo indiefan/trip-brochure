@@ -310,6 +310,12 @@ def build(src: Path, out: Path, refetch_fonts: bool = False, fetch_remote: bool 
     match = re.compile(re.escape(trip["cover_match"]), re.I) if trip.get("cover_match") else None   # or the photo of the event it names
     named = next((e.get("photo") for e in trip["events"] if match and e.get("photo") and match.search(e["title"])), None)
     cover = photo(trip.get("cover") or named, with_cover=True) or next((l["photo"] for l in legs if l.get("photo")), None)
+    if cover and trip.get("cover_fit") == "wide":                                # a landscape cover shown wide, not cropped to a sliver
+        from PIL import Image
+        im = Image.open(io.BytesIO(files[cover.get("cover") or cover["lg"]])).convert("RGB")
+        strip = im.crop((0, round(im.height * .9), im.width, im.height)).resize((1, 1), Image.LANCZOS).getpixel((0, 0))
+        cover = {**cover, "fit": "wide", "ratio": round(im.width / im.height, 4), "fill": float(trip.get("cover_fill") or .88),
+                 "tone": "#%02x%02x%02x" % tuple(round(c * .55) for c in strip)}
     events = []
     for e in trip["events"]:
         cities = re.split(r"\s*(?:->|→)\s*", e.get("city") or "")

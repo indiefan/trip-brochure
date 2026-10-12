@@ -28,6 +28,12 @@ img { display: block; max-width: 100%; }
 .cover { position: relative; height: 100vh; height: 100svh; min-height: 620px; max-height: 1100px; color: #fff; overflow: hidden; background: #2a1d14; }
 .cover img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scale(1.04); animation: drift 24s ease-out forwards; }
 @keyframes drift { to { transform: scale(1); } }
+/* A landscape cover shown wide (trip.json "cover_fit": "wide"): edge to edge across the top, only as tall as `--fill`
+   of the cover needs (so far less cropped than filling a tall screen), fading into a blurred glow of the same scene. */
+.cover img.wide { max-width: none; inset: 0 auto auto calc(var(--fx) * 1%); translate: calc(var(--fx) * -1%) 0; height: auto; aspect-ratio: var(--r);
+  width: max(100%, calc(clamp(620px, 100svh, 1100px) * var(--fill) * var(--r)));
+  -webkit-mask-image: linear-gradient(180deg, #000 72%, transparent); mask-image: linear-gradient(180deg, #000 72%, transparent); }
+.cover img.backdrop { filter: blur(34px) saturate(1.25) brightness(.5); transform: scale(1.2); animation: none; }
 .cover::after { content: ""; position: absolute; inset: 0;
   background: linear-gradient(180deg, rgba(20,12,6,.45) 0%, rgba(20,12,6,0) 22%, rgba(20,12,6,0) 42%, rgba(20,12,6,.55) 70%, rgba(20,12,6,.86) 100%); }
 .cover .in { position: absolute; left: 0; right: 0; bottom: 0; z-index: 1; padding: 0 var(--gutter) calc(28px + env(safe-area-inset-bottom, 0px)); max-width: 760px; margin: 0 auto; }

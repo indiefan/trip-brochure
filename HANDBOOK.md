@@ -316,6 +316,7 @@ times `HH:MM` (24-hour, local to where the event happens).
 | `intro` | Optional. The paragraph under the cover (HTML allowed: `<em>` for the accent colour). `{nights}` and `{cities}` are filled in with the numbers, so the line stays true as the trip changes. Defaults to a plain count. |
 | `accent`, `accent_dark` | Optional. The one accent colour (links, buttons, the seal, `<em>`), for light and dark mode; written to `theme.css`. Defaults to vermilion. `design.py` picks them for the trip. |
 | `cover_match` | Optional. A few words from the title of the event whose photograph should be the cover, when `cover` is not given. |
+| `cover_fit` | Optional. `"wide"` for a landscape cover photograph: it runs edge to edge across the top at a gentle zoom and fades into a blurred glow of the same scene, instead of being cropped to its middle on a tall phone. `cover_fill` (default 0.88) is how much of the cover's height it fills. |
 | `home` | Optional. Where you live (`design.py` gives it a colour, and the city's colour key). |
 | `app` | Written by `design.py`: `{"title": "…", "product": "…"}`, the native app's home-screen name and internal name (copy into `shell-ios/apps/*/app.json`, or pass `--shell-app`). |
 | `start`, `end` | The first and last day. Every event's date must fall inside. |

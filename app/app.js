@@ -268,8 +268,9 @@
     const legs = T.legs.map((l, i) => l.kind === "stay" ? stayHTML(l, ++chapter) : travelHTML(l, i)).join("");
     const ids = T.legs.map((l, i) => [l, i]);
     $("#app").innerHTML = `
-      <section class="cover">
-        ${cover ? `<img src="${cover.cover || cover.lg}" style="object-position:${cover.focus}" alt="">` : ""}
+      <section class="cover"${cover?.fit === "wide" ? ` style="background:${cover.tone}"` : ""}>
+        ${!cover ? "" : cover.fit === "wide" ? `<img class="backdrop" src="${cover.sm || cover.lg}" alt="" aria-hidden="true"><img class="wide" src="${cover.cover || cover.lg}" style="--r:${cover.ratio};--fill:${cover.fill};--fx:${parseFloat(cover.focus) || 50}" alt="">`
+          : `<img src="${cover.cover || cover.lg}" style="object-position:${cover.focus}" alt="">`}
         <div class="top"><div class="kicker">${esc(T.family || "")}<span class="k2">${fmt(T.start, { month: "long", year: "numeric" })}</span></div>${T.seal ? `<div class="seal${CJK.test(T.seal) ? "" : " h"}">${esc(T.seal)}</div>` : ""}</div>
         <div class="in">
           <h1>${T.title_html || esc(T.name)}</h1>
