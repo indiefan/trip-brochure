@@ -268,7 +268,7 @@
     $("#app").innerHTML = `
       <section class="cover">
         ${cover ? `<img src="${cover.cover || cover.lg}" style="object-position:${cover.focus}" alt="">` : ""}
-        <div class="top"><div class="kicker">${esc(T.family || "")}${T.family ? " · " : ""}${fmt(T.start, { month: "long", year: "numeric" })}</div>${T.seal ? `<div class="seal">${esc(T.seal)}</div>` : ""}</div>
+        <div class="top"><div class="kicker">${esc(T.family || "")}<span class="k2">${fmt(T.start, { month: "long", year: "numeric" })}</span></div>${T.seal ? `<div class="seal">${esc(T.seal)}</div>` : ""}</div>
         <div class="in">
           <h1>${T.title_html || esc(T.name)}</h1>
           <div class="dates">${fmt(T.start, { month: "long", day: "numeric" })} – ${fmt(T.end, { month: "long", day: "numeric", year: "numeric" })}</div>
@@ -338,6 +338,7 @@
     return all.length && nowMs() > Math.min(...all.map(x => x[0])) - 12 * 3600e3 && nowMs() < Math.max(...all.map(x => x[1]));
   }
   function goNow(smooth) {
+    if (VIEW !== "itinerary") showView("itinerary");
     mark();
     const el = $(".ev.now") ? [...document.querySelectorAll(".ev.now")].at(-1) : $(".ev.next");
     if (!el) return false;
@@ -350,6 +351,12 @@
 
   // --- the bar: which chapter you are in ---------------------------------------------------------------------------
   function bar() {
+    if (VIEW !== "itinerary") {
+      $("#bar").classList.add("on");
+      const html = esc(VIEWS[VIEW]?.title || "");
+      if ($("#bar-title").innerHTML !== html) $("#bar-title").innerHTML = html;
+      return;
+    }
     const cover = $(".cover").getBoundingClientRect().bottom;
     $("#bar").classList.toggle("on", cover < 60);
     let cur = null;
@@ -385,7 +392,7 @@
     const el = dock.el; if (!el || !dock.xs.length) return;
     const route = $(".cover .route").getBoundingClientRect();
     const end = $(".end").getBoundingClientRect();
-    el.classList.toggle("on", route.bottom < 0 && end.top > innerHeight - 90 && viewer.hidden);
+    el.classList.toggle("on", VIEW === "itinerary" && route.bottom < 0 && end.top > innerHeight - 90 && viewer.hidden);
     // where the reader is: the section under a line a third of the way down the screen
     const y = innerHeight * .34;
     const secs = [...document.querySelectorAll(".chapter, .journey")];
@@ -505,7 +512,7 @@
   let barStyle = "";
   const dark = matchMedia("(prefers-color-scheme: dark)");
   function statusBar() {
-    const overPhoto = viewer.hidden && $(".cover").getBoundingClientRect().bottom > 40;
+    const overPhoto = VIEW === "itinerary" && viewer.hidden && $("#menu").hidden && $(".cover").getBoundingClientRect().bottom > 40;
     const want = overPhoto || dark.matches ? "light" : "dark";
     if (want !== barStyle) { barStyle = want; shell?.postMessage({ statusBar: want }); }
   }
@@ -517,6 +524,129 @@
     setTimeout(() => { const el = $("#shellv"); if (el) el.textContent = " · web app"; }, 0);          // after render()
     const ask = () => navigator.serviceWorker.ready.then(r => r.active?.postMessage({ check: true })).catch(() => {});
     ask(); document.addEventListener("visibilitychange", () => { if (!document.hidden) ask(); });
+  }
+
+  // --- views: the itinerary, and other looks at the same trip, chosen from the menu (☰). #weather etc. in the address. ---
+  const VIEWS = {
+    itinerary: { title: T.name, label: "Itinerary", sub: "The trip, day by day" },
+    weather: { title: "The weather", label: "Weather at a glance", sub: "Every day's forecast on one page, for packing", render: weatherView,
+               when: () => Object.keys(T.weather?.days || {}).length > 0 },
+  };
+  let VIEW = "itinerary";
+  const keep = {};                                          // where each view was scrolled to
+  function showView(name, opts = {}) {
+    if (!VIEWS[name] || (VIEWS[name].when && !VIEWS[name].when())) name = "itinerary";
+    if (name === VIEW && !opts.force) { closeMenu(); return; }
+    keep[VIEW] = scrollY;
+    VIEW = name;
+    document.body.dataset.view = name;
+    $("#app").hidden = name !== "itinerary";
+    $("#alt").hidden = name === "itinerary";
+    if (name !== "itinerary") { $("#alt").innerHTML = VIEWS[name].render(); $("#alt").classList.remove("in"); requestAnimationFrame(() => $("#alt").classList.add("in")); }
+    const want = "#" + (name === "itinerary" ? "" : name);
+    if ((location.hash || "#") !== want && !opts.fromHash) history.pushState(null, "", name === "itinerary" ? location.pathname + location.search : want);
+    closeMenu();
+    window.scrollTo(0, name === "itinerary" ? (keep.itinerary || 0) : 0);
+    bar(); statusBar(); dockMove();
+  }
+  addEventListener("popstate", () => showView((location.hash || "").slice(1) || "itinerary", { fromHash: true }));
+  addEventListener("hashchange", () => showView((location.hash || "").slice(1) || "itinerary", { fromHash: true }));
+
+  // the menu: a paper panel from the left, the views listed as a brochure's contents
+  const menu = $("#menu");
+  function openMenu() {
+    const items = Object.entries(VIEWS).filter(([, v]) => !v.when || v.when());
+    $(".panel", menu).innerHTML = `
+      <div class="m-head"><div class="kicker">${esc(T.family || "")}${T.family ? " · " : ""}${fmt(T.start, { month: "short", day: "numeric" })} – ${fmt(T.end, { month: "short", day: "numeric" })}</div>
+        <div class="m-title">${esc(T.name)}</div><button class="m-close" type="button" aria-label="Close">${'<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>'}</button></div>
+      <ol class="m-items">${items.map(([k, v], i) => `<li><button type="button" data-view="${k}" class="${k === VIEW ? "on" : ""}">
+        <span class="n">${["I", "II", "III", "IV", "V", "VI"][i] || i + 1}</span><span class="t"><b>${esc(v.label)}</b><small>${esc(v.sub)}</small></span></button></li>`).join("")}</ol>
+      ${T.seal ? `<div class="m-seal">${esc(T.seal)}</div>` : ""}`;
+    menu.hidden = false;
+    requestAnimationFrame(() => menu.classList.add("open"));
+    $("#menu-btn").setAttribute("aria-expanded", "true");
+    statusBar();
+  }
+  function closeMenu() {
+    if (menu.hidden) return;
+    menu.classList.remove("open");
+    $("#menu-btn").setAttribute("aria-expanded", "false");
+    setTimeout(() => { if (!menu.classList.contains("open")) menu.hidden = true; statusBar(); }, 320);
+  }
+  $("#menu-btn").addEventListener("click", () => menu.hidden ? openMenu() : closeMenu());
+  menu.addEventListener("click", e => {
+    const b = e.target.closest("[data-view]");
+    if (b) return showView(b.dataset.view);
+    if (e.target.closest(".scrim, .m-close")) closeMenu();
+  });
+  // over the cover the button is white on the photograph; elsewhere ink on paper
+  function menuTone() { $("#menu-btn").classList.toggle("over", VIEW === "itinerary" && $(".cover").getBoundingClientRect().bottom > 50); }
+
+  // --- the weather, at a glance: the whole trip on one page, for packing ----------------------------------------------
+  function tempColor(t) {                                  // a cool-to-warm ramp, for the range bars
+    const stops = [[30, [93, 128, 178]], [45, [104, 154, 196]], [55, [120, 178, 160]], [65, [226, 180, 82]], [75, [226, 132, 66]], [90, [196, 72, 48]]];
+    for (let i = 1; i < stops.length; i++) if (t <= stops[i][0]) {
+      const [t0, c0] = stops[i - 1], [t1, c1] = stops[i], f = Math.max(0, (t - t0) / (t1 - t0));
+      return `rgb(${c0.map((v, j) => Math.round(v + (c1[j] - v) * f)).join(",")})`;
+    }
+    return "rgb(196,72,48)";
+  }
+  const dayLabel = iso => fmt(iso, { weekday: "short" });
+  const dayNum = iso => fmt(iso, { month: "short", day: "numeric" });
+  function weatherView() {
+    const W = T.weather?.days || {};
+    const rows = [];                                        // one per city per day, in trip order
+    const dates = (T.days || []).map(d => d.date);
+    dates.forEach(iso => (W[iso] || []).forEach((w, i) => rows.push({ ...w, iso, first: i === 0 })));
+    if (!rows.length) return `<div class="wrap wv"><p class="lede">No forecast yet: it reaches about two weeks ahead.</p></div>`;
+    const lo = Math.min(...rows.map(r => r.lo)), hi = Math.max(...rows.map(r => r.hi));
+    const pad = 2, min = lo - pad, max = hi + pad, pos = t => ((t - min) / (max - min)) * 100;
+    const coldest = rows.reduce((a, b) => b.lo < a.lo ? b : a), warmest = rows.reduce((a, b) => b.hi > a.hi ? b : a);
+    const wet = rows.filter(r => r.rain >= 50), maybe = rows.filter(r => r.rain >= 30 && r.rain < 50);
+    const wetDays = [...new Set(wet.map(r => r.iso))], maybeDays = [...new Set(maybe.map(r => r.iso))].filter(d => !wetDays.includes(d));
+    const list = isos => isos.map(d => `${dayLabel(d)} ${fmt(d, { day: "numeric" })}`).join(", ");
+    // what to pack, said plainly, from the numbers
+    const notes = [];
+    if (coldest.lo <= 52) notes.push(["layer", `A warm layer for the evenings`, `lows reach ${coldest.lo}° in ${coldest.city} on ${dayLabel(coldest.iso)} ${dayNum(coldest.iso)}`]);
+    if (warmest.hi >= 74) notes.push(["sun", `Light clothes for warm afternoons`, `up to ${warmest.hi}° in ${warmest.city} on ${dayLabel(warmest.iso)} ${dayNum(warmest.iso)}`]);
+    if (wetDays.length) notes.push(["rain", `An umbrella or rain jacket`, `rain is likely on ${list(wetDays)}${maybeDays.length ? `, and possible on ${list(maybeDays)}` : ""}`]);
+    else if (maybeDays.length) notes.push(["rain", `A compact umbrella, just in case`, `rain is possible on ${list(maybeDays)}`]);
+    if (!notes.length) notes.push(["sun", "Pack for mild weather", `highs ${Math.min(...rows.map(r => r.hi))}–${hi}°, lows from ${lo}°`]);
+    const NOTE_ICON = { layer: '<path d="M8 4l4 2 4-2 4 3-2 4-2-1v10H8V10l-2 1-2-4z"/>', sun: WX.sun, rain: '<path d="M12 3v1M4 12a8 8 0 0 1 16 0z"/><path d="M12 12v7a2 2 0 0 1-4 0"/>' };
+    // the cities: each stay's span of days, in route order
+    const stays = T.legs.filter(l => l.kind === "stay");
+    const cityCards = stays.map(l => {
+      const rs = rows.filter(r => r.city === l.title && r.iso >= l.start && r.iso <= l.end);
+      if (!rs.length) return "";
+      const h = rs.map(r => r.hi), lw = rs.map(r => r.lo), rainy = rs.filter(r => r.rain >= 50).length;
+      const [k] = wxKind(rs.reduce((a, b) => b.code > a.code ? b : a).code);
+      return `<li style="--c:${color(l.title)}"><div class="cc-top"><b>${esc(l.title)}</b><svg viewBox="0 0 24 24" aria-hidden="true">${WX[k]}</svg></div>
+        <div class="cc-dates">${dayNum(l.start)} – ${dayNum(l.end)}</div>
+        <div class="cc-t"><span>${Math.max(...h)}°</span><small>${Math.min(...lw)}°</small></div>
+        <div class="cc-r">${rainy ? `${rainy} wet day${rainy > 1 ? "s" : ""}` : "Mostly dry"}</div></li>`;
+    }).join("");
+    const ticks = []; for (let t = Math.ceil(min / 10) * 10; t <= max; t += 10) ticks.push(t);
+    const dayRows = dates.map(iso => {
+      const ws = W[iso];
+      const today = iso === now().date ? " today" : "";
+      if (!ws?.length) return `<li class="d none${today}"><div class="when"><b>${dayLabel(iso)}</b><span>${dayNum(iso)}</span></div><div class="none-t">Not in the forecast yet</div></li>`;
+      return `<li class="d${today}"><div class="when"><b>${dayLabel(iso)}</b><span>${dayNum(iso)}</span></div><div class="cities">${ws.map(w => { const [k, word] = wxKind(w.code);
+        return `<div class="c" style="--c:${color(w.city)}"><span class="city">${esc(w.city)}</span><span class="ic" title="${esc(word)}"><svg viewBox="0 0 24 24" aria-hidden="true">${WX[k]}</svg></span>
+          <span class="rain${w.rain >= 50 ? " wet" : w.rain >= 30 ? " maybe" : ""}">${w.rain >= 10 ? `${w.rain}%` : ""}</span>
+          <span class="lo">${w.lo}°</span><span class="track"><i style="left:${pos(w.lo)}%;width:${pos(w.hi) - pos(w.lo)}%;background:linear-gradient(90deg, ${tempColor(w.lo)}, ${tempColor(w.hi)})"></i></span><span class="hi">${w.hi}°</span></div>`; }).join("")}</div></li>`;
+    }).join("");
+    const when = T.weather.sample ? "a sample forecast" : `forecast by Open-Meteo, updated ${new Date(T.weather.updated).toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}`;
+    return `<div class="wrap wv">
+      <header class="wv-head"><div class="kicker">At a glance · ${dayNum(T.start)} – ${dayNum(T.end)}</div><h1>The weather</h1>
+        <p>${rows.length ? `Highs ${Math.min(...rows.map(r => r.hi))}–${hi}°, lows ${lo}–${Math.max(...rows.map(r => r.lo))}°. ` : ""}It firms up as the days come closer; ${esc(when)}.</p></header>
+      <section class="pack"><div class="range"><span>${lo}°</span><i style="background:linear-gradient(90deg, ${tempColor(lo)}, ${tempColor((lo + hi) / 2)}, ${tempColor(hi)})"></i><span>${hi}°</span><small>coolest night to warmest afternoon</small></div>
+        <h2 class="kicker">What to pack</h2>
+        <ul>${notes.map(([k, a, b]) => `<li><svg viewBox="0 0 24 24" aria-hidden="true">${NOTE_ICON[k]}</svg><div><b>${esc(a)}</b><span>${esc(b)}</span></div></li>`).join("")}</ul></section>
+      <h2 class="kicker sec">By city</h2><ol class="cities-sum">${cityCards}</ol>
+      <h2 class="kicker sec">Day by day <span>${ticks.map(t => `${t}°`).join(" · ")}</span></h2>
+      <ol class="days-wx">${dayRows}</ol>
+      <p class="wv-foot">Rain is the chance of any rain that day. ${esc(when.charAt(0).toUpperCase() + when.slice(1))}.</p>
+    </div>`;
   }
 
   // --- go ------------------------------------------------------------------------------------------------------------
@@ -538,11 +668,11 @@
   });
   $("#bar-title").addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
   $("#bar-today").addEventListener("click", () => goToday(true));
-  addEventListener("scroll", () => requestAnimationFrame(() => { bar(); statusBar(); dockMove(); }), { passive: true });
+  addEventListener("scroll", () => requestAnimationFrame(() => { bar(); statusBar(); dockMove(); menuTone(); }), { passive: true });
   addEventListener("resize", () => requestAnimationFrame(dockLayout));
   document.fonts?.ready.then(dockLayout);
   dark.addEventListener?.("change", statusBar);
-  addEventListener("keydown", e => { if (e.key === "Escape") closeDoc(); });
+  addEventListener("keydown", e => { if (e.key === "Escape") { closeDoc(); closeMenu(); } });
   setInterval(mark, 60e3);
   let hiddenAt = 0;
   document.addEventListener("visibilitychange", () => {
@@ -552,7 +682,10 @@
     if (away && onTrip() && viewer.hidden && $("#driver").hidden) goNow(true);
   });
   DEPART = Math.min(...T.events.map(span).filter(Boolean).map(x => x[0]));
-  if (onTrip()) requestAnimationFrame(() => goNow(false));
+  const asked = (location.hash || "").slice(1);
+  if (VIEWS[asked] && asked !== "itinerary") showView(asked, { fromHash: true, force: true });
+  else if (onTrip()) requestAnimationFrame(() => goNow(false));
+  menuTone();
   bar();
   statusBar();
   dockLayout();

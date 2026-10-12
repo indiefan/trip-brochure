@@ -14,11 +14,14 @@
 <link rel="stylesheet" href="app.css">
 </head>
 <body>
+<button id="menu-btn" type="button" aria-label="Menu" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"/></svg></button>
+<div id="menu" hidden><div class="scrim"></div><nav class="panel" aria-label="Views"></nav></div>
 <header id="bar" aria-hidden="true">
   <button id="bar-title" type="button"></button>
   <button id="bar-today" type="button" hidden>Now</button>
 </header>
 <main id="app"></main>
+<main id="alt" hidden></main>
 <div id="viewer" hidden role="dialog" aria-modal="true">
   <div class="v-top">
     <div class="v-head"><div class="v-kicker"></div><div class="v-title"></div></div>

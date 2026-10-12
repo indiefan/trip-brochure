@@ -100,6 +100,23 @@ what it is (plane, train, bus, car, bed, bowl, bag, star), a photograph when the
 Apple Maps search), a short blurb, a "Booked" or "Don't miss" tag, the Directions buttons, the facts, the confirmations,
 and the original itinerary notes folded away under "Itinerary notes".
 
+### The menu, and the weather at a glance
+
+![The menu, and the weather at a glance](docs/screenshots/22-views.jpg)
+
+The round button at the top left (☰) opens a menu of **views**: other looks at the same trip. The itinerary is the
+first; the second is **Weather at a glance**, made for packing:
+
+- the trip's whole range, from the coolest night to the warmest afternoon, as one bar;
+- **What to pack**, said plainly from the numbers: a warm layer when lows reach the low 50s °F, light clothes when
+  highs pass the mid 70s, an umbrella when rain is likely (with the days and places);
+- a card per city: its dates, its highest and lowest, how many wet days;
+- every day's forecast as a row with a range bar on one shared scale, like a good weather app's ten-day view (both
+  cities on a travel day; days beyond the forecast say so).
+
+Each view has its own address (`#weather`), so the phone's back gesture and a bookmark both work. Section 10 shows how to
+add a view of your own.
+
 ### The weather, day by day
 
 ![Day headings with the forecast: one city, and both cities on a travel day](docs/screenshots/21-weather.jpg)
@@ -721,13 +738,18 @@ Things that are a few lines each, all in `trip.json` or at the top of `app.css`:
 - **Colours and fonts:** the `:root` block in `app.css`; `--serif` for a different display face (drop a `.woff2`
   into `app/fonts` and an `@font-face` into `app/fonts.css`).
 - **Cover photograph:** `cover` in `trip.json`; the `focus` moves the crop.
+- **A view of your own** (a packing list, a phrasebook, the hotels side by side): add an entry to `VIEWS` in `app.js`
+  (`{ title, label, sub, render }`; `render()` returns the page's HTML, and `when()` can hide it while there is nothing
+  to show), and it appears in the menu with its own `#address`. `weatherView()` is the worked example: it reads
+  `T` (data.js), lays the page out in the same paper, serif and cards, and needs nothing else.
 - **Fewer features:** delete what you do not want from `app.js`: `docCards()` (confirmations), `whereHTML()` (maps and
   local names), `wxHTML()` (the forecast; or build with `--no-weather`), the dock (`dockLayout`/`dockMove` and the `#dock` markup), `goNow()` (auto-scroll). Each is
   self-contained.
 
 Ideas we did not build, in rough order of how much they would add:
 
-- A **packing list** or **to-do** page (a second data array, a checklist with ticks saved in `localStorage`).
+- A **packing list** or **to-do** view (a second data array, a checklist with ticks saved in `localStorage`), next to
+  the weather view in the menu.
 - A **phrasebook** per country (a few dozen lines with the local script large, like the driver card).
 - **Per-person details**: seats and ticket numbers by traveller, shown on the event under each name.
 - A **"Share to Trip"** iOS Shortcut that saves a screenshot into `docs/` on a shared folder, so a rebuild picks it up.
