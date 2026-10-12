@@ -70,6 +70,7 @@
     const t = `${e.title} ${e.place || ""}`.toLowerCase();
     if (e.type === "Transit" || (!e.type && e.travel)) {                     // an outing on a travel day keeps its own icon
       if (/\bbus\b|limousine/.test(t)) return "bus";                            // before the airports: the KIX bus
+      if (/rental|rent a car|\bsuv\b|hertz|avis|budget|enterprise|alamo|sixt|\bdrive\b/.test(t)) return "car";   // a car picked up at an airport
       if (/flight|\bair\b|delta|korean air|airport|haneda|kix|icn|sea\b/.test(t)) return "plane";
       if (/train|rail|shinkansen|romancecar|\bline\b|tozan|\bjr\b/.test(t)) return "train";    // before "car": Romancecar
       if (/taxi|\bcab\b|\bcar\b/.test(t)) return "car";

@@ -36,7 +36,14 @@ from urllib.parse import quote
 HERE = Path(__file__).resolve().parent
 APP = HERE / "app"
 UA = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_0) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15"}
-FLIGHT = re.compile(r"\b(flight|fly|airport|airline|air)\b", re.I)
+FLIGHT = re.compile(r"\b(flight|fly|airline|airways|air|delta|alaska|united|american airlines|southwest|jetblue|hawaiian|ana|jal|korean air|asiana)\b", re.I)
+FLIGHT_NO = re.compile(r"\b[A-Z]{2}\s?\d{2,4}\b|\([A-Z]{3}\)")                  # DL3807, (SEA): case matters
+CAR = re.compile(r"\b(rental|rent a car|car hire|drive|driving|suv|hertz|avis|budget|enterprise|alamo|sixt|turo)\b", re.I)   # an airport pickup is not a flight
+
+
+def how(text: str) -> str:
+    """How a travel leg goes: a car (even one picked up at an airport) drives; a flight flies; a train is a train."""
+    return "Drive" if CAR.search(text) else "Fly" if FLIGHT.search(text) or FLIGHT_NO.search(text) else "Train" if TRAIN.search(text) else "Travel"
 TRAIN = re.compile(r"\b(train|rail|railway|shinkansen|romancecar|express)\b", re.I)
 
 
@@ -210,7 +217,7 @@ def legs_of(trip: dict, days: list[dict]) -> list[dict]:
         if before:
             used.update(e["id"] for e in before)
             text = " ".join((e["title"] or "") + " " + (e.get("place") or "") for e in before)
-            out.append({"kind": "travel", "title": ("Fly" if FLIGHT.search(text) else "Train" if TRAIN.search(text) else "Travel") + " to " + h["city"],
+            out.append({"kind": "travel", "title": how(text) + " to " + h["city"],
                         "date": before[0]["date"], "end_date": before[-1]["date"], "events": [e["id"] for e in before]})
         stay_days = [d for d in days if h["start"] <= d["date"] < h["end"]]
         evs = [by_id[i] for d in stay_days for i in d["events"] if i not in used and by_id[i].get("type") != "Transit"]
@@ -225,7 +232,7 @@ def legs_of(trip: dict, days: list[dict]) -> list[dict]:
     tail = [e for e in events if e["id"] not in used and (prev_end is None or e["date"] >= prev_end)]
     if tail:
         text = " ".join((e["title"] or "") + " " + (e.get("place") or "") + " " + (e.get("notes") or "") for e in tail)
-        out.append({"kind": "travel", "title": "Fly home" if FLIGHT.search(text) else "Travel home", "date": tail[0]["date"], "end_date": tail[-1]["date"], "events": [e["id"] for e in tail]})
+        out.append({"kind": "travel", "title": {"Fly": "Fly home", "Drive": "Drive home", "Train": "Train home"}.get(how(text), "Travel home"), "date": tail[0]["date"], "end_date": tail[-1]["date"], "events": [e["id"] for e in tail]})
     return out
 
 
