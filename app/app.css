@@ -175,11 +175,11 @@ img { display: block; max-width: 100%; }
 .ev.done { opacity: .55; }
 
 /* facts: label above value, two to a row where there is room */
-.facts { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 12px 16px; margin: 14px 0 0; padding: 14px 0 0; border-top: 1px dashed var(--rule); }
-.facts div { min-width: 0; }
+.facts { display: flex; flex-wrap: wrap; gap: 12px 16px; margin: 14px 0 0; padding: 14px 0 0; border-top: 1px dashed var(--rule); }
+.facts div { min-width: 0; flex: 1 1 118px; }                         /* a short fact alone on its line takes the line, never breaks */
 .facts dt { font-size: 10.5px; font-weight: 650; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); }
 .facts dd { margin: 2px 0 0; font-size: 14.5px; line-height: 1.35; overflow-wrap: anywhere; }
-.facts .wide { grid-column: 1 / -1; }
+.facts .wide { flex-basis: 100%; }
 .facts .code { white-space: normal; overflow-wrap: anywhere; font: 600 14px/1.35 ui-monospace, "SF Mono", Menlo, monospace; letter-spacing: .02em; text-align: left; }
 .facts .code::after { content: " ⧉"; color: var(--ink-3); font-weight: 400; }
 .notes { margin-top: 12px; font-size: 13.5px; color: var(--ink-3); }
