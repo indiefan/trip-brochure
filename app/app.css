@@ -374,3 +374,51 @@ img { display: block; max-width: 100%; }
   .days-wx .d { grid-template-columns: 80px 1fr; padding: 14px 22px; } }
 .cover .top .kicker { line-height: 1.55; margin-top: -2px; }
 .cover .top .kicker .k2 { display: block; color: rgba(255,255,255,.66); }
+
+/* --- the phrasebook ------------------------------------------------------------------------------------------------ */
+.pv { padding-bottom: calc(60px + env(safe-area-inset-bottom, 0px)); }
+.ptabs { display: flex; gap: 8px; margin: 26px 0 6px; padding: 4px; border-radius: 18px; background: var(--paper-2); }
+.ptabs button { flex: 1; padding: 12px 10px 10px; border-radius: 14px; text-align: center; color: var(--ink-2); transition: background .25s, color .25s, box-shadow .25s; }
+.ptabs button b { display: block; font: 600 22px/1.15 var(--mincho); }
+.ptabs button b:lang(ko) { font-family: var(--myeongjo); }
+.ptabs button small { display: block; font-size: 11px; font-weight: 650; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); margin-top: 3px; }
+.ptabs button.on { background: var(--card); color: var(--ink); box-shadow: 0 1px 3px rgba(40,25,5,.12), 0 6px 16px -10px rgba(40,25,5,.3); }
+.ptabs button.on small { color: var(--accent); }
+.phrases { list-style: none; margin: 0; padding: 0; background: var(--card); border-radius: 20px; box-shadow: var(--shadow); overflow: hidden; }
+.phrases li { display: flex; align-items: center; gap: 12px; padding: 0 14px 0 0; border-top: 1px solid var(--rule); }
+.phrases li:first-child { border-top: 0; }
+.phrases .ph { flex: 1; min-width: 0; text-align: left; padding: 15px 4px 15px 18px; display: flex; flex-direction: column; }
+.phrases .ph:active { background: var(--paper-2); }
+.phrases .en { font-size: 13px; font-weight: 650; letter-spacing: .02em; color: var(--ink-2); }
+.phrases .native { font: 600 25px/1.3 var(--mincho); color: var(--ink); margin-top: 4px; }
+.phrases .native:lang(ko) { font-family: var(--myeongjo); font-weight: 700; }
+.phrases .native.long { font-size: 21px; }
+.phrases .native, #say .native { line-break: strict; text-wrap: balance; }
+.phrases .native:lang(ko), #say .native:lang(ko) { word-break: keep-all; }        /* Korean breaks between words; Japanese anywhere, strictly */
+.phrases .roman { font: italic 400 17px/1.3 var(--serif); color: var(--ink-3); margin-top: 1px; }
+.phrases .note { font-size: 12.5px; color: var(--ink-3); margin-top: 6px; }
+.play { flex: none; position: relative; width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; color: var(--accent);
+        border: 1.5px solid color-mix(in srgb, var(--accent) 55%, transparent); background: var(--card); transition: background .2s, color .2s, transform .15s; }
+.play:active { transform: scale(.94); }
+.play svg { width: 21px; height: 21px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.play svg path:first-child { fill: currentColor; }
+.play .bars { display: none; gap: 3px; align-items: flex-end; height: 18px; }
+.play .bars i { width: 3px; border-radius: 2px; background: currentColor; animation: talk .9s ease-in-out infinite; }
+.play .bars i:nth-child(2) { animation-delay: -.3s; } .play .bars i:nth-child(3) { animation-delay: -.6s; }
+@keyframes talk { 0%, 100% { height: 5px; } 50% { height: 18px; } }
+.play.on { background: var(--accent); color: var(--paper); border-color: var(--accent); box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent) 16%, transparent); }
+.play.on svg { display: none; } .play.on .bars { display: flex; }
+@media (prefers-reduced-motion: reduce) { .play .bars i { animation: none; height: 12px; } }
+#say { position: fixed; inset: 0; z-index: 60; background: #fffdf8; color: #141210; display: flex; align-items: center; justify-content: center; padding: 28px;
+       animation: up .28s cubic-bezier(.2,.8,.2,1); }
+#say[hidden] { display: none; }
+#say .x { position: absolute; top: calc(var(--top) + 12px); right: 16px; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: #efeae1; }
+#say .x svg { width: 22px; height: 22px; fill: none; stroke: #333; stroke-width: 2; stroke-linecap: round; }
+#say .card { text-align: center; max-width: 680px; }
+#say .native { font: 600 clamp(40px, 12vw, 84px)/1.25 var(--mincho); }
+#say .native:lang(ko) { font-family: var(--myeongjo); font-weight: 700; }
+#say .roman { font: italic 400 clamp(20px, 5.5vw, 30px)/1.3 var(--serif); color: #6b645a; margin-top: 16px; }
+#say .en { font-size: 13px; font-weight: 650; letter-spacing: .14em; text-transform: uppercase; color: #8a8378; margin-top: 18px; }
+#say .play.big { width: auto; height: auto; display: inline-flex; gap: 10px; padding: 14px 26px 14px 20px; border-radius: 999px; margin-top: 36px; font-weight: 700; font-size: 16px; background: #fffdf8; }
+#say .play.big.on { background: var(--accent); color: #fffdf8; }
+#say .play.big.on span { display: inline; }

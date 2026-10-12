@@ -324,7 +324,7 @@ def build(src: Path, out: Path, refetch_fonts: bool = False, fetch_remote: bool 
     wx = weather(trip, days, cache, refresh_weather) if with_weather else None
     built = datetime.now(timezone.utc)
     data = {k: trip.get(k) for k in ("name", "title_html", "family", "seal", "farewell", "intro", "start", "end", "people", "zones", "timezone", "bundle_id", "please", "languages")}
-    data.update({"weather": wx, "cities": {k: {"color": v.get("color")} for k, v in (trip.get("cities") or {}).items()}, "days": days, "legs": legs, "events": events, "hotels": hotels,
+    data.update({"phrases": phrasebook(src, files), "weather": wx, "cities": {k: {"color": v.get("color")} for k, v in (trip.get("cities") or {}).items()}, "days": days, "legs": legs, "events": events, "hotels": hotels,
                  "docs": docs_out, "cover": cover, "credits": credits + list(trip.get("credits") or []),
                  "built": built.strftime("%Y-%m-%dT%H:%M:%SZ"), "version": built.strftime("%Y%m%d.%H%M%S")})
     files["data.js"] = ("window.TRIP = " + json.dumps(data, ensure_ascii=False, separators=(",", ":")) + ";\n").encode()
@@ -334,7 +334,7 @@ def build(src: Path, out: Path, refetch_fonts: bool = False, fetch_remote: bool 
         if f.is_file():
             files[str(f.relative_to(APP))] = f.read_bytes()
     if refetch_fonts:
-        files["fonts.css"] = fonts(trip, files, cache).encode()
+        files["fonts.css"] = fonts(trip, files, cache, src).encode()
     icon = src / "icon.png"
     if icon.exists():
         files["icon.png"] = icon.read_bytes()
@@ -418,17 +418,47 @@ def weather(trip: dict, days: list[dict], cache: Path, refresh: bool = False) ->
     return out
 
 
+# --- the phrasebook: phrases.json in the trip folder, with sound from pipeline/phrase_audio.py ----------------------
+
+def phrasebook(src: Path, files: dict) -> dict | None:
+    """phrases.json brought in (see HANDBOOK.md): each phrase per language as {text, roman, note?, audio?, learn?}
+    (a ["text", "roman", "note"] list works too); its recordings copied into audio/."""
+    path = src / "phrases.json"
+    if not path.exists():
+        return None
+    book = json.loads(path.read_text(encoding="utf-8"))
+    for sec in book.get("sections", []):
+        for ph in sec.get("phrases", []):
+            for lang in book.get("languages", {}):
+                x = ph.get(lang)
+                if isinstance(x, list):
+                    x = ph[lang] = {"text": x[0], "roman": x[1] if len(x) > 1 else "", "note": x[2] if len(x) > 2 else None}
+                if not x:
+                    continue
+                for k in ("audio", "learn"):
+                    f = x.get(k)
+                    if f and (src / f).exists():
+                        b = (src / f).read_bytes(); name = f"audio/{hashlib.sha1(b).hexdigest()[:16]}.m4a"
+                        files[name] = b; x[k] = name
+                    else:
+                        x[k] = None
+    return book
+
+
 FONTS = [("Instrument+Serif:ital@0;1", "instrument", None), ("Shippori+Mincho:wght@600", "mincho", "ja"), ("Nanum+Myeongjo:wght@700", "myeongjo", "ko")]
 
 
-def fonts(trip: dict, files: dict, cache: Path) -> str:
+def fonts(trip: dict, files: dict, cache: Path, src_dir: Path) -> str:
     """Google Fonts, brought in: the serif whole, the Japanese and Korean faces subset to the trip's own words (a full
     CJK face is megabytes; the subset is kilobytes). Anything not in the subset falls back to the phone's own font."""
     import requests
     for k in [n for n in files if n.startswith("fonts/")]:
         del files[k]
     words = {"ja": "", "ko": ""}
-    for s in [trip.get("seal", ""), (trip.get("farewell") or {}).get("native", "")] + [c.get("native", "") for c in (trip.get("cities") or {}).values()]:
+    book = json.loads((src_dir / "phrases.json").read_text(encoding="utf-8")) if (src_dir / "phrases.json").exists() else {}
+    said = [(x if isinstance(x, list) else [x.get("text", "")])[0] for sec in book.get("sections", []) for ph in sec.get("phrases", [])
+            for lang, x in ph.items() if lang in ("ja", "ko") and x] + [v.get("native", "") for v in book.get("languages", {}).values()]
+    for s in [trip.get("seal", ""), (trip.get("farewell") or {}).get("native", "")] + [c.get("native", "") for c in (trip.get("cities") or {}).values()] + said:
         for ch in s:
             words["ko" if "가" <= ch <= "힯" else "ja"] += ch
     css_all = []

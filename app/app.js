@@ -531,6 +531,8 @@
     itinerary: { title: T.name, label: "Itinerary", sub: "The trip, day by day" },
     weather: { title: "The weather", label: "Weather at a glance", sub: "Every day's forecast on one page, for packing", render: weatherView,
                when: () => Object.keys(T.weather?.days || {}).length > 0 },
+    phrases: { title: "Phrasebook", label: "Phrasebook", sub: "Say it in the local language: tap to hear it", render: phraseView,
+               when: () => !!T.phrases?.sections?.length },
   };
   let VIEW = "itinerary";
   const keep = {};                                          // where each view was scrolled to
@@ -648,6 +650,68 @@
       <p class="wv-foot">Rain is the chance of any rain that day. ${esc(when.charAt(0).toUpperCase() + when.slice(1))}.</p>
     </div>`;
   }
+
+  // --- the phrasebook: tap to hear (naturally, slowly, naturally), hold the card up to show someone ------------------
+  const SPEAKER = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13L7.5 14.5H4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18.3 6.5a7.5 7.5 0 0 1 0 11"/></svg>';
+  const BARS = '<span class="bars" aria-hidden="true"><i></i><i></i><i></i></span>';
+  function phraseLang() {
+    const langs = Object.keys(T.phrases?.languages || {});
+    let pick = null;
+    try { pick = sessionStorage.getItem("phrases.lang"); } catch (e) {}
+    if (pick && langs.includes(pick)) return pick;
+    const today = (T.days || []).find(d => d.date === now().date);           // on the road: the country you are in
+    const country = today && (T.hotels.find(h => h.id === today.hotel_id) || {}).country;
+    return langs.find(l => (T.phrases.languages[l].countries || []).includes(country)) || langs[0];
+  }
+  function phraseView() {
+    const P = T.phrases, lang = phraseLang(), L = P.languages[lang];
+    const tabs = Object.entries(P.languages).map(([k, v]) => `<button type="button" data-plang="${k}" class="${k === lang ? "on" : ""}"><b lang="${k}">${esc(v.native)}</b><small>${esc(v.name)}</small></button>`).join("");
+    const sections = P.sections.map(sec => {
+      const rows = sec.phrases.filter(ph => ph[lang]).map((ph, i) => { const x = ph[lang];
+        return `<li><button type="button" class="ph" data-say="${esc(JSON.stringify({ en: ph.en, text: x.text, roman: x.roman, audio: x.audio, lang }))}">
+            <span class="en">${esc(ph.en)}</span><span class="native${[...x.text].length > 8 ? " long" : ""}" lang="${lang}">${esc(x.text)}</span><span class="roman">${esc(x.roman)}</span>${x.note || ph.note ? `<span class="note">${esc(x.note || ph.note)}</span>` : ""}</button>
+          ${x.learn ? `<button type="button" class="play" data-play="${x.learn}" aria-label="Hear “${esc(ph.en)}”">${SPEAKER}${BARS}</button>` : ""}</li>`; }).join("");
+      return rows ? `<h2 class="kicker sec">${esc(sec.title)}</h2><ol class="phrases">${rows}</ol>` : "";
+    }).join("");
+    return `<div class="wrap pv">
+      <header class="wv-head"><div class="kicker">Phrasebook · ${esc(L.name)}</div><h1>Say it</h1>
+        <p>Tap the speaker to hear a phrase said naturally, then slowly, then naturally again. Tap the words to show them to someone.</p></header>
+      <div class="ptabs" role="tablist">${tabs}</div>
+      ${sections}
+      <p class="wv-foot">Voices by Gemini, each recording checked by ear. Phrases are polite and simple: people are kind to visitors who try.</p>
+    </div>`;
+  }
+  // playing: one at a time; the files are read as blobs (plays inside the app, offline, with no media range requests)
+  const blobs = {};
+  let playing = null;
+  async function play(src, btn) {
+    if (playing) { playing.audio.pause(); playing.btn?.classList.remove("on"); const was = playing.src; playing = null; if (was === src && btn) return; }
+    try {
+      if (!blobs[src]) blobs[src] = URL.createObjectURL(await (await fetch(src)).blob());
+      const audio = new Audio(blobs[src]);
+      playing = { audio, btn, src };
+      btn?.classList.add("on");
+      audio.onended = audio.onpause = () => { btn?.classList.remove("on"); if (playing?.audio === audio) playing = null; };
+      await audio.play();
+    } catch (e) { btn?.classList.remove("on"); toast("Couldn't play that one"); }
+  }
+  function showSay(d) {
+    const el = document.getElementById("say");
+    el.innerHTML = `<button class="x" type="button" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      <div class="card"><div class="native" lang="${esc(d.lang)}">${esc(d.text)}</div><div class="roman">${esc(d.roman)}</div><div class="en">${esc(d.en)}</div>
+        ${d.audio ? `<button class="play big" type="button" data-play="${esc(d.audio)}" aria-label="Play">${SPEAKER}${BARS}<span>Play</span></button>` : ""}</div>`;
+    el.hidden = false;
+    statusBar();
+  }
+  document.addEventListener("click", e => {
+    const t = e.target.closest("[data-plang]");
+    if (t) { try { sessionStorage.setItem("phrases.lang", t.dataset.plang); } catch (err) {} const y = scrollY; $("#alt").innerHTML = phraseView(); window.scrollTo(0, y); return; }
+    const pl = e.target.closest("[data-play]");
+    if (pl) { e.stopPropagation(); play(pl.dataset.play, pl); return; }
+    const sy = e.target.closest("[data-say]");
+    if (sy) { showSay(JSON.parse(sy.dataset.say)); return; }
+    if (e.target.closest("#say .x")) { if (playing) playing.audio.pause(); $("#say").hidden = true; statusBar(); }
+  });
 
   // --- go ------------------------------------------------------------------------------------------------------------
   document.title = T.name;

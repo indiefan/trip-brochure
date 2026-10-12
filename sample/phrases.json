@@ -1,0 +1,542 @@
+{
+ "languages": {
+  "ja": {
+   "name": "Japanese",
+   "native": "日本語",
+   "countries": [
+    "Japan"
+   ]
+  },
+  "ko": {
+   "name": "Korean",
+   "native": "한국어",
+   "countries": [
+    "South Korea",
+    "Korea"
+   ]
+  }
+ },
+ "sections": [
+  {
+   "key": "essentials",
+   "title": "Essentials",
+   "phrases": [
+    {
+     "en": "Hello",
+     "ja": {
+      "text": "こんにちは",
+      "roman": "konnichiwa",
+      "audio": "audio/763ee1912e783faf.m4a",
+      "learn": "audio/763ee1912e783faf-learn.m4a"
+     },
+     "ko": {
+      "text": "안녕하세요",
+      "roman": "annyeonghaseyo",
+      "audio": "audio/b8efdcc2b7f1d77d.m4a",
+      "learn": "audio/b8efdcc2b7f1d77d-learn.m4a"
+     }
+    },
+    {
+     "en": "Thank you",
+     "ja": {
+      "text": "ありがとうございます",
+      "roman": "arigatō gozaimasu",
+      "audio": "audio/44eeeb520448a79c.m4a",
+      "learn": "audio/44eeeb520448a79c-learn.m4a"
+     },
+     "ko": {
+      "text": "감사합니다",
+      "roman": "gamsahamnida",
+      "audio": "audio/3eefeaedd1a906cc.m4a",
+      "learn": "audio/3eefeaedd1a906cc-learn.m4a"
+     }
+    },
+    {
+     "en": "Excuse me",
+     "ja": {
+      "text": "すみません",
+      "roman": "sumimasen",
+      "note": "To get someone's attention, or to say sorry",
+      "audio": "audio/6964b25d9f866ed9.m4a",
+      "learn": "audio/6964b25d9f866ed9-learn.m4a"
+     },
+     "ko": {
+      "text": "저기요",
+      "roman": "jeogiyo",
+      "note": "To get someone's attention: a server, a passer-by",
+      "audio": "audio/2185f0ff7093e4be.m4a",
+      "learn": "audio/2185f0ff7093e4be-learn.m4a"
+     }
+    },
+    {
+     "en": "I'm sorry",
+     "ja": {
+      "text": "ごめんなさい",
+      "roman": "gomennasai",
+      "audio": "audio/30a3ca8303f8bcec.m4a",
+      "learn": "audio/30a3ca8303f8bcec-learn.m4a"
+     },
+     "ko": {
+      "text": "죄송합니다",
+      "roman": "joesonghamnida",
+      "audio": "audio/2df05170d36dcfe6.m4a",
+      "learn": "audio/2df05170d36dcfe6-learn.m4a"
+     }
+    },
+    {
+     "en": "Yes",
+     "ja": {
+      "text": "はい",
+      "roman": "hai",
+      "audio": "audio/3ee19911431c9740.m4a",
+      "learn": "audio/3ee19911431c9740-learn.m4a"
+     },
+     "ko": {
+      "text": "네",
+      "roman": "ne",
+      "audio": "audio/3592c64ceafe50c2.m4a",
+      "learn": "audio/3592c64ceafe50c2-learn.m4a"
+     }
+    },
+    {
+     "en": "No",
+     "ja": {
+      "text": "いいえ",
+      "roman": "iie",
+      "audio": "audio/3213996e0616c203.m4a",
+      "learn": "audio/3213996e0616c203-learn.m4a"
+     },
+     "ko": {
+      "text": "아니요",
+      "roman": "aniyo",
+      "audio": "audio/e209dffcfcc374e7.m4a",
+      "learn": "audio/e209dffcfcc374e7-learn.m4a"
+     }
+    },
+    {
+     "en": "Do you speak English?",
+     "ja": {
+      "text": "英語を話せますか？",
+      "roman": "eigo o hanasemasu ka?",
+      "audio": "audio/eab203a1d4fda4a9.m4a",
+      "learn": "audio/eab203a1d4fda4a9-learn.m4a"
+     },
+     "ko": {
+      "text": "영어 하실 수 있어요?",
+      "roman": "yeongeo hasil su isseoyo?",
+      "audio": "audio/7f3ac74d636a0cbb.m4a",
+      "learn": "audio/7f3ac74d636a0cbb-learn.m4a"
+     }
+    },
+    {
+     "en": "I don't understand",
+     "ja": {
+      "text": "わかりません",
+      "roman": "wakarimasen",
+      "audio": "audio/21d6534794ab290a.m4a",
+      "learn": "audio/21d6534794ab290a-learn.m4a"
+     },
+     "ko": {
+      "text": "잘 모르겠어요",
+      "roman": "jal moreugesseoyo",
+      "audio": "audio/11368c584be96c26.m4a",
+      "learn": "audio/11368c584be96c26-learn.m4a"
+     }
+    },
+    {
+     "en": "Goodbye",
+     "ja": {
+      "text": "さようなら",
+      "roman": "sayōnara",
+      "audio": "audio/21c3073da3d5efff.m4a",
+      "learn": "audio/21c3073da3d5efff-learn.m4a"
+     },
+     "ko": {
+      "text": "안녕히 계세요",
+      "roman": "annyeonghi gyeseyo",
+      "audio": "audio/50ae80ff6da37c57.m4a",
+      "learn": "audio/50ae80ff6da37c57-learn.m4a"
+     }
+    }
+   ]
+  },
+  {
+   "key": "around",
+   "title": "Getting around",
+   "phrases": [
+    {
+     "en": "Where is the station?",
+     "ja": {
+      "text": "駅はどこですか？",
+      "roman": "eki wa doko desu ka?",
+      "audio": "audio/2d012e6255a95666.m4a",
+      "learn": "audio/2d012e6255a95666-learn.m4a"
+     },
+     "ko": {
+      "text": "역이 어디예요?",
+      "roman": "yeogi eodiyeyo?",
+      "audio": "audio/f3aa6f6e6003e453.m4a",
+      "learn": "audio/f3aa6f6e6003e453-learn.m4a"
+     }
+    },
+    {
+     "en": "Where is the restroom?",
+     "ja": {
+      "text": "トイレはどこですか？",
+      "roman": "toire wa doko desu ka?",
+      "audio": "audio/54eedaac214c0b00.m4a",
+      "learn": "audio/54eedaac214c0b00-learn.m4a"
+     },
+     "ko": {
+      "text": "화장실이 어디예요?",
+      "roman": "hwajangsiri eodiyeyo?",
+      "audio": "audio/0ffef3ae23d48542.m4a",
+      "learn": "audio/0ffef3ae23d48542-learn.m4a"
+     }
+    },
+    {
+     "en": "Please take me here",
+     "note": "To a taxi driver, showing the address",
+     "ja": {
+      "text": "ここまでお願いします",
+      "roman": "koko made onegaishimasu",
+      "audio": "audio/d7f3b377999304d8.m4a",
+      "learn": "audio/d7f3b377999304d8-learn.m4a"
+     },
+     "ko": {
+      "text": "여기로 가 주세요",
+      "roman": "yeogiro ga juseyo",
+      "audio": "audio/efe6c3f38693d7f3.m4a",
+      "learn": "audio/efe6c3f38693d7f3-learn.m4a"
+     }
+    },
+    {
+     "en": "How long does it take?",
+     "ja": {
+      "text": "どのくらいかかりますか？",
+      "roman": "dono kurai kakarimasu ka?",
+      "audio": "audio/ceba5f70035a753e.m4a",
+      "learn": "audio/ceba5f70035a753e-learn.m4a"
+     },
+     "ko": {
+      "text": "얼마나 걸려요?",
+      "roman": "eolmana geollyeoyo?",
+      "audio": "audio/0836a811714dcf7e.m4a",
+      "learn": "audio/0836a811714dcf7e-learn.m4a"
+     }
+    }
+   ]
+  },
+  {
+   "key": "food",
+   "title": "Eating out",
+   "phrases": [
+    {
+     "en": "A table for three, please",
+     "ja": {
+      "text": "三人です",
+      "roman": "san-nin desu",
+      "audio": "audio/5a85e5bd0fde5d12.m4a",
+      "learn": "audio/5a85e5bd0fde5d12-learn.m4a"
+     },
+     "ko": {
+      "text": "세 명이요",
+      "roman": "se myeong-iyo",
+      "audio": "audio/b39874bfbbe72722.m4a",
+      "learn": "audio/b39874bfbbe72722-learn.m4a"
+     }
+    },
+    {
+     "en": "Do you have an English menu?",
+     "ja": {
+      "text": "英語のメニューはありますか？",
+      "roman": "eigo no menyū wa arimasu ka?",
+      "audio": "audio/4e53737d7d87f4ba.m4a",
+      "learn": "audio/4e53737d7d87f4ba-learn.m4a"
+     },
+     "ko": {
+      "text": "영어 메뉴 있어요?",
+      "roman": "yeongeo menyu isseoyo?",
+      "audio": "audio/512db7d45842de74.m4a",
+      "learn": "audio/512db7d45842de74-learn.m4a"
+     }
+    },
+    {
+     "en": "This one, please",
+     "ja": {
+      "text": "これをお願いします",
+      "roman": "kore o onegaishimasu",
+      "audio": "audio/893a61e8cb34de52.m4a",
+      "learn": "audio/893a61e8cb34de52-learn.m4a"
+     },
+     "ko": {
+      "text": "이거 주세요",
+      "roman": "igeo juseyo",
+      "audio": "audio/3716c9d2cfb657d0.m4a",
+      "learn": "audio/3716c9d2cfb657d0-learn.m4a"
+     }
+    },
+    {
+     "en": "Water, please",
+     "ja": {
+      "text": "お水をお願いします",
+      "roman": "omizu o onegaishimasu",
+      "audio": "audio/b99436d710770d72.m4a",
+      "learn": "audio/b99436d710770d72-learn.m4a"
+     },
+     "ko": {
+      "text": "물 좀 주세요",
+      "roman": "mul jom juseyo",
+      "audio": "audio/2cf2c1c226751895.m4a",
+      "learn": "audio/2cf2c1c226751895-learn.m4a"
+     }
+    },
+    {
+     "en": "It's delicious",
+     "ja": {
+      "text": "おいしいです",
+      "roman": "oishii desu",
+      "audio": "audio/c31bc37011e6269a.m4a",
+      "learn": "audio/c31bc37011e6269a-learn.m4a"
+     },
+     "ko": {
+      "text": "맛있어요",
+      "roman": "masisseoyo",
+      "audio": "audio/71d00826ebe4a933.m4a",
+      "learn": "audio/71d00826ebe4a933-learn.m4a"
+     }
+    },
+    {
+     "en": "The check, please",
+     "ja": {
+      "text": "お会計をお願いします",
+      "roman": "okaikei o onegaishimasu",
+      "audio": "audio/3010e1a6a1570801.m4a",
+      "learn": "audio/3010e1a6a1570801-learn.m4a"
+     },
+     "ko": {
+      "text": "계산해 주세요",
+      "roman": "gyesanhae juseyo",
+      "audio": "audio/5f1f6c540fa64614.m4a",
+      "learn": "audio/5f1f6c540fa64614-learn.m4a"
+     }
+    },
+    {
+     "en": "Thank you for the meal",
+     "note": "On the way out",
+     "ja": {
+      "text": "ごちそうさまでした",
+      "roman": "gochisōsama deshita",
+      "audio": "audio/a7384abc232e141a.m4a",
+      "learn": "audio/a7384abc232e141a-learn.m4a"
+     },
+     "ko": {
+      "text": "잘 먹었습니다",
+      "roman": "jal meogeotseumnida",
+      "audio": "audio/ad733b792b91f8d7.m4a",
+      "learn": "audio/ad733b792b91f8d7-learn.m4a"
+     }
+    }
+   ]
+  },
+  {
+   "key": "shopping",
+   "title": "Shopping",
+   "phrases": [
+    {
+     "en": "How much is it?",
+     "ja": {
+      "text": "いくらですか？",
+      "roman": "ikura desu ka?",
+      "audio": "audio/29ace7cdebed1ee6.m4a",
+      "learn": "audio/29ace7cdebed1ee6-learn.m4a"
+     },
+     "ko": {
+      "text": "얼마예요?",
+      "roman": "eolmayeyo?",
+      "audio": "audio/aba35c6bdf6b8a2d.m4a",
+      "learn": "audio/aba35c6bdf6b8a2d-learn.m4a"
+     }
+    },
+    {
+     "en": "Can I pay by card?",
+     "ja": {
+      "text": "カードで払えますか？",
+      "roman": "kādo de haraemasu ka?",
+      "audio": "audio/bd546866fc677dc0.m4a",
+      "learn": "audio/bd546866fc677dc0-learn.m4a"
+     },
+     "ko": {
+      "text": "카드 돼요?",
+      "roman": "kadeu dwaeyo?",
+      "audio": "audio/0e8d473c87d66852.m4a",
+      "learn": "audio/0e8d473c87d66852-learn.m4a"
+     }
+    },
+    {
+     "en": "Just looking, thank you",
+     "ja": {
+      "text": "見ているだけです",
+      "roman": "mite iru dake desu",
+      "audio": "audio/d8eb4291cb4dec45.m4a",
+      "learn": "audio/d8eb4291cb4dec45-learn.m4a"
+     },
+     "ko": {
+      "text": "그냥 구경하는 거예요",
+      "roman": "geunyang gugyeonghaneun geoyeyo",
+      "audio": "audio/0b91d4842a58ee62.m4a",
+      "learn": "audio/0b91d4842a58ee62-learn.m4a"
+     }
+    },
+    {
+     "en": "Tax-free, please",
+     "note": "Bring your passport",
+     "ja": {
+      "text": "免税でお願いします",
+      "roman": "menzei de onegaishimasu",
+      "audio": "audio/299bdb39c91afd53.m4a",
+      "learn": "audio/299bdb39c91afd53-learn.m4a"
+     },
+     "ko": {
+      "text": "택스 리펀드 돼요?",
+      "roman": "taekseu ripeondeu dwaeyo?",
+      "audio": "audio/bc677629435710f2.m4a",
+      "learn": "audio/bc677629435710f2-learn.m4a"
+     }
+    }
+   ]
+  },
+  {
+   "key": "hotel",
+   "title": "At the hotel",
+   "phrases": [
+    {
+     "en": "I have a reservation",
+     "ja": {
+      "text": "予約しています",
+      "roman": "yoyaku shite imasu",
+      "audio": "audio/058fed1479803086.m4a",
+      "learn": "audio/058fed1479803086-learn.m4a"
+     },
+     "ko": {
+      "text": "예약했어요",
+      "roman": "yeyakaesseoyo",
+      "audio": "audio/4af0fd881440dd52.m4a",
+      "learn": "audio/4af0fd881440dd52-learn.m4a"
+     }
+    },
+    {
+     "en": "Could you keep our bags?",
+     "ja": {
+      "text": "荷物を預かってもらえますか？",
+      "roman": "nimotsu o azukatte moraemasu ka?",
+      "audio": "audio/04948535b5fb12a1.m4a",
+      "learn": "audio/04948535b5fb12a1-learn.m4a"
+     },
+     "ko": {
+      "text": "짐 좀 맡아 주실 수 있어요?",
+      "roman": "jim jom mata jusil su isseoyo?",
+      "audio": "audio/0834e3616374cf67.m4a",
+      "learn": "audio/0834e3616374cf67-learn.m4a"
+     }
+    },
+    {
+     "en": "What's the Wi-Fi password?",
+     "ja": {
+      "text": "Wi-Fiのパスワードは何ですか？",
+      "roman": "waifai no pasuwādo wa nan desu ka?",
+      "audio": "audio/6b98ca567a3077f7.m4a",
+      "learn": "audio/6b98ca567a3077f7-learn.m4a"
+     },
+     "ko": {
+      "text": "와이파이 비밀번호가 뭐예요?",
+      "roman": "waipai bimilbeonhoga mwoyeyo?",
+      "audio": "audio/884a9e28302cfc3f.m4a",
+      "learn": "audio/884a9e28302cfc3f-learn.m4a"
+     }
+    }
+   ]
+  },
+  {
+   "key": "help",
+   "title": "Help",
+   "phrases": [
+    {
+     "en": "Help!",
+     "ja": {
+      "text": "助けて！",
+      "roman": "tasukete!",
+      "audio": "audio/8d573ad0961a064c.m4a",
+      "learn": "audio/8d573ad0961a064c-learn.m4a"
+     },
+     "ko": {
+      "text": "도와주세요!",
+      "roman": "dowajuseyo!",
+      "audio": "audio/31ea4d649229689d.m4a",
+      "learn": "audio/31ea4d649229689d-learn.m4a"
+     }
+    },
+    {
+     "en": "Please call an ambulance",
+     "ja": {
+      "text": "救急車を呼んでください",
+      "roman": "kyūkyūsha o yonde kudasai",
+      "audio": "audio/66c50656e0f5735a.m4a",
+      "learn": "audio/66c50656e0f5735a-learn.m4a"
+     },
+     "ko": {
+      "text": "구급차 불러 주세요",
+      "roman": "gugeupcha bulleo juseyo",
+      "audio": "audio/5c22c1911f4f21dc.m4a",
+      "learn": "audio/5c22c1911f4f21dc-learn.m4a"
+     }
+    },
+    {
+     "en": "Where is a hospital?",
+     "ja": {
+      "text": "病院はどこですか？",
+      "roman": "byōin wa doko desu ka?",
+      "audio": "audio/cc2229ad8ebd00f1.m4a",
+      "learn": "audio/cc2229ad8ebd00f1-learn.m4a"
+     },
+     "ko": {
+      "text": "병원이 어디예요?",
+      "roman": "byeongwoni eodiyeyo?",
+      "audio": "audio/f55080cecece438e.m4a",
+      "learn": "audio/f55080cecece438e-learn.m4a"
+     }
+    },
+    {
+     "en": "I'm lost",
+     "ja": {
+      "text": "道に迷いました",
+      "roman": "michi ni mayoimashita",
+      "audio": "audio/dc38d746eb8c4ad9.m4a",
+      "learn": "audio/dc38d746eb8c4ad9-learn.m4a"
+     },
+     "ko": {
+      "text": "길을 잃었어요",
+      "roman": "gireul ireosseoyo",
+      "audio": "audio/60788aaed53171be.m4a",
+      "learn": "audio/60788aaed53171be-learn.m4a"
+     }
+    },
+    {
+     "en": "I have a food allergy",
+     "ja": {
+      "text": "食べ物のアレルギーがあります",
+      "roman": "tabemono no arerugī ga arimasu",
+      "audio": "audio/c7fbcd5caa9091c3.m4a",
+      "learn": "audio/c7fbcd5caa9091c3-learn.m4a"
+     },
+     "ko": {
+      "text": "음식 알레르기가 있어요",
+      "roman": "eumsik allereugiga isseoyo",
+      "audio": "audio/0dcc8a38af441158.m4a",
+      "learn": "audio/0dcc8a38af441158-learn.m4a"
+     }
+    }
+   ]
+  }
+ ]
+}

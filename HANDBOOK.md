@@ -117,6 +117,24 @@ first; the second is **Weather at a glance**, made for packing:
 Each view has its own address (`#weather`), so the phone's back gesture and a bookmark both work. Section 10 shows how to
 add a view of your own.
 
+### The phrasebook, with sound
+
+![The phrasebook: Japanese, Korean, a phrase playing, and the card to show someone](docs/screenshots/23-phrasebook.jpg)
+
+The third view: the everyday phrases (essentials, getting around, eating out, shopping, the hotel, help) in each
+language of the trip, the one for the country you are in shown first during the trip. Each phrase shows its English,
+the phrase in its own script (in the same brushed serif as the cover's city names), and a romanization to read aloud.
+
+- **Tap the speaker** to hear it: said naturally, then slowly with every sound exaggerated so you can copy it, then
+  naturally again. The phrase is said by Gemini's text-to-speech in a native voice for the language (standard Tokyo
+  Japanese, standard Seoul Korean, …), and every recording is checked by a second model that listens and says whether
+  it heard exactly that phrase.
+- **Tap the words** for a full-screen card to hold up for someone (a taxi driver, a waiter), with the natural recording.
+- It all works offline: the recordings are small AAC files inside the app (the sample's 64 phrases are about 4 MB).
+
+You write the phrases (`phrases.json`, section 5) and `pipeline/phrase_audio.py` makes the sound (section 6). Without
+sound the phrasebook still works as text.
+
 ### The weather, day by day
 
 ![Day headings with the forecast: one city, and both cities on a travel day](docs/screenshots/21-weather.jpg)
@@ -383,6 +401,30 @@ A night with no hotel (an overnight flight, a night train) simply has no chapter
 - Pictures an email loads from the web are fetched once while building and kept locally (`--no-remote` to skip).
   Tracking pixels, scripts and forms are stripped.
 
+### The phrasebook (`phrases.json`)
+
+Optional: a file next to `trip.json`. Languages by code, sections, phrases:
+
+```json
+{
+ "languages": {"ja": {"name": "Japanese", "native": "日本語", "countries": ["Japan"]},
+               "ko": {"name": "Korean", "native": "한국어", "countries": ["South Korea"]}},
+ "sections": [
+  {"key": "essentials", "title": "Essentials", "phrases": [
+   {"en": "Thank you", "ja": ["ありがとうございます", "arigatō gozaimasu"], "ko": ["감사합니다", "gamsahamnida"]},
+   {"en": "Excuse me", "ja": ["すみません", "sumimasen", "To get someone's attention, or to say sorry"],
+                       "ko": ["저기요", "jeogiyo", "To get someone's attention: a server, a passer-by"]}
+  ]}
+ ]
+}
+```
+
+Each language's entry is `[phrase, romanization, note]` (the note optional, and per language: the same English can
+need different advice). `countries` decides which language opens first, from the hotel's `country` on the day.
+`pipeline/phrase_audio.py` turns entries into objects with `audio` and `learn` file paths. `sample/phrases.json` has 32
+phrases in Japanese and Korean to start from. Keep phrases polite and short; check them with a speaker if you can (or
+ask Claude, and listen to the recordings).
+
 ### Photographs
 
 Any JPEG or PNG in the trip folder. `focus` is a CSS object-position ("50% 50%" is the middle; "68% 50%" keeps the
@@ -473,6 +515,24 @@ Claude reads a screenshot, PDF or `.eml` (it can see images and PDFs), lists eve
 two), and matches each to an existing event or adds a new one (`C-…`). With `--apply` the blank fields of matched
 events are filled, confirmation numbers appended, the document registered under `docs` and linked. Your copy of the
 original stays where it was.
+
+### `phrase_audio.py` — the phrasebook's sound (Gemini)
+
+```bash
+export GEMINI_API_KEY=…        # aistudio.google.com → Get API key (free tier works; paid is faster)
+brew install ffmpeg            # once
+python3 pipeline/phrase_audio.py mytrip/
+```
+
+For every phrase without sound: two recordings with **Gemini 3.8 Flash TTS**, one natural and one slow with exaggerated
+pronunciation, in a native voice and accent for the language (the voices and accents are a table at the top of the
+script: Japanese, Korean, Mandarin, Thai, Vietnamese, French, Spanish, Italian, German, Portuguese and Greek are set up;
+any other language gets a neutral standard accent). The accent and pace go in the API's `speech_metadata` style, not in
+the text: the 3.8 models read any direction in the text aloud. **Gemini 3.6 Flash** then listens to each recording and
+says whether it heard exactly the phrase, naturally pronounced; a rejected one is made again (the last try in another
+voice). The two recordings are kept as `audio/<key>.m4a` and joined (natural, pause, slow, pause, natural) into
+`audio/<key>-learn.m4a`. About 12 seconds per phrase, a few cents for a whole phrasebook. Run it again after adding
+phrases; it only makes what is missing (`--force` for all).
 
 ### What we had that you do not need
 
@@ -743,14 +803,13 @@ Things that are a few lines each, all in `trip.json` or at the top of `app.css`:
   to show), and it appears in the menu with its own `#address`. `weatherView()` is the worked example: it reads
   `T` (data.js), lays the page out in the same paper, serif and cards, and needs nothing else.
 - **Fewer features:** delete what you do not want from `app.js`: `docCards()` (confirmations), `whereHTML()` (maps and
-  local names), `wxHTML()` (the forecast; or build with `--no-weather`), the dock (`dockLayout`/`dockMove` and the `#dock` markup), `goNow()` (auto-scroll). Each is
+  local names), `wxHTML()` (the forecast; or build with `--no-weather`), the phrasebook (leave out `phrases.json`), the dock (`dockLayout`/`dockMove` and the `#dock` markup), `goNow()` (auto-scroll). Each is
   self-contained.
 
 Ideas we did not build, in rough order of how much they would add:
 
 - A **packing list** or **to-do** view (a second data array, a checklist with ticks saved in `localStorage`), next to
   the weather view in the menu.
-- A **phrasebook** per country (a few dozen lines with the local script large, like the driver card).
 - **Per-person details**: seats and ticket numbers by traveller, shown on the event under each name.
 - A **"Share to Trip"** iOS Shortcut that saves a screenshot into `docs/` on a shared folder, so a rebuild picks it up.
 - **Currency** conversions on costs, fixed at build time.
@@ -792,6 +851,7 @@ Ideas we did not build, in rough order of how much they would add:
 - Fonts: Instrument Serif, Shippori Mincho, Nanum Myeongjo, all SIL Open Font License (Google Fonts).
 - Sample photographs: Wikimedia Commons, Creative Commons, each credited in `sample/trip.json` and on the app's end
   page. Keep the credits when you use them; replace them freely.
+- Sample phrasebook recordings: made with Gemini 3.8 Flash TTS for this kit.
 - Sample documents: invented ("Example Air" does not exist). The sample's forecast is invented too (marked "sample").
 - Weather: [Open-Meteo](https://open-meteo.com), free for non-commercial use, data under CC BY 4.0: keep the credit on
   the end page.

@@ -40,8 +40,8 @@
   font-style: normal;
   font-weight: 600;
   font-display: swap;
-  src: url(fonts/mincho-fd8d58bfab.woff2) format('woff2');
-  unicode-range: U+4eac, U+56fd, U+5927, U+5948, U+65c5, U+65e5, U+672c, U+6771, U+6839, U+7bb1, U+826f, U+90fd, U+962a, U+97d3;
+  src: url(fonts/mincho-50081b17ea.woff2) format('woff2');
+  unicode-range: U+20-21, U+2d, U+3f, U+46, U+57, U+69, U+3042, U+3044, U+3046, U+3048, U+304a-304c, U+304f-3063, U+3066-306b, U+306e-3071, U+3078-307a, U+307e-307f, U+3081-3083, U+3088-308c, U+308f, U+3092-3094, U+3099-309a, U+30a2, U+30a4, U+30ab-30ae, U+30b9-30ba, U+30c8-30c9, U+30cb, U+30cf-30d1, U+30e1, U+30e5, U+30eb-30ec, U+30ef, U+30f7, U+30fc, U+4e09, U+4e88, U+4eac, U+4eba, U+4f1a, U+4f55, U+514d, U+52a9, U+547c, U+5927, U+6025, U+6255, U+6551, U+65c5, U+65e5, U+672c, U+6771, U+6839, U+6c34, U+7269, U+75c5, U+7a0e, U+7bb1, U+7d04, U+82f1, U+8377, U+898b, U+8a08, U+8a71, U+8a9e, U+8eca, U+8ff7, U+9053, U+90fd, U+962a, U+9662, U+9810, U+9858, U+98df, U+99c5, U+ff01, U+ff1f;
 }
 
 @font-face {
@@ -49,6 +49,6 @@
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url(fonts/myeongjo-f2c684f9a2.woff2) format('woff2');
-  unicode-range: U+1100, U+1109, U+110b, U+1112, U+1161, U+1165, U+116e, U+11a8, U+11ab, U+11af, U+ac00-ac01, U+ac04, U+ac08, U+ac70-ac71, U+ac74, U+ac78, U+ad6c-ad6d, U+ad70, U+ad74, U+c0ac-c0ad, U+c0b0, U+c0b4, U+c11c-c11d, U+c120, U+c124, U+c218-c219, U+c21c, U+c220, U+c544-c545, U+c548, U+c54c, U+c5b4-c5b5, U+c5b8, U+c5bc, U+c6b0-c6b1, U+c6b4, U+c6b8, U+d558-d559, U+d55c, U+d560, U+d5c8-d5c9, U+d5cc, U+d5d0, U+d6c4-d6c5, U+d6c8, U+d6cc;
+  src: url(fonts/myeongjo-54a1550343.woff2) format('woff2');
+  unicode-range: U+ac00, U+ac10, U+ac70, U+ac78, U+aca0, U+acbd, U+acc4, U+ad6c-ad6d, U+adf8, U+ae09, U+ae30, U+ae38, U+b098, U+b0e5, U+b124, U+b155, U+b274, U+b294, U+b2c8, U+b2e4, U+b3c4, U+b3fc, U+b4dc, U+b514, U+b7ec, U+b808, U+b824, U+b85c, U+b974, U+b9ac, U+b9c8, U+b9db, U+b9e1, U+ba39, U+ba54, U+ba85, U+baa8, U+bb3c, U+bb50, U+bc00, U+bc88, U+bcd1, U+bd88, U+be44, U+c0ac, U+c0b0, U+c11c, U+c138, U+c1a1, U+c218, U+c2a4, U+c2b5, U+c2dd, U+c2e4, U+c544, U+c548, U+c54c, U+c57d, U+c5b4, U+c5bc, U+c5c8, U+c5ec-c5ed, U+c601, U+c608, U+c640, U+c694, U+c6b8, U+c6d0, U+c744, U+c74c, U+c774, U+c783, U+c788, U+c798, U+c7a5, U+c800, U+c880, U+c8c4, U+c8fc, U+c9d0, U+cc28, U+ce74, U+d0dd, U+d30c, U+d380, U+d558, U+d55c, U+d569, U+d574, U+d588, U+d638, U+d654, U+d788;
 }
