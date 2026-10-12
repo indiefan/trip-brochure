@@ -433,3 +433,44 @@ img { display: block; max-width: 100%; }
 .cover .seal.h { writing-mode: horizontal-tb; font: italic 400 17px/1 var(--serif); letter-spacing: .04em; padding: 7px 11px 8px; }
 .hero .native.h { writing-mode: horizontal-tb; font: 400 38px/1 var(--native, var(--serif)); letter-spacing: .01em; }
 .end .mark.h, .m-seal.h { font: italic 400 30px/1 var(--serif); letter-spacing: .02em; }
+
+/* --- search: the trip, offline --------------------------------------------------------------------------------- */
+.m-search { width: 100%; display: flex; align-items: center; gap: 10px; margin: 18px 0 4px; padding: 12px 14px; border-radius: 14px; text-align: left;
+            background: var(--card); border: 1px solid var(--rule); color: var(--ink-3); font-size: 15.5px; }
+.m-search svg, .s-field svg { width: 18px; height: 18px; flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+.m-search:active { opacity: .6; }
+#search { position: fixed; inset: 0; z-index: 55; background: var(--paper); display: flex; flex-direction: column; opacity: 0; transform: translateY(10px);
+          transition: opacity .22s ease, transform .28s cubic-bezier(.2, .8, .2, 1); }
+#search[hidden] { display: none; }
+#search.open { opacity: 1; transform: none; }
+.s-bar { display: flex; align-items: center; gap: 12px; padding: calc(var(--top) + 12px) var(--gutter) 12px; border-bottom: 1px solid var(--rule); background: var(--paper); }
+.s-field { flex: 1; display: flex; align-items: center; gap: 10px; padding: 0 14px; height: 46px; border-radius: 14px; background: var(--card); border: 1px solid var(--rule); color: var(--ink-3); }
+.s-field:focus-within { border-color: var(--accent); }
+.s-field input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; color: var(--ink); font: 400 17px/1 var(--sans); -webkit-appearance: none; appearance: none; }
+.s-field input::-webkit-search-cancel-button { display: none; }
+.s-done { font-weight: 650; font-size: 16px; color: var(--accent); padding: 8px 2px; }
+.s-out { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding-bottom: calc(40px + env(safe-area-inset-bottom, 0px)); width: 100%; box-sizing: border-box; }
+.s-out .kicker.sec { margin-top: 26px; }
+.s-out .kicker.sec span { color: var(--ink-3); font-weight: 500; margin-left: 4px; }
+.s-hint, .s-none { color: var(--ink-3); font-size: 15px; line-height: 1.5; margin: 26px 0 14px; }
+.s-none { font: italic 400 22px/1.3 var(--serif); color: var(--ink-2); }
+.s-try { display: flex; flex-wrap: wrap; gap: 8px; }
+.s-try button { padding: 8px 14px; border-radius: 999px; background: var(--card); border: 1px solid var(--rule); font-size: 14px; color: var(--ink-2); }
+.s-list { list-style: none; margin: 8px 0 0; padding: 0; }
+.s-list li { border-bottom: 1px solid var(--rule); }
+.s-row { width: 100%; display: flex; gap: 14px; align-items: flex-start; text-align: left; padding: 13px 0; }
+.s-row:active { opacity: .6; }
+.s-date { flex: none; width: 60px; padding-left: 10px; border-left: 3px solid var(--c); }
+.s-date b { white-space: nowrap; }
+.s-date b { display: block; font: 400 17px/1.1 var(--serif); }
+.s-date small { display: block; font-size: 11.5px; color: var(--ink-3); margin-top: 2px; }
+.s-main { min-width: 0; flex: 1; }
+.s-main b { display: block; font-size: 16px; font-weight: 650; line-height: 1.3; }
+.s-snip { display: block; font-size: 13.5px; color: var(--ink-3); line-height: 1.4; margin-top: 3px; overflow-wrap: anywhere; }
+.s-ph .native { display: block; font: 600 20px/1.3 var(--native, var(--mincho)); margin-top: 3px; }
+.s-out mark { background: color-mix(in srgb, var(--accent) 22%, transparent); color: inherit; border-radius: 3px; padding: 0 1px; }
+/* where a search result lands: a moment's glow */
+.found { animation: found 2.2s ease-out; border-radius: 14px; }
+@keyframes found { 0%, 30% { box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 55%, transparent), 0 0 0 9999px transparent; background: color-mix(in srgb, var(--accent) 7%, transparent); }
+                   100% { box-shadow: 0 0 0 3px transparent; background: transparent; } }
+@media (prefers-reduced-motion: reduce) { #search { transition: none; } .found { animation-duration: .01s; } }

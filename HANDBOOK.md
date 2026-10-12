@@ -135,6 +135,17 @@ the phrase in its own script (in the same brushed serif as the cover's city name
 You write the phrases (`phrases.json`, section 5) and `pipeline/phrase_audio.py` makes the sound (section 6). Without
 sound the phrasebook still works as text.
 
+### Search
+
+![Search: "kyoto" across the plans, with the matches marked](docs/screenshots/25-search.jpg)
+
+"Search the trip", at the top of the menu, finds anything in it, offline: plans (titles, places, facts such as
+confirmation numbers, notes, the day: "Apr 19", "Tuesday"), hotels, the confirmations (their subjects, senders, and the
+words of the emails and PDFs themselves, which `build.py` keeps for this) and the phrasebook. Every word typed must
+match; case, accents and punctuation are ignored ("wifi" finds "Wi-Fi"). Results come grouped (plans, stays,
+confirmations, phrases), the best group first, with the matches marked. A tap goes there: the itinerary scrolls to the
+plan or hotel, which glows for a moment; a confirmation opens; a phrase shows its card. On a keyboard, `/` opens it.
+
 ### The weather, day by day
 
 ![Day headings with the forecast: one city, and both cities on a travel day](docs/screenshots/21-weather.jpg)

@@ -565,6 +565,7 @@
     $(".panel", menu).innerHTML = `
       <div class="m-head"><div class="kicker">${esc(T.family || "")}${T.family ? " · " : ""}${fmt(T.start, { month: "short", day: "numeric" })} – ${fmt(T.end, { month: "short", day: "numeric" })}</div>
         <div class="m-title">${esc(T.name)}</div><button class="m-close" type="button" aria-label="Close">${'<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>'}</button></div>
+      <button type="button" class="m-search" data-search><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>Search the trip</button>
       <ol class="m-items">${items.map(([k, v], i) => `<li><button type="button" data-view="${k}" class="${k === VIEW ? "on" : ""}">
         <span class="n">${["I", "II", "III", "IV", "V", "VI"][i] || i + 1}</span><span class="t"><b>${esc(v.label)}</b><small>${esc(v.sub)}</small></span></button></li>`).join("")}</ol>
       ${T.seal ? `<div class="m-seal${CJK.test(T.seal) ? "" : " h"}">${esc(T.seal)}</div>` : ""}`;
@@ -587,6 +588,172 @@
   });
   // over the cover the button is white on the photograph; elsewhere ink on paper
   function menuTone() { $("#menu-btn").classList.toggle("over", VIEW === "itinerary" && $(".cover").getBoundingClientRect().bottom > 50); }
+
+  // --- search: everything in the trip, offline. Plans, stays, confirmations (and the emails' own words) and phrases;
+  //     every word typed must appear somewhere; a title outranks a place, a place a fact, a fact the small print. ------
+  // folded for matching: no accents, no case, no punctuation ("Wi-Fi" = "wifi", "check-in" = "check in"); `at` maps each
+  // folded character back to the original one, so a match can be marked where it really is
+  function folded(s) {
+    let out = "", at = [];
+    [...String(s ?? "")].forEach((c, i) => {
+      const f = c.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+      for (const ch of f) if (/[\p{L}\p{N}\s]/u.test(ch)) { out += /\s/.test(ch) ? " " : ch; at.push(i); }
+    });
+    return { s: out, at };
+  }
+  const fold = s => folded(s).s;
+  const arrows = s => String(s || "").replace(/\s*->\s*/g, " → ");
+  const distinct = parts => { const kept = [];                  // "The Thousand Kyoto", "Kyoto": the first says it all
+    for (const p of parts.map(x => String(x || "").trim()).filter(Boolean)) if (!kept.some(k => fold(k).includes(fold(p)))) kept.push(p);
+    return kept.join(" · "); };
+  let INDEX = null;
+  function searchIndex() {
+    if (INDEX) return INDEX;
+    const out = [], when = iso => iso ? `${fmt(iso, { weekday: "long", month: "long", day: "numeric" })} ${fmt(iso, { month: "short", day: "numeric" })}` : "";
+    const legOf = id => T.legs.find(l => l.kind === "stay" && l.events.includes(id));
+    for (const e of T.events) {
+      const cp = e.copy || {}, docs = (e.docs || []).map(d => T.docs[d]).filter(Boolean);
+      out.push({ kind: "plan", id: e.id, date: e.date, start: e.start, color: color(legOf(e.id)?.title || (e.city || "").split(/\s*(?:->|→)\s*/).pop()),
+        title: e.title, fields: [[e.title, 6], [arrows(distinct([e.place, e.gplace?.name, e.city])), 3],
+          [(cp.facts || []).map(f => `${f.label}: ${f.value}`).join(" · ") + (e.confirmation ? ` · Confirmation: ${e.confirmation}` : ""), 2],
+          [arrows(`${cp.blurb || ""} ${e.notes || ""}`), 1], [when(e.date), 4], [docs.map(d => d.subject || "").join(" · "), 1]] });
+    }
+    for (const h of T.hotels) {
+      const cp = h.copy || {};
+      out.push({ kind: "stay", id: h.id, date: h.start, color: color(h.city), title: h.name,
+        fields: [[h.name, 6], [distinct([h.address, h.city, h.country]), 3],
+          [[...(cp.facts || []).map(f => `${f.label}: ${f.value}`), h.room, h.perks, h.confirmation && `Confirmation: ${h.confirmation}`].filter(Boolean).join(" · "), 2],
+          [cp.blurb || "", 1], [`${when(h.start)} ${when(h.end)}`, 4]] });
+    }
+    for (const d of Object.values(T.docs || {})) {
+      const sent = new Date(d.sent || d.received || ""), day = isNaN(sent) ? "" : sent.toISOString().slice(0, 10);
+      out.push({ kind: "doc", id: d.id, date: day, title: (d.subject || "Confirmation").replace(/^(fwd?|re):\s*/i, ""),
+        fields: [[d.subject || "", 5], [d.sender || "", 3], [d.text || "", 1]] });
+    }
+    for (const sec of T.phrases?.sections || [])
+      for (const ph of sec.phrases)
+        for (const [lang, x] of Object.entries(ph))
+          if (x && typeof x === "object" && x.text)
+            out.push({ kind: "phrase", id: `${lang}:${x.text}`, title: ph.en, lang, x, en: ph.en,
+              fields: [[ph.en, 5], [`${x.text} ${x.roman}`, 4], [x.note || ph.note || "", 1]] });
+    for (const it of out) it.folded = it.fields.map(([t, w]) => [fold(t), w, t]);
+    return INDEX = out;
+  }
+  function searchFor(q) {
+    const words = fold(q).split(/\s+/).filter(Boolean);
+    if (!words.length) return [];
+    const hits = [];
+    for (const it of searchIndex()) {
+      let score = 0, best = null;
+      const ok = words.every(w => {
+        let found = false;
+        for (const [f, weight, raw] of it.folded) {
+          const i = f.indexOf(w);
+          if (i < 0) continue;
+          found = true;
+          const s = weight * (i === 0 || /[^a-z0-9]/.test(f[i - 1]) ? 2 : 1);
+          score += s;
+          if (!best || weight > best.weight && weight < 6) best = { raw, i, weight };      // where to quote from (not the title)
+        }
+        return found;
+      });
+      if (ok) hits.push({ it, score, best });
+    }
+    return hits.sort((a, b) => b.score - a.score || String(a.it.date || "").localeCompare(String(b.it.date || "")));
+  }
+  function marked(text, q, around) {
+    // the text with the typed words marked; around = a character to centre a snippet on (long texts)
+    let t = String(text || "");
+    if (around != null && t.length > 140) {
+      const at = folded(t).at[around] ?? around, a = Math.max(0, at - 50);
+      t = (a ? "…" : "") + t.slice(a, a + 140).trim() + (a + 140 < t.length ? "…" : "");
+    }
+    const words = fold(q).split(/\s+/).filter(Boolean).sort((a, b) => b.length - a.length);
+    const { s: f, at } = folded(t), on = new Array(t.length).fill(false);
+    for (const w of words) for (let i = f.indexOf(w); i >= 0; i = f.indexOf(w, i + 1)) for (let k = i; k < i + w.length; k++) on[at[k]] = true;
+    let html = "", open = false;
+    for (let i = 0; i < t.length; i++) {
+      if (on[i] !== open) { html += on[i] ? "<mark>" : "</mark>"; open = on[i]; }
+      html += esc(t[i]);
+    }
+    return html + (open ? "</mark>" : "");
+  }
+  const SEARCH_HEADS = { plan: "Plans", stay: "Stays", doc: "Confirmations", phrase: "Phrases" };
+  function searchResults(q) {
+    const hits = searchFor(q);
+    if (!q.trim()) {
+      const cities = T.legs.filter(l => l.kind === "stay").map(l => l.title);
+      const tries = [...cities.slice(0, 3), "Confirmation", "Check-in", T.phrases ? "Thank you" : null].filter(Boolean);
+      return `<p class="s-hint">Plans, stays, confirmation numbers, the emails' own words${T.phrases ? " and the phrasebook" : ""}.</p>
+        <div class="s-try">${tries.map(t => `<button type="button" data-try="${esc(t)}">${esc(t)}</button>`).join("")}</div>`;
+    }
+    if (!hits.length) return `<p class="s-none">Nothing for “${esc(q)}”.</p>`;
+    const groups = {};
+    for (const h of hits) (groups[h.it.kind] ||= []).push(h);
+    const order = Object.keys(SEARCH_HEADS).filter(k => groups[k]).sort((a, b) => groups[b][0].score - groups[a][0].score);   // the best match's group first
+    return order.map(k => `<h2 class="kicker sec">${SEARCH_HEADS[k]} <span>${groups[k].length}</span></h2>
+      <ol class="s-list">${groups[k].slice(0, 30).map(({ it, best }) => {
+        const snip = best && best.weight < 6 ? `<span class="s-snip">${marked(best.raw, q, best.i)}</span>` : "";
+        if (it.kind === "phrase") return `<li><button type="button" class="s-row s-ph" data-say="${esc(JSON.stringify({ en: it.en, text: it.x.text, roman: it.x.roman, audio: it.x.audio, lang: it.lang }))}">
+            <span class="s-main"><b>${marked(it.en, q)}</b><span class="native" lang="${esc(it.lang)}">${marked(it.x.text, q)}</span><span class="s-snip">${marked(it.x.roman, q)}</span></span></button></li>`;
+        const date = it.date ? `<span class="s-date"><b>${fmt(it.date, { month: "short", day: "numeric" })}</b>${it.start ? `<small>${esc(clock(it.start).replace(/<[^>]+>/g, ""))}</small>` : `<small>${fmt(it.date, { weekday: "short" })}</small>`}</span>` : `<span class="s-date"></span>`;
+        return `<li><button type="button" class="s-row" data-hit="${it.kind}:${esc(it.id)}" style="--c:${it.color || "var(--ink-3)"}">${date}
+            <span class="s-main"><b>${marked(it.title, q)}</b>${snip}</span></button></li>`;
+      }).join("")}</ol>`).join("");
+  }
+  const searchEl = () => document.getElementById("search");
+  function openSearch(q = "") {
+    const el = searchEl();
+    el.innerHTML = `<div class="s-bar"><label class="s-field"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
+        <input type="search" enterkeyhint="search" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="Search the trip" aria-label="Search the trip"></label>
+        <button type="button" class="s-done">Done</button></div><div class="s-out wrap"></div>`;
+    el.hidden = false;
+    document.body.style.overflow = "hidden";
+    requestAnimationFrame(() => el.classList.add("open"));
+    const input = $("input", el), out = $(".s-out", el);
+    let t;
+    const run = () => { out.innerHTML = searchResults(input.value); out.scrollTop = 0; };
+    input.value = q; run();
+    input.addEventListener("input", () => { clearTimeout(t); t = setTimeout(run, 60); });
+    input.addEventListener("keydown", e => { if (e.key === "Escape") closeSearch(); if (e.key === "Enter") input.blur(); });
+    setTimeout(() => input.focus({ preventScroll: true }), 60);
+    statusBar();
+  }
+  function closeSearch() {
+    const el = searchEl();
+    if (el.hidden) return;
+    el.classList.remove("open"); document.body.style.overflow = "";
+    setTimeout(() => { el.hidden = true; el.innerHTML = ""; statusBar(); }, 220);
+  }
+  function goTo(el) {                                           // the itinerary, scrolled to it, which glows for a moment
+    if (!el) return;
+    el.querySelector("details.notes")?.setAttribute("open", "");
+    el.scrollIntoView({ behavior: "auto", block: "center" });
+    el.classList.remove("found"); void el.offsetWidth; el.classList.add("found");
+    setTimeout(() => el.classList.remove("found"), 2400);
+  }
+  document.addEventListener("click", e => {
+    const el = searchEl();
+    if (e.target.closest("[data-search]")) { closeMenu(); return openSearch(); }
+    if (!el || el.hidden || !el.contains(e.target)) return;
+    if (e.target.closest(".s-done")) return closeSearch();
+    const tr = e.target.closest("[data-try]");
+    if (tr) { const i = $("input", el); i.value = tr.dataset.try; i.dispatchEvent(new Event("input")); return; }
+    const hit = e.target.closest("[data-hit]");
+    if (!hit) return;
+    const [kind, id] = [hit.dataset.hit.slice(0, hit.dataset.hit.indexOf(":")), hit.dataset.hit.slice(hit.dataset.hit.indexOf(":") + 1)];
+    closeSearch();
+    if (kind === "doc") return openDoc(id, "Search");
+    if (VIEW !== "itinerary") showView("itinerary");
+    requestAnimationFrame(() => {
+      if (kind === "plan") goTo(document.getElementById("ev-" + id));
+      if (kind === "stay") goTo([...document.querySelectorAll(".chapter")].find(c => $(".stay h3", c)?.textContent === hotels[id]?.name)?.querySelector(".stay"));
+    });
+  }, true);
+  addEventListener("keydown", e => {
+    if ((e.key === "/" || (e.key === "k" && (e.metaKey || e.ctrlKey))) && !/input|textarea/i.test(document.activeElement?.tagName || "")) { e.preventDefault(); openSearch(); }
+    if (e.key === "Escape") closeSearch();
+  });
 
   // --- the weather, at a glance: the whole trip on one page, for packing ----------------------------------------------
   function tempColor(t) {                                  // a cool-to-warm ramp, for the range bars

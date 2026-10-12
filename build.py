@@ -75,6 +75,25 @@ def thumb(data: bytes, width: int = 420, ratio: float = 1.25) -> bytes:
     return out.getvalue()
 
 
+def search_text(text: str, limit: int = 5000) -> str:
+    """A document's words for the app's search: no links, picture markers or runs of blank space; the start of it."""
+    t = re.sub(r"\[image:[^\]]*\]|<(https?|mailto):[^>]*>|https?://\S+", " ", text or "")
+    return re.sub(r"\s+", " ", t).strip()[:limit]
+
+
+def html_text(raw_html: str) -> str:
+    from bs4 import BeautifulSoup
+    soup = BeautifulSoup(raw_html or "", "html.parser")
+    for t in soup(["script", "style", "head"]):
+        t.decompose()
+    return soup.get_text(" ")
+
+
+def pdf_text(data: bytes) -> str:
+    import pymupdf
+    return " ".join(p.get_text() for p in pymupdf.open(stream=data, filetype="pdf"))
+
+
 def pdf_pages(data: bytes) -> list[bytes]:
     import pymupdf
     doc = pymupdf.open(stream=data, filetype="pdf")
@@ -290,10 +309,12 @@ def build(src: Path, out: Path, refetch_fonts: bool = False, fetch_remote: bool 
             elif f:
                 text = (src / f).read_text(encoding="utf-8", errors="replace")
             files[f"docs/{did}.html"] = email_page(raw_html, text or "", files, cache, fetch_remote).encode()
+            o["text"] = search_text(text or html_text(raw_html))                 # what the app's search reads
             o["email"] = f"docs/{did}.html"; o["original"] = bool(raw_html)
             if d.get("translation"):
                 t = (src / d["translation"]).read_text(encoding="utf-8")
                 files[f"docs/{did}-en.html"] = (t if t.lstrip().lower().startswith("<!doctype") else page(f"<div class=\"tr\">{t}</div>", TRANSLATION_STYLE)).encode()
+                o["text"] = search_text(html_text(t)) + " " + o["text"]
                 o["translation"] = f"docs/{did}-en.html"; o["language"] = d.get("language") or d.get("language_en", ""); o["language_en"] = d.get("language_en", "")
         elif f:
             attachments.insert(0, f)
@@ -303,6 +324,8 @@ def build(src: Path, out: Path, refetch_fonts: bool = False, fetch_remote: bool 
             else:
                 b = (src / a).read_bytes(); mime = "application/pdf" if b[:4] == b"%PDF" else "image/*"
             pages += [jpeg(p, 1400, 82) for p in pdf_pages(b)] if mime == "application/pdf" else [jpeg(b, 1290, 85)]
+            if mime == "application/pdf":
+                o["text"] = (o.get("text", "") + " " + search_text(pdf_text(b))).strip()
         for i, p in enumerate(pages, 1):
             files[f"docs/{did}-{i}.jpg"] = p; o["pages"].append(f"docs/{did}-{i}.jpg")
         if pages:
