@@ -307,7 +307,9 @@ def build(src: Path, out: Path, refetch_fonts: bool = False, fetch_remote: bool 
     for leg in legs:
         if leg["kind"] == "stay":
             leg["photo"] = photo(leg.pop("_city").get("photo"))
-    cover = photo(trip.get("cover"), with_cover=True) or next((l["photo"] for l in legs if l.get("photo")), None)
+    match = re.compile(re.escape(trip["cover_match"]), re.I) if trip.get("cover_match") else None   # or the photo of the event it names
+    named = next((e.get("photo") for e in trip["events"] if match and e.get("photo") and match.search(e["title"])), None)
+    cover = photo(trip.get("cover") or named, with_cover=True) or next((l["photo"] for l in legs if l.get("photo")), None)
     events = []
     for e in trip["events"]:
         cities = re.split(r"\s*(?:->|→)\s*", e.get("city") or "")
@@ -324,7 +326,10 @@ def build(src: Path, out: Path, refetch_fonts: bool = False, fetch_remote: bool 
     wx = weather(trip, days, cache, refresh_weather) if with_weather else None
     built = datetime.now(timezone.utc)
     data = {k: trip.get(k) for k in ("name", "title_html", "family", "seal", "farewell", "intro", "start", "end", "people", "zones", "timezone", "bundle_id", "please", "languages")}
-    data.update({"phrases": phrasebook(src, files), "weather": wx, "cities": {k: {"color": v.get("color")} for k, v in (trip.get("cities") or {}).items()}, "days": days, "legs": legs, "events": events, "hotels": hotels,
+    book = phrasebook(src, files)
+    if (data.get("farewell") or {}).get("native") and book and not data["farewell"].get("lang"):   # its language, for its face
+        data["farewell"] = {**data["farewell"], "lang": next(iter(book.get("languages") or {}), "")}
+    data.update({"phrases": book, "weather": wx, "cities": {k: {"color": v.get("color")} for k, v in (trip.get("cities") or {}).items()}, "days": days, "legs": legs, "events": events, "hotels": hotels,
                  "docs": docs_out, "cover": cover, "credits": credits + list(trip.get("credits") or []),
                  "built": built.strftime("%Y-%m-%dT%H:%M:%SZ"), "version": built.strftime("%Y%m%d.%H%M%S")})
     files["data.js"] = ("window.TRIP = " + json.dumps(data, ensure_ascii=False, separators=(",", ":")) + ";\n").encode()
@@ -333,8 +338,10 @@ def build(src: Path, out: Path, refetch_fonts: bool = False, fetch_remote: bool 
     for f in APP.rglob("*"):
         if f.is_file():
             files[str(f.relative_to(APP))] = f.read_bytes()
+    chars, langs, chinese = shown_chars(trip, book)
     if refetch_fonts:
-        files["fonts.css"] = fonts(trip, files, cache, src).encode()
+        files["fonts.css"] = fonts(files, chars).encode()
+    files["theme.css"] = theme_css(trip, chars, langs, chinese).encode()
     icon = src / "icon.png"
     if icon.exists():
         files["icon.png"] = icon.read_bytes()
@@ -445,27 +452,73 @@ def phrasebook(src: Path, files: dict) -> dict | None:
     return book
 
 
-FONTS = [("Instrument+Serif:ital@0;1", "instrument", None), ("Shippori+Mincho:wght@600", "mincho", "ja"), ("Nanum+Myeongjo:wght@700", "myeongjo", "ko")]
+DISPLAY = ("Instrument+Serif:ital@0;1", "instrument", None)      # the serif, whole (Latin)
+# A face per script for the destination's own words (city names, the seal, the phrasebook, the send-off), cut down to
+# the characters shown: (Google Fonts family query, file stem, CSS family, weight).
+FACES = {
+    "kana": ("Shippori+Mincho:wght@600", "mincho", "Shippori Mincho", 600),          # Japanese (and Han, unless the trip is Chinese)
+    "hangul": ("Nanum+Myeongjo:wght@700", "myeongjo", "Nanum Myeongjo", 700),
+    "han-sc": ("Noto+Serif+SC:wght@600", "notosc", "Noto Serif SC", 600),
+    "han-tc": ("Noto+Serif+TC:wght@600", "notatc", "Noto Serif TC", 600),
+    "thai": ("Noto+Serif+Thai:wght@500", "thai", "Noto Serif Thai", 500),
+    "greek": ("Noto+Serif:wght@500", "notoserif", "Noto Serif", 500),                 # Greek, Cyrillic, Vietnamese
+    "hebrew": ("Frank+Ruhl+Libre:wght@500", "frankruhl", "Frank Ruhl Libre", 500),
+    "arabic": ("Amiri:wght@700", "amiri", "Amiri", 700),
+    "devanagari": ("Noto+Serif+Devanagari:wght@600", "devanagari", "Noto Serif Devanagari", 600),
+}
+LATIN_LANGS = {"es", "fr", "it", "de", "pt", "nl", "sv", "da", "no", "nb", "fi", "is", "pl", "cs", "sk", "hu", "ro", "hr", "sl", "tr", "id", "ms",
+               "tl", "sw", "ca", "eu", "gl", "et", "lv", "lt", "mt", "ga", "cy", "haw", "mi", "af"}
 
 
-def fonts(trip: dict, files: dict, cache: Path, src_dir: Path) -> str:
-    """Google Fonts, brought in: the serif whole, the Japanese and Korean faces subset to the trip's own words (a full
-    CJK face is megabytes; the subset is kilobytes). Anything not in the subset falls back to the phone's own font."""
+def script_of(ch: str, chinese: str | None = None) -> str | None:
+    """The face a character is set in: None for Latin (the display serif)."""
+    o = ord(ch)
+    if 0xAC00 <= o <= 0xD7AF or 0x1100 <= o <= 0x11FF or 0x3130 <= o <= 0x318F:
+        return "hangul"
+    if 0x3040 <= o <= 0x30FF:
+        return "kana"
+    if 0x3400 <= o <= 0x9FFF or 0x3000 <= o <= 0x303F or 0xFF00 <= o <= 0xFFEF:
+        return {"sc": "han-sc", "tc": "han-tc"}.get(chinese or "", "kana")
+    if 0x0E00 <= o <= 0x0E7F:
+        return "thai"
+    if 0x0370 <= o <= 0x03FF or 0x1F00 <= o <= 0x1FFF or 0x0400 <= o <= 0x04FF or 0x1EA0 <= o <= 0x1EF9:
+        return "greek"
+    if 0x0590 <= o <= 0x05FF:
+        return "hebrew"
+    if 0x0600 <= o <= 0x06FF:
+        return "arabic"
+    if 0x0900 <= o <= 0x097F:
+        return "devanagari"
+    return None
+
+
+def shown_chars(trip: dict, book: dict | None) -> tuple[dict, list, str | None]:
+    """Every character the app shows in the destination's scripts, by face; the phrasebook's languages; and whether Han
+    characters are Chinese (simplified "sc" / traditional "tc") rather than Japanese."""
+    langs = list((book or {}).get("languages") or {})
+    chinese = "tc" if any(l in ("zh-TW", "zh-HK") for l in langs) else "sc" if any(l.startswith("zh") for l in langs) and "ja" not in langs else None
+    shown = trip.get("seal", "") + (trip.get("farewell") or {}).get("native", "") + "".join(c.get("native", "") for c in (trip.get("cities") or {}).values())
+    for sec in (book or {}).get("sections", []):
+        for ph in sec.get("phrases", []):
+            shown += "".join((ph.get(l) or {}).get("text", "") for l in langs if isinstance(ph.get(l), dict))
+    shown += "".join(v.get("native", "") for v in ((book or {}).get("languages") or {}).values())
+    chars: dict[str, str] = {}
+    for ch in shown:
+        if (k := script_of(ch, chinese)):
+            chars[k] = chars.get(k, "") + ch
+    return chars, langs, chinese
+
+
+def fonts(files: dict, chars: dict) -> str:
+    """Google Fonts, brought in: the serif whole, each script's face cut down to the characters the app shows in it
+    (a full CJK face is megabytes; the subset is kilobytes), so no word mixes two typefaces. Anything not in a subset
+    falls back to the phone's own font."""
     import requests
     for k in [n for n in files if n.startswith("fonts/")]:
         del files[k]
-    words = {"ja": "", "ko": ""}
-    book = json.loads((src_dir / "phrases.json").read_text(encoding="utf-8")) if (src_dir / "phrases.json").exists() else {}
-    said = [(x if isinstance(x, list) else [x.get("text", "")])[0] for sec in book.get("sections", []) for ph in sec.get("phrases", [])
-            for lang, x in ph.items() if lang in ("ja", "ko") and x] + [v.get("native", "") for v in book.get("languages", {}).values()]
-    for s in [trip.get("seal", ""), (trip.get("farewell") or {}).get("native", "")] + [c.get("native", "") for c in (trip.get("cities") or {}).values()] + said:
-        for ch in s:
-            words["ko" if "가" <= ch <= "힯" else "ja"] += ch
     css_all = []
-    for family, stem, lang in FONTS:
-        text = "".join(sorted(set(words[lang]))) if lang else None
-        if lang and not text:
-            continue
+    for family, stem, text in [DISPLAY] + [(FACES[k][0], FACES[k][1], t) for k, t in chars.items() if t.strip()]:
+        text = "".join(sorted(set(text))) if text is not None else None
         url = f"https://fonts.googleapis.com/css2?family={family}&display=swap" + (f"&text={quote(text)}" if text else "")
         css = requests.get(url, headers=UA, timeout=30).text
         def local(m):
@@ -474,6 +527,31 @@ def fonts(trip: dict, files: dict, cache: Path, src_dir: Path) -> str:
             return f"url({name})"
         css_all.append(re.sub(r"url\((https://[^)]+)\)", local, css))
     return "\n".join(css_all)
+
+
+def theme_css(trip: dict, faces: dict, langs: list[str], chinese: str | None) -> str:
+    """The trip's accent (trip.json "accent", "accent_dark"), and each language's face where the app shows its words."""
+    out = []
+    if trip.get("accent"):
+        out.append(f":root {{ --accent: {trip['accent']}; }}")
+        out.append(f"@media (prefers-color-scheme: dark) {{ :root {{ --accent: {trip.get('accent_dark') or trip['accent']}; }} }}")
+    stack = lambda k: f'"{FACES[k][2]}", var(--serif)'                          # noqa: E731
+    natives = [k for k in faces if k not in ("kana", "hangul")]
+    if natives:
+        out.append(f":root {{ --native: {stack(natives[0])}; }}")
+    if chinese:
+        out.append(f':root {{ --mincho: "{FACES["han-" + chinese][2]}", "Shippori Mincho", serif; }}')
+    for lang in langs:
+        if lang in ("ja", "ko"):
+            continue
+        sel = ", ".join(x.format(l=lang) for x in (".phrases .native:lang({l})", "#say .native:lang({l})", ".ptabs button b:lang({l})", ".where .local b:lang({l})",
+                                                    ".end h2:lang({l})"))
+        if lang.split("-")[0] in LATIN_LANGS:
+            out.append(f"{sel} {{ font-family: var(--serif); font-weight: 400; }}")
+            out.append(f".phrases .native:lang({lang}) {{ font-size: 28px; line-height: 1.2; }} .phrases .native.long:lang({lang}) {{ font-size: 24px; }}")
+        elif natives:
+            out.append(f"{sel} {{ font-family: {stack(natives[0])}; font-weight: {FACES[natives[0]][3]}; }}")
+    return "\n".join(out) + "\n"
 
 
 if __name__ == "__main__":

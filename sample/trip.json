@@ -3,11 +3,13 @@
  "title_html": "Japan <i>&amp;</i><br>Korea",
  "family": "The Example family",
  "seal": "旅",
+ "accent": "#b8432c",
+ "accent_dark": "#e0694f",
  "farewell": {
   "native": "いってらっしゃい",
   "english": "Have a wonderful trip."
  },
- "intro": "10 nights, 5 cities, two countries: from the neon of <em>Tokyo</em> to the hot springs of Hakone, the temples of Kyoto, the theme parks of Osaka, and on to Seoul.",
+ "intro": "{nights} nights, {cities} cities, two countries: from the neon of <em>Tokyo</em> to the hot springs of Hakone, the temples of Kyoto, the theme parks of Osaka, and on to Seoul.",
  "start": "2027-04-14",
  "end": "2027-04-24",
  "people": [

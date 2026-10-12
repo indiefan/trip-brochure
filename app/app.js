@@ -6,10 +6,11 @@
   // Each city's colour comes from the trip's data (cities[name].color); an unlisted city gets one from a small palette.
   const PALETTE = ["#34557a", "#4f7a5a", "#b0662a", "#b8432c", "#6b4f8a", "#5d6b7a", "#8a6d3b"];
   const color = city => { const name = String(city || "").split(/\s*(?:->|→)\s*/).pop().trim();
-    const c = (T.cities || {})[name]?.color; if (c) return c;
+    const c = Object.entries(T.cities || {}).find(([k]) => k.toLowerCase() === name.toLowerCase())?.[1]?.color; if (c) return c;
     let h = 0; for (const ch of name.toLowerCase()) h = (h * 31 + ch.charCodeAt(0)) >>> 0; return name ? PALETTE[h % PALETTE.length] : "#5d6b7a"; };
   const ev = Object.fromEntries(T.events.map(e => [e.id, e]));
   const hotels = Object.fromEntries(T.hotels.map(h => [h.id, h]));
+  const CJK = /[\u3040-\u30ff\u3400-\u9fff\uac00-\ud7af]/;                 // set vertically, like a seal; anything else across
   const ROMAN = ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII"];
 
   // --- dates and the clock. Every event is placed in absolute time: its start in the zone of the city it starts in
@@ -116,7 +117,8 @@
   // Offline: the little map (tap: Apple Maps), and the name and address in Japanese or Korean, to show a driver.
   function whereHTML(place, w) {
     if (!place || (!place.map && !place.local_name)) return "";
-    const lang = ({ ja: "Japanese", ko: "Korean", zh: "Chinese", th: "Thai", vi: "Vietnamese", fr: "French", it: "Italian", es: "Spanish", de: "German", pt: "Portuguese", el: "Greek", ...(T.languages || {}) })[place.language] || "";
+    const lang = ({ ja: "Japanese", ko: "Korean", zh: "Chinese", th: "Thai", vi: "Vietnamese", el: "Greek", he: "Hebrew", ar: "Arabic", ru: "Russian", hi: "Hindi",
+                    fr: "French", it: "Italian", es: "Spanish", de: "German", pt: "Portuguese", ...(T.languages || {}) })[String(place.language || "").split("-")[0]] || "";
     const local = place.local_name && lang ? `<div class="local"><div><span>In ${lang}</span><b lang="${place.language}">${esc(place.local_name)}</b>${place.local_address ? `<small lang="${place.language}">${esc(place.local_address)}</small>` : ""}</div>
         <button class="show" data-driver="${esc(JSON.stringify({ name: place.local_name, address: place.local_address, en: place.name, lang: place.language }))}">Show driver</button></div>` : "";
     const map = place.map ? `<a class="map" href="${esc(w?.apple || w?.google || "#")}"><img loading="lazy" src="${place.map}" alt="Map of ${esc(place.name)}"></a>` : "";
@@ -219,7 +221,7 @@
 
   function stayHTML(leg, n) {
     const c = color(leg.title), h = hotels[leg.hotel_id] || {}, cp = leg.copy || {}, hc = h.copy || {};
-    const native = cp.native ? `<div class="native${/[가-힯]/.test(cp.native) ? " ko" : ""}">${esc(cp.native)}</div>` : "";
+    const native = cp.native ? `<div class="native${/[가-힯]/.test(cp.native) ? " ko" : /[\u3040-\u30ff\u3400-\u9fff]/.test(cp.native) ? "" : " h"}">${esc(cp.native)}</div>` : "";
     const range = `${fmt(leg.start, { month: "short", day: "numeric" })} – ${fmt(leg.end, { month: "short", day: "numeric" })}`;
     const dates = [...new Set([...(leg.days || []), ...leg.events.map(i => ev[i]?.date)].filter(Boolean))].sort();
     const hotelFacts = (hc.facts || []).filter(f => !/^(nights|hotel)$/i.test(f.label));
@@ -268,7 +270,7 @@
     $("#app").innerHTML = `
       <section class="cover">
         ${cover ? `<img src="${cover.cover || cover.lg}" style="object-position:${cover.focus}" alt="">` : ""}
-        <div class="top"><div class="kicker">${esc(T.family || "")}<span class="k2">${fmt(T.start, { month: "long", year: "numeric" })}</span></div>${T.seal ? `<div class="seal">${esc(T.seal)}</div>` : ""}</div>
+        <div class="top"><div class="kicker">${esc(T.family || "")}<span class="k2">${fmt(T.start, { month: "long", year: "numeric" })}</span></div>${T.seal ? `<div class="seal${CJK.test(T.seal) ? "" : " h"}">${esc(T.seal)}</div>` : ""}</div>
         <div class="in">
           <h1>${T.title_html || esc(T.name)}</h1>
           <div class="dates">${fmt(T.start, { month: "long", day: "numeric" })} – ${fmt(T.end, { month: "long", day: "numeric", year: "numeric" })}</div>
@@ -278,14 +280,14 @@
         </div>
       </section>
       <div class="wrap intro">
-        <p>${T.intro || `${nights} nights, ${stays.length} ${stays.length === 1 ? "city" : "cities"}: ${stays.map(s => esc(s.title)).join(", ")}.`}</p>
+        <p>${T.intro ? T.intro.replace(/\{nights\}/g, nights).replace(/\{cities\}/g, stays.length) : `${nights} nights, ${stays.length} ${stays.length === 1 ? "city" : "cities"}: ${stays.map(s => esc(s.title)).join(", ")}.`}</p>
         <div class="glance"><div><b>${dayNo(T.end)}</b><span>days</span></div><div><b>${stays.length}</b><span>cities</span></div><div><b>${booked}</b><span>bookings</span></div></div>
       </div>
       ${legs.replace(/id="leg-(\d+)"/g, (m, k) => m)}
       <footer class="end">
         <div class="wrap">
-          ${T.seal ? `<div class="mark">${esc(T.seal)}</div>` : ""}
-          <h2>${esc(T.farewell?.native || T.farewell?.english || "Have a wonderful trip.")}</h2>
+          ${T.seal ? `<div class="mark${CJK.test(T.seal) ? "" : " h"}">${esc(T.seal)}</div>` : ""}
+          <h2${T.farewell?.native && T.farewell?.lang ? ` lang="${esc(T.farewell.lang)}"` : ""}>${esc(T.farewell?.native || T.farewell?.english || "Have a wonderful trip.")}</h2>
           ${T.farewell?.native && T.farewell?.english ? `<p>${esc(T.farewell.english)}</p>` : ""}
           <div class="credits">${T.credits.map(c => `<div>Photo: ${esc(c.credit)}, ${esc(c.license || "")}</div>`).join("")}</div>
           <div class="build">Itinerary as of ${new Date(T.built).toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}${T.weather?.updated && Object.keys(T.weather.days || {}).length ? ` · forecast ${T.weather.sample ? "(sample)" : `by <a href="https://open-meteo.com/">Open-Meteo</a>, ${new Date(T.weather.updated).toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}`}` : ""}<span id="shellv"></span></div>
@@ -423,7 +425,7 @@
   }
 
   // --- show the driver: the destination in its own script, as large as the screen allows -------------------------------
-  const PLEASE = { ja: "ここまでお願いします。", ko: "여기로 가 주세요.", zh: "请带我去这里。", th: "ช่วยพาไปที่นี่ค่ะ/ครับ", ...(T.please || {}) };
+  const PLEASE = { ja: "ここまでお願いします。", ko: "여기로 가 주세요.", zh: "请带我去这里。", th: "ช่วยพาไปที่นี่ค่ะ/ครับ", el: "Εδώ, παρακαλώ.", ...(T.please || {}) };
   function showDriver(d) {
     const el = document.getElementById("driver");
     el.innerHTML = `<button class="x" aria-label="Close">×</button><div class="card"><b lang="${esc(d.lang)}">${esc(d.name)}</b>
@@ -563,7 +565,7 @@
         <div class="m-title">${esc(T.name)}</div><button class="m-close" type="button" aria-label="Close">${'<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>'}</button></div>
       <ol class="m-items">${items.map(([k, v], i) => `<li><button type="button" data-view="${k}" class="${k === VIEW ? "on" : ""}">
         <span class="n">${["I", "II", "III", "IV", "V", "VI"][i] || i + 1}</span><span class="t"><b>${esc(v.label)}</b><small>${esc(v.sub)}</small></span></button></li>`).join("")}</ol>
-      ${T.seal ? `<div class="m-seal">${esc(T.seal)}</div>` : ""}`;
+      ${T.seal ? `<div class="m-seal${CJK.test(T.seal) ? "" : " h"}">${esc(T.seal)}</div>` : ""}`;
     menu.hidden = false;
     requestAnimationFrame(() => menu.classList.add("open"));
     $("#menu-btn").setAttribute("aria-expanded", "true");

@@ -12,7 +12,7 @@ instructions for getting it onto phones, including installing Xcode and setting 
 app/          the app itself (index.html, app.css, app.js, sw.js, fonts)        — edit to restyle
 build.py      trip folder → dist/ (resizes photos, renders documents, writes data.js + manifest.json)
 sample/       a complete sample trip (trip.json, photos, documents): build it, open it, copy it
-pipeline/     optional: Claude writes the copy and translates emails; Google Maps pins the exact places
+pipeline/     optional: Claude designs the app (name, icon, colours), writes the copy and the phrasebook, translates emails; Google Maps pins the exact places
 depot/        optional: a small update server (Docker) for the native iOS route
 shell-ios/    optional: the native iOS shell (Swift + xcodegen) and its Mac build script
 docs/         screenshots used by the handbook

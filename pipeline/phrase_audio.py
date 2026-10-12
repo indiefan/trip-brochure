@@ -31,7 +31,8 @@ import httpx
 TTS = os.environ.get("GEMINI_TTS_MODEL", "gemini-3.8-flash-tts")
 JUDGE = os.environ.get("GEMINI_JUDGE_MODEL", "gemini-3.6-flash")
 INTERACTIONS = "https://generativelanguage.googleapis.com/v1beta/interactions"
-# The voice and where the speaker is from, per language; any other language gets a neutral standard accent.
+# The voice and where the speaker is from, per language; any other language gets a neutral standard accent, unless
+# phrases.json gives the language a "voice_style" (phrases.py writes one for the place you are going: Mexican Spanish).
 VOICES = {
     "ja": ("Leda", "from Tokyo, natural standard Japanese"), "ko": ("Kore", "from Seoul, natural standard Seoul Korean"),
     "zh": ("Leda", "from Beijing, natural standard Mandarin"), "th": ("Kore", "from Bangkok, natural standard Thai"),
@@ -40,6 +41,7 @@ VOICES = {
     "de": ("Kore", "from Berlin, natural standard German"), "pt": ("Aoede", "from Lisbon, natural European Portuguese"),
     "el": ("Kore", "from Athens, natural standard Greek"),
 }
+STYLES: dict[str, str] = {}      # a language's own speaking style, from phrases.json ("voice_style", as phrases.py writes)
 SLOW = ("speaking very slowly, syllable by syllable, exaggerating the pronunciation of every sound clearly so a learner "
         "can hear and copy each one, with a small pause between words, still natural and kind")
 
@@ -49,8 +51,10 @@ def say(*a):
 
 
 def style(lang: str, name: str, slow: bool) -> str:
-    where = VOICES.get(lang, ("Kore", f"natural standard {name}"))[1]
     pace = SLOW if slow else "speaking clearly and a little slowly"
+    if STYLES.get(lang):                                     # "a native Spanish speaker from Mexico City, …, speaking clearly and a little slowly, …"
+        return STYLES[lang].replace("speaking clearly and a little slowly", pace)
+    where = VOICES.get(lang, ("Kore", f"natural standard {name}"))[1]
     return f"a native {name} speaker {where}, warm and polite, {pace}, as if helping a visitor"
 
 
@@ -132,6 +136,7 @@ def main():
     path = root / "phrases.json"
     book = json.loads(path.read_text(encoding="utf-8"))
     (root / "audio").mkdir(exist_ok=True)
+    STYLES.update({lang: info["voice_style"] for lang, info in book["languages"].items() if info.get("voice_style")})
     http = httpx.Client(timeout=120)
     for sec in book["sections"]:
         for ph in sec["phrases"]:

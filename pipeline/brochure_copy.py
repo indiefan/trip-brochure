@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Brochure copy: Claude writes a short blurb and the key facts for every city, hotel and event that lacks them.
 
-    python3 pipeline/copy.py mytrip/            # only what is new or changed since last time
-    python3 pipeline/copy.py mytrip/ --force    # everything again
+    python3 pipeline/brochure_copy.py mytrip/            # only what is new or changed since last time
+    python3 pipeline/brochure_copy.py mytrip/ --force    # everything again
 
 Writes into trip.json: cities[name].blurb and .native, hotels[].blurb/.facts, events[].blurb/.facts. Your own
 blurb or facts are never overwritten unless --force. Facts come only from the item's own text (notes, confirmation,
@@ -17,10 +17,13 @@ import json
 from pydantic import BaseModel
 
 from common import MODEL, Trip, claude, say
+from style import HOUSE
 
 BATCH = 10
 PROMPT = """You are writing the copy for a beautifully printed travel brochure: a family's own itinerary for {trip}, \
-{start} to {end} (travellers: {people}). For each item below write:
+{start} to {end} (travellers: {people}). {house}
+
+For each item below write:
 
 - blurb: one or two sentences (at most 40 words) a reader enjoys: what this is and why it is a highlight. Warm and \
 precise, never gushing; no exclamation marks; present tense. Well-known facts about a famous place are welcome; \
@@ -30,7 +33,7 @@ short practical sentence.
 Seats, Flight, Terminal, Meeting point, Check-in, Check-out, Room, Includes, Tickets, Address, Phone, Cost, Note. Take \
 them ONLY from the item's text: never invent or guess a number, time, place or name. Merge repeats. Values short \
 (under 90 characters). Leave out the date and start/end time (shown elsewhere) and the status. No facts is fine.
-- native: for a "city:" item only, the city's name in its own script (東京, 서울); otherwise empty.
+- native: for a "city:" item only, the city's name in its own script when that script is not the Latin alphabet (東京, 서울, Αθήνα); otherwise empty.
 
 Answer for every key given.
 
@@ -83,7 +86,7 @@ def main():
         group = todo[i:i + BATCH]
         items = "\n\n".join(f"[{s['key']}]\n{s['text'][:5000]}" for s in group)
         r = client.messages.parse(model=MODEL, max_tokens=12000, output_config={"effort": "low"}, output_format=Copies,
-                                  messages=[{"role": "user", "content": PROMPT.format(trip=t.data["name"], start=t.data["start"], end=t.data["end"],
+                                  messages=[{"role": "user", "content": PROMPT.format(house=HOUSE, trip=t.data["name"], start=t.data["start"], end=t.data["end"],
                                                                                       people=", ".join(t.data.get("people") or []) or "the family", items=items)}])
         by_key = {s["key"]: s for s in group}
         short = {k.split(":", 1)[1]: k for k in by_key}

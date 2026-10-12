@@ -422,3 +422,8 @@ img { display: block; max-width: 100%; }
 #say .play.big { width: auto; height: auto; display: inline-flex; gap: 10px; padding: 14px 26px 14px 20px; border-radius: 999px; margin-top: 36px; font-weight: 700; font-size: 16px; background: #fffdf8; }
 #say .play.big.on { background: var(--accent); color: #fffdf8; }
 #say .play.big.on span { display: inline; }
+
+/* scripts beyond Japanese and Korean: across, in the trip's own face for its language (theme.css sets --native) */
+.cover .seal.h { writing-mode: horizontal-tb; font: italic 400 17px/1 var(--serif); letter-spacing: .04em; padding: 7px 11px 8px; }
+.hero .native.h { writing-mode: horizontal-tb; font: 400 38px/1 var(--native, var(--serif)); letter-spacing: .01em; }
+.end .mark.h, .m-seal.h { font: italic 400 30px/1 var(--serif); letter-spacing: .02em; }

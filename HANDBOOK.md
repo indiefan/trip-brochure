@@ -234,10 +234,12 @@ The last page: the seal, a farewell in the local language, photo credits, and wh
  └──────────────────────┘                    ▲                       │ Route B: native iOS         │
             ▲                                │                       │   depot/ serves versions    │
    optional, before building:                │ app/ (the page)       │   shell-ios/ wraps the page │
-   pipeline/copy.py       (Claude)           │  index.html app.css   │   installs over the air     │
+   pipeline/brochure_copy.py (Claude)        │  index.html app.css   │   installs over the air     │
    pipeline/translate.py  (Claude)           │  app.js sw.js fonts   └─────────────────────────────┘
    pipeline/places.py     (Google Maps)
    pipeline/read_confirmation.py (Claude)
+   pipeline/design.py     (Claude: name, icon, colours)
+   pipeline/phrases.py    (Claude) → phrase_audio.py (Gemini)
 ```
 
 | Folder | What it is | Needs |
@@ -291,7 +293,9 @@ times `HH:MM` (24-hour, local to where the event happens).
   "family": "The Example family",
   "seal": "旅",
   "farewell": {"native": "いってらっしゃい", "english": "Have a wonderful trip."},
-  "intro": "10 nights, 5 cities, two countries: from the neon of <em>Tokyo</em> to …",
+  "intro": "{nights} nights, {cities} cities, two countries: from the neon of <em>Tokyo</em> to …",
+  "accent": "#b8432c",
+  "accent_dark": "#e0694f",
   "start": "2027-04-14",
   "end": "2027-04-24",
   "people": ["Alex", "Sam", "Jordan"],
@@ -307,15 +311,19 @@ times `HH:MM` (24-hour, local to where the event happens).
 | `name` | The trip's name: the page title, the app's name. |
 | `title_html` | Optional. The cover title with its own line breaks and italics (HTML). Defaults to `name`. |
 | `family` | Optional. The small line at the top of the cover. |
-| `seal` | Optional. One character for the red seal on the cover and the end page. Leave out for none. |
-| `farewell` | Optional. The end page's big line (`native`) and its translation (`english`). |
-| `intro` | Optional. The paragraph under the cover (HTML allowed: `<em>` for the accent colour). Defaults to a plain count. |
+| `seal` | Optional. One character for the seal on the cover and the end page (set vertically for Chinese, Japanese or Korean; a short word in any other script is set across, in italics). Leave out for none. |
+| `farewell` | Optional. The end page's big line (`native`) and its translation (`english`); `lang` (optional) is the native line's language code, else the phrasebook's first language. |
+| `intro` | Optional. The paragraph under the cover (HTML allowed: `<em>` for the accent colour). `{nights}` and `{cities}` are filled in with the numbers, so the line stays true as the trip changes. Defaults to a plain count. |
+| `accent`, `accent_dark` | Optional. The one accent colour (links, buttons, the seal, `<em>`), for light and dark mode; written to `theme.css`. Defaults to vermilion. `design.py` picks them for the trip. |
+| `cover_match` | Optional. A few words from the title of the event whose photograph should be the cover, when `cover` is not given. |
+| `home` | Optional. Where you live (`design.py` gives it a colour, and the city's colour key). |
+| `app` | Written by `design.py`: `{"title": "…", "product": "…"}`, the native app's home-screen name and internal name (copy into `shell-ios/apps/*/app.json`, or pass `--shell-app`). |
 | `start`, `end` | The first and last day. Every event's date must fall inside. |
 | `people` | Who is going; shown on the cover. |
 | `zones` | UTC offsets by city name (the first word matters: "Seattle -> Tokyo" uses Seattle's). `default` covers every city not listed. Daylight saving: write the offset in force during the trip. |
 | `timezone` | IANA zones: `home` is used until the first event starts, `default` after (for "today"). |
 | `bundle_id` | The app's id, used in Naver Map links. Match `shell-ios/apps/*/app.json` if you build the native app. |
-| `cover` | The cover photograph (see photographs below). Defaults to the first city's photo. |
+| `cover` | The cover photograph (see photographs below). Defaults to the photo of the event `cover_match` names, else the first city's. |
 | `please` | Optional. Overrides or adds the "please take me here" line by language code: `{"zh": "请带我去这里。"}`. |
 | `languages` | Optional. Names for language codes not already known: `{"id": "Indonesian"}`. |
 | `units` | Optional. `"celsius"` for the forecast in °C; °F otherwise. |
@@ -333,7 +341,7 @@ times `HH:MM` (24-hour, local to where the event happens).
 One entry per city you sleep in, keyed by the exact name used in `hotels[].city`. `native` is the name in the local
 script (down the side of the chapter's photo); `color` is the city's colour everywhere (its dot, its ribbon, the dock's
 line); `blurb` the chapter's paragraph; `lat`/`lng` (optional) pin the city for the forecast when its name alone is
-ambiguous (a "Portland" or a small town). All optional except the key; `pipeline/copy.py` writes `blurb` and `native`
+ambiguous (a "Portland" or a small town). All optional except the key; `pipeline/brochure_copy.py` writes `blurb` and `native`
 for you, and the app picks a colour if you give none.
 
 ### Hotels (stays)
@@ -344,7 +352,7 @@ for you, and the app picks a colour if you give none.
    "name": "The Okura Tokyo (Heritage Wing)", "room": "Heritage Twin Junior Suite", "booking": "Amex Fine Hotels + Resorts",
    "perks": "Free breakfast for 3, $100 credit, guaranteed 4 PM checkout", "confirmation": "ABC123",
    "address": "2-10-4 Toranomon, Minato-ku, Tokyo", "blurb": "…", "facts": [{"label": "Includes", "value": "…"}],
-   "notes": "anything else, used by copy.py", "dest": "optional Maps search", "gplace": {…}}
+   "notes": "anything else, used by brochure_copy.py", "dest": "optional Maps search", "gplace": {…}}
 ]
 ```
 
@@ -375,7 +383,7 @@ A night with no hotel (an overnight flight, a night train) simply has no chapter
 | `city` | The city, or `A -> B` for travel between cities (then the time zones of A and B apply to start and end). |
 | `status` | `booked` (green tag), `critical` ("Don't miss" tag), anything else (no tag). |
 | `confirmation`, `cost`, `address`, `notes` | Shown as facts / folded notes; also what the Claude helpers read. |
-| `blurb`, `facts` | The copy. Write them, or let `copy.py` write them. Facts are `[{label, value}]`, at most about seven. |
+| `blurb`, `facts` | The copy. Write them, or let `brochure_copy.py` write them. Facts are `[{label, value}]`, at most about seven. |
 | `dest` | Where "Directions" goes: a Google Maps search ending in city and country, or an `https://` link (an operator's own map pin). `places.py` can pick these with Claude. |
 | `gplace` | The exact place, written by `places.py`: `{id, name, address, lat, lng, local_name, local_address, language, map}`. You can also write one by hand with coordinates and no `id`. |
 | `photo` | Optional photograph (see below). |
@@ -421,8 +429,10 @@ Optional: a file next to `trip.json`. Languages by code, sections, phrases:
 
 Each language's entry is `[phrase, romanization, note]` (the note optional, and per language: the same English can
 need different advice). `countries` decides which language opens first, from the hotel's `country` on the day.
-`pipeline/phrase_audio.py` turns entries into objects with `audio` and `learn` file paths. `sample/phrases.json` has 32
-phrases in Japanese and Korean to start from. Keep phrases polite and short; check them with a speaker if you can (or
+`pipeline/phrase_audio.py` turns entries into objects with `audio` and `learn` file paths. A language may carry a
+`voice_style` (how a native speaker from where you are going speaks it), which `phrase_audio.py` uses for its
+recordings; `pipeline/phrases.py` writes the whole file, styles included, for your trip's languages.
+`sample/phrases.json` has 32 phrases in Japanese and Korean to start from. Keep phrases polite and short; check them with a speaker if you can (or
 ask Claude, and listen to the recordings).
 
 ### Photographs
@@ -465,7 +475,7 @@ export ANTHROPIC_API_KEY=…        # console.anthropic.com → API keys
 export GOOGLE_MAPS_KEY=…          # only for places.py
 ```
 
-### `copy.py` — the brochure copy (Claude)
+### `brochure_copy.py` — the brochure copy (Claude)
 
 Writes a `blurb` and `facts` for every city, hotel and event that has none, and the city's `native` name. The prompt
 asks for warm, precise, present-tense copy, no exclamation marks, at most two sentences; and for facts taken **only**
@@ -516,6 +526,47 @@ two), and matches each to an existing event or adds a new one (`C-…`). With `-
 events are filled, confirmation numbers appended, the document registered under `docs` and linked. Your copy of the
 original stays where it was.
 
+### `phrases.py` — the phrasebook, written for your trip (Claude)
+
+```bash
+python3 pipeline/phrases.py mytrip/        # writes mytrip/phrases.json (asks before replacing one)
+```
+
+From the hotels' cities and countries, Claude decides which languages a visitor needs (none where English is the
+everyday language: then the app simply has no phrasebook) and writes 32 everyday phrases in six sections (essentials,
+getting around, eating out, shopping, the hotel, help) the way a polite local says them, in the local variety
+(European Portuguese in Lisbon, Mexican Spanish in Mexico City), with a romanization or an English-speaker's
+pronunciation guide and a note where one matters. A phrase that makes no sense there is swapped for the nearest
+useful one. Each language also gets a `voice_style` for the recordings. It runs at high effort, a few cents. Read the
+result once, with a speaker if you can: a wrong phrase is worse than none. Then run `phrase_audio.py`.
+
+### `design.py` — the app's name, icon and colours (Claude)
+
+```bash
+pip install playwright && playwright install chromium     # it renders its own drafts
+python3 pipeline/design.py mytrip/                       # icon.png + the design into trip.json
+python3 pipeline/design.py mytrip/ --shell-app trip      # also the native app's icon and name
+python3 pipeline/design.py mytrip/ --again               # reconsider it after the trip changed
+```
+
+A designer agent gives the trip its own app. Claude studies the trip, then works like a designer at a desk: it draws
+three different icon concepts as SVG, sees them rendered side by side and at real size on an iPhone home screen with
+the app's name under them, and judges them by four tests: does it read in a blink at 60 pt; would someone who knows the
+place feel it is this trip, or could it pass for a weather, swimming or banking app; is it crafted (proportions,
+balance, every curve, a confident palette); would it hold its own beside the finest apps. It refines the strongest,
+rendering after each change, then hands over the icon (`icon.png`, 1024 px, opaque) and writes into `trip.json`: `name`,
+`app` (home-screen name, at most 12 characters, and internal name), `title_html`, `seal`, `intro`, `farewell`, `accent`
+and `accent_dark`, a `color` for each city and for home, and `cover_match`. Its reasoning is kept in `design.why`.
+
+![What design.py made for the sample trip](docs/screenshots/24-design-example.png)
+
+It takes three to five minutes and costs roughly $1–3 with Claude Opus (adaptive thinking, up to eight renders, each
+render a couple of images). Review it before building: open `icon.png`, read the words, build and look at the cover.
+If something is off, run it again (each run explores afresh) or edit `trip.json` by hand. With `--again` it sees its
+earlier design and keeps the icon and names unless they now misrepresent the trip (a second country booked, say), since
+a new icon or name means reinstalling the native app; the words and colours, which only live in the page, are brought
+up to date either way. The sample keeps its hand-made design; the picture above is what the designer made of it.
+
 ### `phrase_audio.py` — the phrasebook's sound (Gemini)
 
 ```bash
@@ -527,7 +578,7 @@ python3 pipeline/phrase_audio.py mytrip/
 For every phrase without sound: two recordings with **Gemini 3.8 Flash TTS**, one natural and one slow with exaggerated
 pronunciation, in a native voice and accent for the language (the voices and accents are a table at the top of the
 script: Japanese, Korean, Mandarin, Thai, Vietnamese, French, Spanish, Italian, German, Portuguese and Greek are set up;
-any other language gets a neutral standard accent). The accent and pace go in the API's `speech_metadata` style, not in
+a language's `voice_style` in `phrases.json` overrides the table, and any other language gets a neutral standard accent). The accent and pace go in the API's `speech_metadata` style, not in
 the text: the 3.8 models read any direction in the text aloud. **Gemini 3.6 Flash** then listens to each recording and
 says whether it heard exactly the phrase, naturally pronounced; a rejected one is made again (the last try in another
 voice). The two recordings are kept as `audio/<key>.m4a` and joined (natural, pause, slow, pause, natural) into
@@ -542,6 +593,13 @@ app does not miss it: save confirmations as `.eml` or screenshots into `mytrip/d
 or just write the events by hand. If you want the automation, the pieces to copy are: a mail client that saves new
 messages from a label to a folder (Apple Mail rules can run a script; Gmail's API needs OAuth), then
 `read_confirmation.py --apply` and a rebuild.
+
+One step further, for an ambitious setup: the original now runs **many trips, each with its own app**. Every
+confirmation goes to the same inbox; Claude decides which trip it belongs to (by its dates and places), and one for a
+journey no trip covers starts a new trip by itself. A new trip then designs itself (`design.py`'s agent, once the
+confirmations stop arriving for a while), gets its phrasebook and its own native app (same shell, a new bundle id,
+built by the Mac without anyone at it), and a family dashboard on the wall offers a QR code to install it. Each trip here
+is simply its own folder with its own `trip.json`; the rest is plumbing around these scripts.
 
 ---
 
@@ -762,6 +820,24 @@ Content changes never need it.
 
 The look is a printed brochure on warm paper. Keeping it is mostly a matter of not adding things.
 
+### The house style, in every prompt
+
+Every Claude job in `pipeline/` (the designer, the copywriter, the phrasebook writer) is given the same brief,
+`pipeline/style.py`, so whatever the trip, and however little of it you write by hand, the result is held to one
+standard. Edit that file to change the house's taste; this is it as shipped:
+
+> The family's trip apps are held to the standard of a beautifully printed travel brochure and a best-in-class iPhone app (think Aman, Condé Nast Traveler, Monocle; Apple's own apps): high-end, beautiful, delightful, impeccable. Every detail is considered; nothing generic, clip-art, stock or template-like.
+> - Restraint: paper and ink, one accent colour, and the photographs carry the colour. Generous margins: text and card edges never touch the screen's edge; only photographs bleed. Resist adding things; take away what does not earn its place.
+> - Type: a refined display serif (Instrument Serif) for titles, the system font for reading; a destination's own script in a fine face of its own (a mincho for Japanese, a myeongjo for Korean); never two typefaces inside one word.
+> - Voice: warm and precise, never gushing; present tense; no exclamation marks; facts only from the sources, never invented.
+> - Detail: consistent spacing and alignment, balanced line breaks, real typography (curly apostrophes, en dashes for ranges), names spelled as locals spell them, contrast that reads in light and dark mode, at arm's length, in sunlight.
+> - Delight: small, purposeful touches (the route dock's little vehicle, a seal in the local script), never decoration for its own sake.
+> What every trip's app must do (keep it all working, whatever the trip): work fully offline; open on today's event during the trip (times in each place's own time zone); Directions to the exact place (Google Maps, Apple Maps, Naver in Korea) and a card in the local script to show a driver; every confirmation one tap away (the original email, its PDF, an English translation); weather at a glance with packing notes; a phrasebook with offline audio wherever English is not the language; the route dock; updates over the air; large tap targets, one-handed use.
+
+When your agent writes prompts of its own for this app, it should include the brief too.
+
+### The details
+
 **Colour** (`app.css` `:root`): paper `#f4efe6`, a second paper `#ece5d8`, card `#fbf8f2`, ink `#1d1a16`, two greys
 for secondary and tertiary text, a hairline `#ddd3c2`, one accent, vermilion `#b8432c`, and a muted green for "booked".
 Dark mode swaps paper for near-black (`#141311`) and ink for off-white; photographs are left alone. Each city has one
@@ -770,7 +846,10 @@ colour of its own, used sparingly: its dot, its ribbon, its stretch of the dock'
 **Type:** Instrument Serif (free, Google Fonts) for everything display: the cover title, city names, day headings,
 numbers at a glance, the hotel's name. The phone's own system sans (San Francisco, Roboto) for everything you read on
 the day: titles, blurbs, facts. Small capitals with wide tracking (`.kicker`) for labels. Shippori Mincho / Nanum
-Myeongjo for the Japanese and Korean. Confirmation codes in the system monospace. No other faces.
+Myeongjo for the Japanese and Korean, and a fine face per script for other destinations (Noto Serif SC/TC, Noto Serif
+Thai, Noto Serif for Greek, Cyrillic and Vietnamese, Frank Ruhl Libre, Amiri, Noto Serif Devanagari; Latin-script
+languages use Instrument Serif), each cut down by `build.py --fonts` to the characters the trip shows, so no word
+mixes two typefaces. Confirmation codes in the system monospace. No other faces.
 
 **Layout:** one column, 20 px gutters on a phone (32 on a tablet), content capped at 720 px; photographs and chapter
 heroes bleed to the edges, everything else keeps the gutter. Cards have 14–18 px radii and a soft double shadow;
