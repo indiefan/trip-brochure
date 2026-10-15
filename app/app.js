@@ -94,26 +94,34 @@
     return city && !place.toLowerCase().includes(city.toLowerCase()) ? `${place}, ${city}` : place;
   }
   // The ways to get there. With an exact place (looked up once on Google Maps): Google by its place id, Naver and
-  // Apple Maps by its coordinates (Apple Maps works offline in a downloaded area). In Korea, Naver Map comes first:
-  // Google cannot give walking directions there.
+  // Apple Maps by its coordinates (Apple Maps works offline in a downloaded area), and a ride there in the Uber app
+  // (its universal link: the app opens with the destination set, or the web page without it). In Korea, Naver Map
+  // comes first: Google cannot give walking directions there.
+  const uber = (q, place) => `https://m.uber.com/ul/?action=setPickup&pickup=my_location` +
+    (place ? `&dropoff[latitude]=${place.lat}&dropoff[longitude]=${place.lng}&dropoff[nickname]=${encodeURIComponent(place.name || q || "")}` : "") +
+    (place?.address || q ? `&dropoff[formatted_address]=${encodeURIComponent(place?.address || q)}` : "");
   const DIR_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l9.5 9.5-9.5 9.5L2.5 12z" fill="currentColor"/><path d="M9 14.5v-2.5a1.5 1.5 0 0 1 1.5-1.5H15m-2-2l2 2-2 2" fill="none" stroke="var(--card)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const UBER_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 11l1.6-4.2A2 2 0 0 1 8.5 5.5h7a2 2 0 0 1 1.9 1.3L19 11m-14 0h14a1.5 1.5 0 0 1 1.5 1.5V17H3.5v-4.5A1.5 1.5 0 0 1 5 11zm.5 6v1.5m13-1.5v1.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><circle cx="7.5" cy="14" r="1" fill="currentColor"/><circle cx="16.5" cy="14" r="1" fill="currentColor"/></svg>';
   function ways(place, q) {
     if (place?.lat != null) {
       const ll = `${place.lat},${place.lng}`;
       return { korea: place.language === "ko",
                google: `https://www.google.com/maps/dir/?api=1&destination=${ll}&destination_place_id=${encodeURIComponent(place.id)}`,
                naver: `nmap://route/public?dlat=${place.lat}&dlng=${place.lng}&dname=${encodeURIComponent(place.local_name || place.name)}&appname=${encodeURIComponent(T.bundle_id || "trip.brochure")}`,
-               apple: `maps://?daddr=${ll}` };
+               apple: `maps://?daddr=${ll}`, uber: uber(q, place) };
     }
     if (!q) return null;
-    return { korea: /korea/i.test(q), google: directions(q), apple: /^https?:/.test(q) ? null : `maps://?daddr=${encodeURIComponent(q)}`,
-             naver: /korea/i.test(q) ? `nmap://search?query=${encodeURIComponent(q)}&appname=${encodeURIComponent(T.bundle_id || "trip.brochure")}` : null };
+    const pin = /^https?:/.test(q);                                            // an operator's map link: nothing to hand a ride app
+    return { korea: /korea/i.test(q), google: directions(q), apple: pin ? null : `maps://?daddr=${encodeURIComponent(q)}`,
+             naver: /korea/i.test(q) ? `nmap://search?query=${encodeURIComponent(q)}&appname=${encodeURIComponent(T.bundle_id || "trip.brochure")}` : null,
+             uber: pin ? null : uber(q) };
   }
   function goButtons(w) {
     if (!w) return "";
     const main = w.korea && w.naver ? `<a class="dir" href="${esc(w.naver)}">${DIR_ICON}Naver Map</a>` : `<a class="dir" href="${esc(w.google)}">${DIR_ICON}Directions</a>`;
+    const ride = w.uber ? `<a class="dir alt" href="${esc(w.uber)}">${UBER_ICON}Uber</a>` : "";
     const alt = w.apple ? `<a class="dir alt" href="${esc(w.apple)}">Apple Maps</a>` : "";
-    return `<span class="go-ways">${main}${alt}</span>`;
+    return `<span class="go-ways">${main}${ride}${alt}</span>`;
   }
   // Offline: the little map (tap: Apple Maps), and the name and address in Japanese or Korean, to show a driver.
   function whereHTML(place, w) {

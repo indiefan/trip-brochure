@@ -165,6 +165,8 @@ forecast was fetched. Leave it out with `--no-weather`, or give your own (`weath
 - **Directions** opens Google Maps with directions from wherever the phone is to the exact place (by Google's place
   id, so a text search cannot land somewhere similar). In South Korea the button becomes **Naver Map**, because Google
   cannot give walking or transit directions there.
+- **Uber** opens the Uber app with the destination already set (by coordinates when the place is exact, by address
+  otherwise), ready to request a ride from wherever the phone is; without the app it opens Uber's web page instead.
 - **Apple Maps** opens Apple Maps by coordinates; with the area downloaded beforehand, that works with no network.
 - Below the facts, when the place was looked up: a small **map** in the brochure's colours (tap: Apple Maps), and the
   place's **name and address in the local script**, from Google itself, not a translation.
