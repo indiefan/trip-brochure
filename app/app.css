@@ -63,6 +63,9 @@ img { display: block; max-width: 100%; }
 #bar-title { font: 400 22px/1.1 var(--serif); text-align: left; flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 #bar-title small { font: 500 12px var(--sans); color: var(--ink-3); margin-left: 8px; letter-spacing: .02em; }
 #bar-today { font-size: 13px; font-weight: 600; padding: 7px 14px; border-radius: 999px; background: var(--ink); color: var(--paper); }
+#bar-hotel { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; padding: 6px 13px 6px 10px; border-radius: 999px; color: var(--ink); background: var(--card); border: 1px solid var(--rule); }
+#bar-hotel svg { width: 17px; height: 17px; flex: none; color: var(--ink-2); }
+#bar-hotel:active, #bar-today:active { transform: scale(.97); }
 
 /* --- an introduction under the cover ----------------------------------------------------------------------------- */
 .intro { padding-top: 44px; padding-bottom: 10px; }      /* top and bottom only: the sides are .wrap's gutter */
@@ -171,7 +174,10 @@ img { display: block; max-width: 100%; }
 #driver { position: fixed; inset: 0; z-index: 60; background: #fff; color: #111; display: flex; align-items: center; justify-content: center; padding: 28px; }
 #driver[hidden] { display: none; }
 #driver .x { position: absolute; top: calc(var(--top) + 12px); right: 16px; width: 44px; height: 44px; border-radius: 50%; background: #eee; font-size: 28px; line-height: 1; color: #333; }
-#driver .card { text-align: center; max-width: 640px; }
+#driver { overflow: auto; }
+#driver .card { text-align: center; max-width: 640px; max-height: 100%; padding: calc(var(--top) + 48px) 0 24px; }
+#driver .map { display: block; width: min(100%, 560px); aspect-ratio: 16 / 10; object-fit: cover; margin: 0 auto 24px; border-radius: 16px; border: 1px solid #e4e4e4; }
+#driver .kicker { display: block; margin-bottom: 10px; font: 600 12px/1 system-ui, sans-serif; letter-spacing: .08em; text-transform: uppercase; color: #999; }
 #driver b { display: block; font: 700 clamp(34px, 11vw, 64px)/1.2 "Hiragino Sans", "Apple SD Gothic Neo", system-ui, sans-serif; }
 #driver p { font: 500 clamp(19px, 5.5vw, 28px)/1.45 "Hiragino Sans", "Apple SD Gothic Neo", system-ui, sans-serif; margin: 18px 0 0; }
 #driver small { display: block; margin-top: 18px; font-size: 15px; color: #777; }

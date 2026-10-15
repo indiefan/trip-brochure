@@ -129,7 +129,7 @@
     const lang = ({ ja: "Japanese", ko: "Korean", zh: "Chinese", th: "Thai", vi: "Vietnamese", el: "Greek", he: "Hebrew", ar: "Arabic", ru: "Russian", hi: "Hindi",
                     fr: "French", it: "Italian", es: "Spanish", de: "German", pt: "Portuguese", ...(T.languages || {}) })[String(place.language || "").split("-")[0]] || "";
     const local = place.local_name && lang ? `<div class="local"><div><span>In ${lang}</span><b lang="${place.language}">${esc(place.local_name)}</b>${place.local_address ? `<small lang="${place.language}">${esc(place.local_address)}</small>` : ""}</div>
-        <button class="show" data-driver="${esc(JSON.stringify({ name: place.local_name, address: place.local_address, en: place.name, lang: place.language }))}">Show driver</button></div>` : "";
+        <button class="show" data-driver="${esc(JSON.stringify({ name: place.local_name, address: place.local_address, en: place.name, lang: place.language, map: place.map || null }))}">Show driver</button></div>` : "";
     const map = place.map ? `<a class="map" href="${esc(w?.apple || w?.google || "#")}"><img loading="lazy" src="${place.map}" alt="Map of ${esc(place.name)}"></a>` : "";
     return `<div class="where">${map}${local}</div>`;
   }
@@ -438,11 +438,28 @@
   const PLEASE = { ja: "ここまでお願いします。", ko: "여기로 가 주세요.", zh: "请带我去这里。", th: "ช่วยพาไปที่นี่ค่ะ/ครับ", el: "Εδώ, παρακαλώ.", ...(T.please || {}) };
   function showDriver(d) {
     const el = document.getElementById("driver");
-    el.innerHTML = `<button class="x" aria-label="Close">×</button><div class="card"><b lang="${esc(d.lang)}">${esc(d.name)}</b>
-      ${d.address ? `<p lang="${esc(d.lang)}">${esc(d.address)}</p>` : ""}<small>${esc(d.en)}</small>
+    el.innerHTML = `<button class="x" aria-label="Close">×</button><div class="card">${d.kicker ? `<span class="kicker">${esc(d.kicker)}</span>` : ""}
+      ${d.map ? `<img class="map" src="${esc(d.map)}" alt="Map of ${esc(d.en || d.name)}">` : ""}<b lang="${esc(d.lang)}">${esc(d.name)}</b>
+      ${d.address ? `<p lang="${esc(d.lang)}">${esc(d.address)}</p>` : ""}${d.en && d.en !== d.name ? `<small>${esc(d.en)}</small>` : ""}
       ${PLEASE[d.lang] ? `<div class="please" lang="${esc(d.lang)}">${esc(PLEASE[d.lang])}</div>` : ""}</div>`;
     el.hidden = false;
     $(".x", el).onclick = () => { el.hidden = true; };
+  }
+
+  // The hotel for tonight (the one whose stay covers today; before the trip the first, after it the last, between two
+  // stays the next), and its card for a taxi driver, from the "Hotel" button in the bar. There whatever the day.
+  function tonightHotel() {
+    const hs = [...T.hotels].filter(h => h.start && h.end).sort((a, b) => a.start.localeCompare(b.start));
+    if (!hs.length) return null;
+    const d = now().date;
+    return hs.find(h => h.start <= d && d < h.end) || hs.find(h => h.start > d) || hs.at(-1);
+  }
+  function showHotel() {
+    const h = tonightHotel(); if (!h) return;
+    const p = h.gplace || {}, local = !!p.local_name;
+    const d = now().date, when = h.start <= d && d < h.end ? "Tonight" : h.start > d ? `From ${fmt(h.start, { month: "short", day: "numeric" })}` : "Last stay";
+    showDriver({ name: local ? p.local_name : (p.name || h.name), address: local ? p.local_address : (p.address || h.address || ""),
+                 en: local ? (p.name || h.name) : h.city, lang: local ? p.language : "en", map: p.map || null, kicker: `${when} · ${h.city}` });
   }
 
   // --- the viewer --------------------------------------------------------------------------------------------------
@@ -911,6 +928,8 @@
   });
   $("#bar-title").addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
   $("#bar-today").addEventListener("click", () => goToday(true));
+  $("#bar-hotel").hidden = !tonightHotel();
+  $("#bar-hotel").addEventListener("click", showHotel);
   addEventListener("scroll", () => requestAnimationFrame(() => { bar(); statusBar(); dockMove(); menuTone(); }), { passive: true });
   addEventListener("resize", () => requestAnimationFrame(dockLayout));
   document.fonts?.ready.then(dockLayout);
