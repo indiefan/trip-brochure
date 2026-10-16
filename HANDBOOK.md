@@ -165,9 +165,10 @@ forecast was fetched. Leave it out with `--no-weather`, or give your own (`weath
 - **Directions** opens Google Maps with directions from wherever the phone is to the exact place (by Google's place
   id, so a text search cannot land somewhere similar). In South Korea the button becomes **Naver Map**, because Google
   cannot give walking or transit directions there.
-- **Hotel**, in the bar at the top, is there whatever the day: it opens tonight's hotel (before the trip the first,
-  between two stays the next) as a card for a taxi driver, with its map above the name and address in the local script.
-  The same card opens from "Show driver" on any exact place.
+- **Hotel**, in the bar at the top, is there whatever the day. Its left half opens tonight's hotel (before the trip
+  the first, between two stays the next) as a card for a taxi driver, with its map above the name and address in the
+  local script; its right half, the car, opens Uber with that hotel as the destination. The same driver card opens
+  from "Show driver" on any exact place.
 - **Uber** opens the Uber app with the destination already set (by coordinates when the place is exact, by address
   otherwise), ready to request a ride from wherever the phone is; without the app it opens Uber's web page instead.
 - **Apple Maps** opens Apple Maps by coordinates; with the area downloaded beforehand, that works with no network.

@@ -454,6 +454,8 @@
     const d = now().date;
     return hs.find(h => h.start <= d && d < h.end) || hs.find(h => h.start > d) || hs.at(-1);
   }
+  // a ride to tonight's hotel: the Uber link for its exact place (else its address)
+  const hotelRide = () => { const h = tonightHotel(); return h ? ways(h.gplace, h.address || `${h.name}, ${h.city}`)?.uber || null : null; };
   function showHotel() {
     const h = tonightHotel(); if (!h) return;
     const p = h.gplace || {}, local = !!p.local_name;
@@ -929,7 +931,12 @@
   $("#bar-title").addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
   $("#bar-today").addEventListener("click", () => goToday(true));
   $("#bar-hotel").hidden = !tonightHotel();
-  $("#bar-hotel").addEventListener("click", showHotel);
+  $("#bar-hotel-card").addEventListener("click", showHotel);
+  const ride = $("#bar-hotel-ride");
+  ride.innerHTML = UBER_ICON;
+  const setRide = () => { const u = hotelRide(); ride.hidden = !u; if (u) ride.href = u; };
+  setRide();
+  ride.addEventListener("click", setRide);                                     // tonight's hotel as of the tap, then the link opens
   addEventListener("scroll", () => requestAnimationFrame(() => { bar(); statusBar(); dockMove(); menuTone(); }), { passive: true });
   addEventListener("resize", () => requestAnimationFrame(dockLayout));
   document.fonts?.ready.then(dockLayout);

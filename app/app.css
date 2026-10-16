@@ -63,9 +63,15 @@ img { display: block; max-width: 100%; }
 #bar-title { font: 400 22px/1.1 var(--serif); text-align: left; flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 #bar-title small { font: 500 12px var(--sans); color: var(--ink-3); margin-left: 8px; letter-spacing: .02em; }
 #bar-today { font-size: 13px; font-weight: 600; padding: 7px 14px; border-radius: 999px; background: var(--ink); color: var(--paper); }
-#bar-hotel { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; padding: 6px 13px 6px 10px; border-radius: 999px; color: var(--ink); background: var(--card); border: 1px solid var(--rule); }
+/* one pill, two halves: the hotel's card for a driver, and a ride there */
+#bar-hotel { display: inline-flex; align-items: stretch; border-radius: 999px; color: var(--ink); background: var(--card); border: 1px solid var(--rule); overflow: hidden; flex: none; }
+#bar-hotel[hidden] { display: none; }
+#bar-hotel > * { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; padding: 6px 12px 6px 10px; color: inherit; text-decoration: none; }
+#bar-hotel > a { padding: 6px 10px 6px 9px; border-left: 1px solid var(--rule); color: var(--ink-2); }
+#bar-hotel > a[hidden] { display: none; }
 #bar-hotel svg { width: 17px; height: 17px; flex: none; color: var(--ink-2); }
-#bar-hotel:active, #bar-today:active { transform: scale(.97); }
+#bar-hotel > *:active { background: var(--paper-2); }
+#bar-today:active { transform: scale(.97); }
 
 /* --- an introduction under the cover ----------------------------------------------------------------------------- */
 .intro { padding-top: 44px; padding-bottom: 10px; }      /* top and bottom only: the sides are .wrap's gutter */
