@@ -365,6 +365,7 @@ def build(src: Path, out: Path, refetch_fonts: bool = False, fetch_remote: bool 
     book = phrasebook(src, files)
     if (data.get("farewell") or {}).get("native") and book and not data["farewell"].get("lang"):   # its language, for its face
         data["farewell"] = {**data["farewell"], "lang": next(iter(book.get("languages") or {}), "")}
+    data["money"] = trip.get("money") or money(trip, cache / "rates.json", trip.get("home_currency") or "USD")   # trip.json may give its own
     data.update({"phrases": book, "weather": wx, "cities": {k: {"color": v.get("color")} for k, v in (trip.get("cities") or {}).items()}, "days": days, "legs": legs, "events": events, "hotels": hotels,
                  "docs": docs_out, "cover": cover, "credits": credits + list(trip.get("credits") or []),
                  "built": built.strftime("%Y-%m-%dT%H:%M:%SZ"), "version": built.strftime("%Y%m%d.%H%M%S")})
@@ -393,6 +394,44 @@ def build(src: Path, out: Path, refetch_fonts: bool = False, fetch_remote: bool 
     (out / "manifest.json").write_text(json.dumps(manifest, indent=1))
     say(f"built {len(files)} files, {sum(len(b) for b in files.values()) / 1e6:.1f} MB, version {data['version']} → {out}")
     return manifest
+
+
+# --- money: the home currency beside every amount in another one (Frankfurter: free, no key, the ECB's daily rates) ---
+
+RATES_TTL = 20 * 3600
+COUNTRY_CURRENCY = {"Japan": "JPY", "South Korea": "KRW", "Korea": "KRW", "China": "CNY", "Hong Kong": "HKD", "Taiwan": "TWD",
+                    "Thailand": "THB", "Vietnam": "VND", "Singapore": "SGD", "India": "INR", "United Kingdom": "GBP", "UK": "GBP",
+                    "England": "GBP", "Scotland": "GBP", "Switzerland": "CHF", "Mexico": "MXN", "Canada": "CAD", "Australia": "AUD",
+                    "New Zealand": "NZD", "Sweden": "SEK", "Norway": "NOK", "Denmark": "DKK", "Poland": "PLN", "Czechia": "CZK",
+                    "Czech Republic": "CZK", "Hungary": "HUF", "Iceland": "ISK", "Turkey": "TRY", "Türkiye": "TRY", "Brazil": "BRL",
+                    "South Africa": "ZAR", "Israel": "ILS", "Indonesia": "IDR", "Malaysia": "MYR", "Philippines": "PHP"}
+EURO = {"France", "Germany", "Italy", "Spain", "Portugal", "Netherlands", "Belgium", "Austria", "Ireland", "Greece", "Finland",
+        "Croatia", "Slovenia", "Slovakia", "Estonia", "Latvia", "Lithuania", "Luxembourg", "Malta", "Cyprus"}
+
+
+def money(trip: dict, cache_file: Path, home: str = "USD") -> dict | None:
+    """{home, rates: {code: units per one home unit}, as_of} for the currencies of the places stayed in, kept in the
+    cache and asked again when older than RATES_TTL; the last answer when the network is away; None when the trip has
+    no foreign currency (or none Frankfurter knows)."""
+    codes = sorted({COUNTRY_CURRENCY.get(c) or ("EUR" if c in EURO else None) for c in (h.get("country") or "" for h in trip.get("hotels", []))} - {None, home})
+    if not codes:
+        return None
+    old = json.loads(cache_file.read_text()) if cache_file.exists() else None
+    if old and time.time() - old.get("at", 0) < RATES_TTL and old.get("codes") == codes and old.get("home") == home:
+        return old["data"]
+    try:
+        r = http.get("https://api.frankfurter.dev/v1/latest", params={"base": home, "symbols": ",".join(codes)}, timeout=30)
+        r.raise_for_status()
+        j = r.json()
+        data = {"home": home, "rates": j.get("rates") or {}, "as_of": j.get("date")}
+        if not data["rates"]:
+            return old["data"] if old else None
+        cache_file.parent.mkdir(parents=True, exist_ok=True)
+        cache_file.write_text(json.dumps({"at": time.time(), "codes": codes, "home": home, "data": data}))
+        return data
+    except Exception as e:                                                       # keep the last rates when the network is away
+        say(f"  exchange rates not refreshed: {e}")
+        return old["data"] if old else None
 
 
 # --- weather: each day's forecast where you are (Open-Meteo: free, no key, about 16 days ahead) -----------------------

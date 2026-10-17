@@ -464,6 +464,47 @@
                  en: local ? (p.name || h.name) : h.city, lang: local ? p.language : "en", map: p.map || null, kicker: `${when} · ${h.city}` });
   }
 
+  // --- money: the home currency after every amount in another one ----------------------------------------------------
+  // Rates come with the build (T.money: {home, rates: {JPY: 158, ...}, as_of}); offline they are as fresh as the last
+  // build, which is plenty for a glance. Amounts are found in the page's own text: ¥12,400, JPY 36,000, 14,400 JPY,
+  // ₩50,000, 50,000 won. The equivalent is set after each as a light "(≈ $78)". Home-currency amounts are left alone.
+  const MONEY = T.money && T.money.rates ? T.money : null;
+  const SYMBOL = { "¥": MONEY?.rates?.JPY ? "JPY" : "CNY", "￥": MONEY?.rates?.JPY ? "JPY" : "CNY", "₩": "KRW", "€": "EUR", "£": "GBP", "฿": "THB", "₫": "VND", "₹": "INR" };
+  const WORD = { yen: "JPY", won: "KRW", euro: "EUR", euros: "EUR", baht: "THB" };
+  const AMOUNT = /(?:([¥￥₩€£฿₫₹])\s?(\d[\d,]*(?:\.\d+)?)|\b(JPY|KRW|EUR|GBP|CNY|THB|VND|INR|TWD|HKD|SGD|MXN|CAD|AUD|CHF)\s?(\d[\d,]*(?:\.\d+)?)|(\d[\d,]*(?:\.\d+)?)\s?(JPY|KRW|EUR|GBP|CNY|THB|VND|INR|TWD|HKD|SGD|MXN|CAD|AUD|CHF|yen|won|euros?|baht)\b)/gi;
+  const MONEY_HINT = /[¥￥₩€£฿₫₹]|\b(JPY|KRW|EUR|GBP|CNY|THB|VND|INR|TWD|HKD|SGD|MXN|CAD|AUD|CHF|yen|won|euros?|baht)/i;   // a hint only: AMOUNT decides
+  function inHome(code, n) {
+    const rate = MONEY.rates[code]; if (!rate || !(n > 0)) return null;
+    const v = n / rate;
+    return new Intl.NumberFormat("en-US", { style: "currency", currency: MONEY.home || "USD", maximumFractionDigits: v >= 10 ? 0 : 2, minimumFractionDigits: v >= 10 ? 0 : 2 }).format(v);
+  }
+  function moneyize(root) {
+    if (!MONEY || !root) return;
+    const skip = "script, style, input, textarea, #driver, .local, .say, .usd";
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, { acceptNode: n =>
+      n.parentElement?.closest(skip) || n.parentElement?.querySelector(":scope > .usd") ? NodeFilter.FILTER_REJECT   // done already
+      : MONEY_HINT.test(n.data) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP });
+    const nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode);
+    for (const n of nodes) {
+      const text = n.data, frag = document.createDocumentFragment();
+      let last = 0, m, any = false;
+      AMOUNT.lastIndex = 0;
+      while ((m = AMOUNT.exec(text))) {
+        const [whole, sym, a, code1, b, c, code2] = m;
+        const code = sym ? SYMBOL[sym] : (WORD[(code1 || code2).toLowerCase()] || (code1 || code2).toUpperCase());
+        if (code === (MONEY.home || "USD") || /^\s?[–-]\s?\d/.test(text.slice(m.index + whole.length))) continue;   // home money, or the start of a range
+        const home = inHome(code, parseFloat((a || b || c).replace(/,/g, "")));
+        if (!home) continue;
+        frag.append(text.slice(last, m.index + whole.length));
+        const s = document.createElement("span"); s.className = "usd"; s.textContent = `(≈ ${home})`; frag.append(" ", s);
+        last = m.index + whole.length; any = true;
+      }
+      if (!any) continue;
+      frag.append(text.slice(last));
+      n.replaceWith(frag);
+    }
+  }
+
   // --- the viewer --------------------------------------------------------------------------------------------------
   const viewer = $("#viewer");
   function openDoc(id, title) {
@@ -575,7 +616,7 @@
     document.body.dataset.view = name;
     $("#app").hidden = name !== "itinerary";
     $("#alt").hidden = name === "itinerary";
-    if (name !== "itinerary") { $("#alt").innerHTML = VIEWS[name].render(); $("#alt").classList.remove("in"); requestAnimationFrame(() => $("#alt").classList.add("in")); }
+    if (name !== "itinerary") { $("#alt").innerHTML = VIEWS[name].render(); moneyize($("#alt")); $("#alt").classList.remove("in"); requestAnimationFrame(() => $("#alt").classList.add("in")); }
     const want = "#" + (name === "itinerary" ? "" : name);
     if ((location.hash || "#") !== want && !opts.fromHash) history.pushState(null, "", name === "itinerary" ? location.pathname + location.search : want);
     closeMenu();
@@ -739,7 +780,7 @@
     requestAnimationFrame(() => el.classList.add("open"));
     const input = $("input", el), out = $(".s-out", el);
     let t;
-    const run = () => { out.innerHTML = searchResults(input.value); out.scrollTop = 0; };
+    const run = () => { out.innerHTML = searchResults(input.value); moneyize(out); out.scrollTop = 0; };
     input.value = q; run();
     input.addEventListener("input", () => { clearTimeout(t); t = setTimeout(run, 60); });
     input.addEventListener("keydown", e => { if (e.key === "Escape") closeSearch(); if (e.key === "Enter") input.blur(); });
@@ -914,6 +955,7 @@
   // --- go ------------------------------------------------------------------------------------------------------------
   document.title = T.name;
   render();
+  moneyize($("#app"));
   mark();
   document.addEventListener("click", e => {
     const j = e.target.closest("[data-jump]");

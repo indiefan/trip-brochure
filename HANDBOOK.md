@@ -341,6 +341,7 @@ times `HH:MM` (24-hour, local to where the event happens).
 | `zones` | UTC offsets by city name (the first word matters: "Seattle -> Tokyo" uses Seattle's). `default` covers every city not listed. Daylight saving: write the offset in force during the trip. |
 | `timezone` | IANA zones: `home` is used until the first event starts, `default` after (for "today"). |
 | `bundle_id` | The app's id, used in Naver Map links. Match `shell-ios/apps/*/app.json` if you build the native app. |
+| `home_currency` | Your currency, default `USD`. Every amount in another currency (¥12,400, 36,000 JPY, ₩50,000, 50,000 won …) gets it in parentheses, "(≈ $78)", from rates `build.py` fetches once a day from Frankfurter (the ECB's rates, no key). `money` = `{home, rates, as_of}` can be given by hand instead. |
 | `cover` | The cover photograph (see photographs below). Defaults to the photo of the event `cover_match` names, else the first city's. |
 | `please` | Optional. Overrides or adds the "please take me here" line by language code: `{"zh": "请带我去这里。"}`. |
 | `languages` | Optional. Names for language codes not already known: `{"id": "Indonesian"}`. |
